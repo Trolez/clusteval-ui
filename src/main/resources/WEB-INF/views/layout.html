@@ -1,0 +1,110 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!-- Meta tags -->
+<meta charset="UTF-8">
+
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+<!-- Bootstrap -->
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<script src="bootstrap.min.js"></script>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+
+<!-- Custom CSS -->
+<link rel="stylesheet" type="text/css" href="css/style.css">
+
+<head>
+    <title>Clusteval Web Interface</title>
+</head>
+<body>
+    <header>
+        <h1>Clusteval UI</h1>
+    </header>
+
+    <main>
+      <div id="side-menu">
+          <ul>
+              <li>
+                  <a href="#">
+                      <div class="icon">
+                          <i class="fa fa-home"></i>
+                      </div>
+                      <span>Home</span>
+                  </a>
+              </li>
+              <li>
+                  <a href="#">
+                      <div class="icon">
+                          <i class="fa fa-users"></i>
+                      </div>
+                      <span>Users</span>
+                  </a>
+              </li>
+              <li>
+                  <a href="#">
+                      <div class="icon">
+                          <i class="fa fa-link"></i>
+                      </div>
+                      <span>Link</span>
+                  </a>
+              </li>
+              <li>
+                  <a href="#">
+                      <div class="icon">
+                          <i class="fa fa-file"></i>
+                      </div>
+                      <span>File</span>
+                  </a>
+              </li>
+          </ul>
+      </div>
+      <div id="content-wrapper">
+          <div class="container-fluid">
+              <div class="alert alert-success">
+                  Your run was successfully generated
+              </div>
+              <form>
+                  <div class="form-group">
+                      <label>Name</label>
+                      <input type="text" class="form-control">
+                  </div>
+                  <div class="form-group">
+                      <label>Type</label>
+                      <select class="form-control">
+                          <option>Option 1</option>
+                          <option>Option 2</option>
+                          <option>Option 3</option>
+                      </select>
+                  </div>
+                  <div class="form-group">
+                      <input type="submit" class="form-control btn btn-primary">
+                  </div>
+              </form>
+
+                <div layout:fragment="content">
+                    <!-- ============================================================================ -->
+                    <!-- This content is only used for static prototyping purposes (natural templates)-->
+                    <!-- and is therefore entirely optional, as this markup fragment will be included -->
+                    <!-- from "fragments/header.html" at runtime.                                     -->
+                    <!-- ============================================================================ -->
+                    <h1>Static content for prototyping purposes only</h1>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Praesent scelerisque neque neque, ac elementum quam dignissim interdum.
+                        Phasellus et placerat elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Praesent scelerisque neque neque, ac elementum quam dignissim interdum.
+                        Phasellus et placerat elit.
+                    </p>
+                </div>
+          </div>
+      </div>
+    </main>
+
+    <footer>
+
+    </footer>
+</body>
+</html>

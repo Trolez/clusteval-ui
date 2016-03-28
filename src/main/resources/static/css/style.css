@@ -1,0 +1,22 @@
+* { margin: 0px; padding: 0px; }
+* { transition: all 0.4s; }
+
+body { background-color: #c0c0c0; height: 100%; overflow-x: hidden; }
+
+/* Header */
+header { height: 100px; background: rgb(67, 80, 109); padding-left: 75px; }
+header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transform: translateY(-50%); z-index: 2; text-shadow: 1px 1px 2px #0E1221; }
+
+/* Side menu */
+#side-menu { position: fixed; top: 0px; bottom: 0px; width: 65px; background: #0E1221; border-right: 5px solid rgb(67, 80, 109); padding-top: 100px; z-index: 1; }
+#side-menu ul { list-style: none; padding-left: 0px; }
+#side-menu ul li { background: rgb(67, 80, 109); overflow: hidden; }
+#side-menu ul li:hover { width: 300px; }
+#side-menu ul li a { text-decoration: none; }
+#side-menu ul li a .icon { display: block; float: left; font-size: 24px; width: 60px; height: 60px; text-align: center; line-height: 60px; vertical-align: middle; color: #dedede; background: #0E1221; margin-right: 5px; }
+#side-menu ul li a:hover .icon { background: #171C2D; }
+#side-menu ul li a span { display: none; font-size: 25px; color: #0E1221; text-align: center; color: #dedede; text-shadow: 1px 1px 1px #0E1221;  }
+#side-menu ul li a:hover span { display: block; height: 60px; line-height: 60px; vertical-align: middle; }
+
+/* Content Wrapper */
+#content-wrapper { margin-left: 65px; min-height: 1200px; background: #fafbff; padding-top: 15px; }
