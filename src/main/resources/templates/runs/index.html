@@ -2,8 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
 <body>
     <div layout:fragment="content">
-        <p th:text="'Hello, ' + ${name} + '!'" />
-
         <div class="row" th:each="run : ${runs}" th:object="${run}">
             <div class="col-md-8">
                 <span th:text="*{name}" />

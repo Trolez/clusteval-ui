@@ -7,29 +7,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.beans.factory.annotation.*;
 
 import de.clusteval.serverclient.BackendClient;
+
+import java.rmi.ConnectException;
 
 import java.util.ArrayList;
 
 @Controller
 public class RunController {
+    @Value("${port}")
+    private int port;
 
     @RequestMapping("/runs")
-    public String showRuns(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
+    public String showRuns(Model model) {
         ArrayList<String> runNames = new ArrayList<String>();
         ArrayList<Run> runs = new ArrayList<Run>();
         try {
-            BackendClient backendClient = new BackendClient(new String[0]);
+            BackendClient backendClient = new BackendClient(new String[]);
             runNames = new ArrayList<String>(backendClient.getRuns());
 
             for (String runName : runNames) {
                 runs.add(new Run(runName));
             }
+        } catch (ConnectException e) {
+            return "runs/notRunning";
         } catch (Exception e) {
         }
-
-        model.addAttribute("name", name);
 
         model.addAttribute("runs", runs);
 
@@ -37,15 +42,17 @@ public class RunController {
     }
 
     @RequestMapping(value="/runs", method=RequestMethod.POST)
-    public String greetingSubmit(@ModelAttribute Run run, Model model, RedirectAttributes redirectAttributes) {
+    public String performRun(@ModelAttribute Run run, Model model, RedirectAttributes redirectAttributes) {
         try {
             BackendClient backendClient = new BackendClient(new String[0]);
 
             redirectAttributes.addFlashAttribute("success", "The run '" + run.getName() + "' was successfully started.");
-            redirectAttributes.addFlashAttribute("failure", "An unknown error occurred.");
 
-            //backendClient.performRun(run.getName());
+            backendClient.performRun(run.getName());
+        } catch (ConnectException e) {
+            redirectAttributes.addFlashAttribute("failure", "Could not connect to the Clusteval server. Is it running?");
         } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("failure", "An unknown error occurred.");
         }
 
         return "redirect:/runs";
