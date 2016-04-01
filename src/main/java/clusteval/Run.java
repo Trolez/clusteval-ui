@@ -1,4 +1,4 @@
-package hello;
+package clusteval;
 
 public class Run {
     private String name;

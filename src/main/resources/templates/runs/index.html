@@ -1,9 +1,5 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
-<head>
-    <title>Getting Started: Serving Web Content</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-</head>
 <body>
     <div layout:fragment="content">
         <p th:text="'Hello, ' + ${name} + '!'" />
@@ -14,10 +10,11 @@
             </div>
             <div class="col-md-4 text-right">
                 <form action="#" th:action="@{/runs}" method="post" th:object="${run}">
-                    <input type="text" name="name" th:value="*{name}">
+                    <input type="hidden" name="name" th:value="*{name}">
                     <input type="submit" name="send" value="Perform Run" class="btn btn-primary">
                 </form>
             </div>
+            <hr>
         </div>
     </div>
 </body>
