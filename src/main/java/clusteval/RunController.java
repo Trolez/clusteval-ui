@@ -10,10 +10,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.beans.factory.annotation.*;
 
 import de.clusteval.serverclient.BackendClient;
+import de.clusteval.run.RUN_STATUS;
+import de.wiwie.wiutils.utils.Pair;
 
 import java.rmi.ConnectException;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 @Controller
 public class RunController {
@@ -25,12 +28,17 @@ public class RunController {
         ArrayList<String> runNames = new ArrayList<String>();
         ArrayList<Run> runs = new ArrayList<Run>();
         try {
-            BackendClient backendClient = new BackendClient(new String[]);
+            BackendClient backendClient = new BackendClient(new String[0]);
             runNames = new ArrayList<String>(backendClient.getRuns());
 
             for (String runName : runNames) {
                 runs.add(new Run(runName));
             }
+
+            Map<String, Pair<RUN_STATUS, Float>> runStatus = backendClient.getMyRunStatus();
+
+            model.addAttribute("status", runStatus);
+
         } catch (ConnectException e) {
             return "runs/notRunning";
         } catch (Exception e) {
