@@ -20,3 +20,12 @@ header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transfo
 
 /* Content Wrapper */
 #content-wrapper { margin-left: 65px; min-height: 1200px; background: #fafbff; padding-top: 15px; }
+
+/* Accordion */
+.myAccordion { list-style: none; overflow: hidden; position: relative; width: 100%; display: flex; flex-wrap: wrap; }
+.myAccordion li { display: flex; width: 75px; float: left; overflow: hidden; -webkit-transition:all 600ms ease-in-out; -moz-transition:all 600ms ease-in-out; -o-transition:all 600ms ease-in-out; -ms-transition:all 600ms ease-in-out; transition: all 600ms ease-in-out; }
+.myAccordion li .section-header { display: block; height: 100%; background: #eee; position: absolute; top: 0px; bottom: 0px; width: 75px; cursor: pointer; border: 1px dashed #ccc; }
+.myAccordion li .section-header span { font-weight: bold; color: #777; display: block; position: relative; top: 50%; transform: translateY(-50%) rotate(-90deg); text-align: center; }
+.myAccordion li .section-content { width: 100%; background: #f3f3f3; }
+.myAccordion li:first-child { width: calc(100% - 150px); }
+.myAccordion li .section-content { display: block; padding: 10px; margin-left: 75px; overflow: hidden; }

@@ -65,4 +65,9 @@ public class RunController {
 
         return "redirect:/runs";
     }
+
+    @RequestMapping(value="/runs/create")
+    public String createRun(Model model) {
+        return "runs/create";
+    }
 }
