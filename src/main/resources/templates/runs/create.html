@@ -30,7 +30,7 @@
                     </span>
                     <div class="section-content">
                         <h1>Programs</h1>
-                        <select multiple>
+                        <select class="select2-multiple" multiple>
                             <option th:each="program : ${programs}" th:value="${program}" th:text="${program}">
                         </select>
                     </div>
@@ -41,7 +41,7 @@
                     </span>
                     <div class="section-content">
                         <h1>Data</h1>
-                        <select multiple>
+                        <select class="select2-multiple" multiple>
                             <option th:each="dataSet : ${dataSets}" th:value="${dataSet}" th:text="${dataSet}">
                         </select>
                     </div>
