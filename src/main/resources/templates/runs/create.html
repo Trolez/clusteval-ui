@@ -2,32 +2,60 @@
 <html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
 <body>
     <div layout:fragment="content">
-        <ul class="myAccordion">
-            <li class="open">
-                <span class="section-header">
-                    <span>Section 1</span>
-                </span>
-                <div class="section-content">
-                    Content 1 <br><br><br><br><br><br><br>
-                </div>
-            </li>
-            <li>
-                <span class="section-header">
-                    <span>Section 2</span>
-                </span>
-                <div class="section-content">
-                    Content 2
-                </div>
-            </li>
-            <li>
-                <span class="section-header">
-                    <span>Section 3</span>
-                </span>
-                <div class="section-content">
-                    Content 3<br><br><br><br><br>
-                </div>
-            </li>
-        </ul>
+        <form action="" method="post" class="run-creation">
+            <ul class="myAccordion">
+                <li class="open">
+                    <span class="section-header">
+                        <span>Run type</span>
+                    </span>
+                    <div class="section-content">
+                        <h1>Run type</h1>
+                        <strong>Name of run</strong><br>
+                        <label>Name</label>
+                        <input type="text" name="run_name"><br>
+                        <strong>Choose the type of run below</strong><br>
+                        <label>Parameter optimization run</label>
+                        <input type="radio" name="run_type" value="parameter_optimization" checked>
+                        <br>
+                        <label>Robustness analysis run</label>
+                        <input type="radio" name="run_type" value="robustnessAnalysis" checked>
+                        <br>
+                        <label>Data analysis run</label>
+                        <input type="radio" name="run_type" value="dataAnalysis" checked>
+                    </div>
+                </li>
+                <li>
+                    <span class="section-header">
+                        <span>Programs</span>
+                    </span>
+                    <div class="section-content">
+                        <h1>Programs</h1>
+                        <select multiple>
+                            <option th:each="program : ${programs}" th:value="${program}" th:text="${program}">
+                        </select>
+                    </div>
+                </li>
+                <li>
+                    <span class="section-header">
+                        <span>Data</span>
+                    </span>
+                    <div class="section-content">
+                        <h1>Data</h1>
+                        <select multiple>
+                            <option th:each="dataSet : ${dataSets}" th:value="${dataSet}" th:text="${dataSet}">
+                        </select>
+                    </div>
+                </li>
+                <li>
+                    <span class="section-header">
+                        <span>Other settings</span>
+                    </span>
+                    <div class="section-content">
+                        <input type="submit" value="Create run">
+                    </div>
+                </li>
+            </ul>
+        </form>
     </div>
 </body>
 </html>

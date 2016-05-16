@@ -18,6 +18,8 @@ import java.rmi.ConnectException;
 import java.util.ArrayList;
 import java.util.Map;
 
+import java.io.*;
+
 @Controller
 public class RunController {
     @Value("${port}")
@@ -53,10 +55,9 @@ public class RunController {
     public String performRun(@ModelAttribute Run run, Model model, RedirectAttributes redirectAttributes) {
         try {
             BackendClient backendClient = new BackendClient(new String[0]);
+            backendClient.performRun(run.getName());
 
             redirectAttributes.addFlashAttribute("success", "The run '" + run.getName() + "' was successfully started.");
-
-            backendClient.performRun(run.getName());
         } catch (ConnectException e) {
             redirectAttributes.addFlashAttribute("failure", "Could not connect to the Clusteval server. Is it running?");
         } catch (Exception e) {
@@ -68,6 +69,45 @@ public class RunController {
 
     @RequestMapping(value="/runs/create")
     public String createRun(Model model) {
+        ArrayList<String> dataSets = new ArrayList<String>();
+        ArrayList<String> programs = new ArrayList<String>();
+        try {
+            BackendClient backendClient = new BackendClient(new String[0]);
+
+            dataSets = new ArrayList<String>(backendClient.getDataSets());
+            model.addAttribute("dataSets", dataSets);
+
+            programs = new ArrayList<String>(backendClient.getPrograms());
+            model.addAttribute("programs", programs);
+        } catch (ConnectException e) {
+            return "runs/notRunning";
+        } catch (Exception e) {
+        }
+
         return "runs/create";
+    }
+
+    @RequestMapping(value="/runs/create", method=RequestMethod.POST)
+    public String createRun(Model model, RedirectAttributes redirectAttributes) {
+        //Create test file
+        try {
+            File file = new File("/home/troels/Desktop/testfile.run");
+
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileWriter writer = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(writer);
+            writer.write("This is a just a test!");
+            writer.close();
+
+            redirectAttributes.addFlashAttribute("success", "The run has been succcesfully created.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("failure", "An error occurred during file writing.");
+        }
+
+        return "redirect:/runs";
     }
 }
