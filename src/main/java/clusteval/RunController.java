@@ -25,6 +25,9 @@ public class RunController {
     @Value("${port}")
     private int port;
 
+    @Value("${absRepoPath}")
+    private String path;
+
     @RequestMapping("/runs")
     public String showRuns(Model model) {
         ArrayList<String> runNames = new ArrayList<String>();
@@ -68,7 +71,7 @@ public class RunController {
     }
 
     @RequestMapping(value="/runs/create")
-    public String createRun(Model model) {
+    public String createRun(RunCreation runCreation, Model model) {
         ArrayList<String> dataSets = new ArrayList<String>();
         ArrayList<String> programs = new ArrayList<String>();
         try {
@@ -88,10 +91,10 @@ public class RunController {
     }
 
     @RequestMapping(value="/runs/create", method=RequestMethod.POST)
-    public String createRun(Model model, RedirectAttributes redirectAttributes) {
+    public String createRun(@ModelAttribute RunCreation runCreation, Model model, RedirectAttributes redirectAttributes) {
         //Create test file
         try {
-            File file = new File("/home/troels/Desktop/testfile.run");
+            File file = new File(path + "/runs/" + runCreation.getName() + ".run");
 
             if (!file.exists()) {
                 file.createNewFile();

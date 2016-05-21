@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
 <body>
     <div layout:fragment="content">
-        <form action="" method="post" class="run-creation">
+        <form class="run-creation" th:action="@{/runs/create}" method="post" th:object="${runCreation}">
             <ul class="myAccordion">
                 <li class="open">
                     <span class="section-header">
@@ -10,18 +10,23 @@
                     </span>
                     <div class="section-content">
                         <h1>Run type</h1>
-                        <strong>Name of run</strong><br>
-                        <label>Name</label>
-                        <input type="text" name="run_name"><br>
-                        <strong>Choose the type of run below</strong><br>
-                        <label>Parameter optimization run</label>
-                        <input type="radio" name="run_type" value="parameter_optimization" checked>
-                        <br>
-                        <label>Robustness analysis run</label>
-                        <input type="radio" name="run_type" value="robustnessAnalysis" checked>
-                        <br>
-                        <label>Data analysis run</label>
-                        <input type="radio" name="run_type" value="dataAnalysis" checked>
+                        <span class="info">
+                            Set the basic run settings below.
+                        </span>
+                        <div class="form-group">
+                            <label>Name of run</label>
+                            <input type="text" name="name" th:field="${runCreation.name}" class="form-control"><br>
+                        </div>
+                        <div class="form-group">
+                            <label>Parameter optimization run</label>
+                            <input type="radio" name="run_type" value="parameter_optimization" checked>
+                            <br>
+                            <label>Robustness analysis run</label>
+                            <input type="radio" name="run_type" value="robustnessAnalysis">
+                            <br>
+                            <label>Data analysis run</label>
+                            <input type="radio" name="run_type" value="dataAnalysis">
+                        </div>
                     </div>
                 </li>
                 <li>
