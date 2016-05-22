@@ -10,8 +10,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.beans.factory.annotation.*;
 
 import de.clusteval.serverclient.BackendClient;
-import de.clusteval.run.RUN_STATUS;
-import de.wiwie.wiutils.utils.Pair;
 
 import java.rmi.ConnectException;
 
@@ -23,21 +21,30 @@ public class RunController {
     @Value("${port}")
     private int port;
 
+    @Value("${clientId}")
+    private int clientId;
+
     @RequestMapping("/runs")
     public String showRuns(Model model) {
         ArrayList<String> runNames = new ArrayList<String>();
         ArrayList<Run> runs = new ArrayList<Run>();
+        ArrayList<Run> runResumes = new ArrayList<Run>();
+
         try {
-            BackendClient backendClient = new BackendClient(new String[0]);
+            BackendClient backendClient = new BackendClient(new String[]{"-port", Integer.toString(port), "-clientId", Integer.toString(clientId)});
             runNames = new ArrayList<String>(backendClient.getRuns());
 
             for (String runName : runNames) {
                 runs.add(new Run(runName));
             }
 
-            Map<String, Pair<RUN_STATUS, Float>> runStatus = backendClient.getMyRunStatus();
+            ArrayList<String> runResumeNames = new ArrayList<String>(backendClient.getRunResumes());
 
-            model.addAttribute("status", runStatus);
+            for (String runResumeName : runResumeNames) {
+                runResumes.add(new Run(runResumeName));
+            }
+
+            model.addAttribute("resumes", runResumes);
 
         } catch (ConnectException e) {
             return "runs/notRunning";
@@ -52,11 +59,45 @@ public class RunController {
     @RequestMapping(value="/runs", method=RequestMethod.POST)
     public String performRun(@ModelAttribute Run run, Model model, RedirectAttributes redirectAttributes) {
         try {
-            BackendClient backendClient = new BackendClient(new String[0]);
-
-            redirectAttributes.addFlashAttribute("success", "The run '" + run.getName() + "' was successfully started.");
+            BackendClient backendClient = new BackendClient(new String[]{"-port", Integer.toString(port), "-clientId", Integer.toString(clientId)});
 
             backendClient.performRun(run.getName());
+
+            redirectAttributes.addFlashAttribute("success", "The run '" + run.getName() + "' was successfully started.");
+        } catch (ConnectException e) {
+            redirectAttributes.addFlashAttribute("failure", "Could not connect to the Clusteval server. Is it running?");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("failure", "An unknown error occurred.");
+        }
+
+        return "redirect:/runs";
+    }
+
+    @RequestMapping(value="/resume-run", method=RequestMethod.POST)
+    public String resumeRun(@ModelAttribute Run run, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            BackendClient backendClient = new BackendClient(new String[]{"-port", Integer.toString(port), "-clientId", Integer.toString(clientId)});
+
+            backendClient.resumeRun(run.getName());
+
+            redirectAttributes.addFlashAttribute("success", "The run '" + run.getName() + "' was successfully resumed.");
+        } catch (ConnectException e) {
+            redirectAttributes.addFlashAttribute("failure", "Could not connect to the Clusteval server. Is it running?");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("failure", "An unknown error occurred.");
+        }
+
+        return "redirect:/runs";
+    }
+
+    @RequestMapping(value="/terminate-run", method=RequestMethod.POST)
+    public String terminateRun(@ModelAttribute Run run, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            BackendClient backendClient = new BackendClient(new String[0]);
+
+            backendClient.terminateRun(run.getName());
+
+            redirectAttributes.addFlashAttribute("success", "The run '" + run.getName() + "' was successfully terminated.");
         } catch (ConnectException e) {
             redirectAttributes.addFlashAttribute("failure", "Could not connect to the Clusteval server. Is it running?");
         } catch (Exception e) {

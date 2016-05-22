@@ -2,20 +2,37 @@
 <html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
 <body>
     <div layout:fragment="content">
+        <h1>Resume runs</h1>
+        <div class="row" th:each="resume : ${resumes}" th:object="${resume}">
+            <div class="col-md-8">
+                <span th:text="*{name}" />
+            </div>
+            <div class="col-md-4 text-right">
+                <form th:action="@{/resume-run}" method="post" th:object="${resume}">
+                    <input type="hidden" name="name" th:value="*{name}">
+                    <input type="submit" name="send" value="Resume Run" class="btn btn-primary">
+                </form>
+                <form th:action="@{/terminate-run}" method="post" th:object="${resume}">
+                    <input type="hidden" name="name" th:value="*{name}">
+                    <input type="submit" name="send" value="Terminate Run" class="btn btn-primary">
+                </form>
+            </div>
+            <hr>
+        </div>
+
+        <h1>Available runs</h1>
         <div class="row" th:each="run : ${runs}" th:object="${run}">
             <div class="col-md-8">
                 <span th:text="*{name}" />
             </div>
             <div class="col-md-4 text-right">
-                <form action="#" th:action="@{/runs}" method="post" th:object="${run}">
+                <form th:action="@{/runs}" method="post" th:object="${run}">
                     <input type="hidden" name="name" th:value="*{name}">
                     <input type="submit" name="send" value="Perform Run" class="btn btn-primary">
                 </form>
             </div>
             <hr>
         </div>
-
-        <div th:text="${status}"></div>
     </div>
 </body>
 </html>
