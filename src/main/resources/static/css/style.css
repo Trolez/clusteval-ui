@@ -31,5 +31,5 @@ header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transfo
 
 /* Main */
 main form.run-creation h1 { margin-top: 0px; color: #444; text-shadow: 2px 0px 1px #ccc; }
-main form.run-creation label { width: 300px; }
 main form.run-creation span.info { font-size: 12px; color: #999; font-style: italic; }
+main form.run-creation span.error { font-size: 12px; color: #cf3a3a; font-style: italic; }

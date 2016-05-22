@@ -14,18 +14,29 @@
                             Set the basic run settings below.
                         </span>
                         <div class="form-group">
-                            <label>Name of run</label>
-                            <input type="text" name="name" th:field="${runCreation.name}" class="form-control"><br>
+                            <label>
+                                Name of run
+                                <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                            </label>
+                            <input type="text" name="name" th:field="*{name}" class="form-control"><br>
                         </div>
-                        <div class="form-group">
-                            <label>Parameter optimization run</label>
-                            <input type="radio" name="run_type" value="parameter_optimization" checked>
-                            <br>
-                            <label>Robustness analysis run</label>
-                            <input type="radio" name="run_type" value="robustnessAnalysis">
-                            <br>
-                            <label>Data analysis run</label>
-                            <input type="radio" name="run_type" value="dataAnalysis">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="run_type" value="parameter_optimization" checked>
+                                Parameter optimization run
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="run_type" value="robustnessAnalysis">
+                                Robustness analysis run
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="run_type" value="dataAnalysis">
+                                Data analysis run
+                            </label>
                         </div>
                     </div>
                 </li>
@@ -35,8 +46,8 @@
                     </span>
                     <div class="section-content">
                         <h1>Programs</h1>
-                        <select class="select2-multiple" multiple>
-                            <option th:each="program : ${programs}" th:value="${program}" th:text="${program}">
+                        <select class="select2-multiple" multiple="multiple" name="programs">
+                            <option th:each="program : *{programs}" th:value="${program}" th:text="${program}">
                         </select>
                     </div>
                 </li>
@@ -46,8 +57,8 @@
                     </span>
                     <div class="section-content">
                         <h1>Data</h1>
-                        <select class="select2-multiple" multiple>
-                            <option th:each="dataSet : ${dataSets}" th:value="${dataSet}" th:text="${dataSet}">
+                        <select class="select2-multiple" multiple="multiple" name="dataSets">
+                            <option th:each="dataSet : *{dataSets}" th:value="${dataSet}" th:text="${dataSet}">
                         </select>
                     </div>
                 </li>

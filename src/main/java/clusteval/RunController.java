@@ -1,6 +1,9 @@
 package clusteval;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +39,7 @@ public class RunController {
         ArrayList<Run> runResumes = new ArrayList<Run>();
 
         try {
-            BackendClient backendClient = new BackendClient(new String[]{"-port", Integer.toString(port), "-clientId", Integer.toString(clientId)});
+            BackendClient backendClient = getBackendClient();
             runNames = new ArrayList<String>(backendClient.getRuns());
 
             for (String runName : runNames) {
@@ -64,7 +67,7 @@ public class RunController {
     @RequestMapping(value="/runs", method=RequestMethod.POST)
     public String performRun(@ModelAttribute Run run, Model model, RedirectAttributes redirectAttributes) {
         try {
-            BackendClient backendClient = new BackendClient(new String[]{"-port", Integer.toString(port), "-clientId", Integer.toString(clientId)});
+            BackendClient backendClient = getBackendClient();
 
             backendClient.performRun(run.getName());
 
@@ -81,7 +84,7 @@ public class RunController {
     @RequestMapping(value="/resume-run", method=RequestMethod.POST)
     public String resumeRun(@ModelAttribute Run run, Model model, RedirectAttributes redirectAttributes) {
         try {
-            BackendClient backendClient = new BackendClient(new String[]{"-port", Integer.toString(port), "-clientId", Integer.toString(clientId)});
+            BackendClient backendClient = getBackendClient();
 
             backendClient.resumeRun(run.getName());
 
@@ -98,7 +101,7 @@ public class RunController {
     @RequestMapping(value="/terminate-run", method=RequestMethod.POST)
     public String terminateRun(@ModelAttribute Run run, Model model, RedirectAttributes redirectAttributes) {
         try {
-            BackendClient backendClient = new BackendClient(new String[0]);
+            BackendClient backendClient = getBackendClient();
 
             backendClient.terminateRun(run.getName());
 
@@ -117,13 +120,13 @@ public class RunController {
         ArrayList<String> dataSets = new ArrayList<String>();
         ArrayList<String> programs = new ArrayList<String>();
         try {
-            BackendClient backendClient = new BackendClient(new String[0]);
+            BackendClient backendClient = getBackendClient();
 
             dataSets = new ArrayList<String>(backendClient.getDataSets());
-            model.addAttribute("dataSets", dataSets);
+            runCreation.setDataSets(dataSets);
 
             programs = new ArrayList<String>(backendClient.getPrograms());
-            model.addAttribute("programs", programs);
+            runCreation.setPrograms(programs);
         } catch (ConnectException e) {
             return "runs/notRunning";
         } catch (Exception e) {
@@ -133,7 +136,26 @@ public class RunController {
     }
 
     @RequestMapping(value="/runs/create", method=RequestMethod.POST)
-    public String createRun(@ModelAttribute RunCreation runCreation, Model model, RedirectAttributes redirectAttributes) {
+    public String createRun(@Valid RunCreation runCreation, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        //Return to form if there were validation errors
+        if (bindingResult.hasErrors()) {
+            try {
+                ArrayList<String> dataSets = new ArrayList<String>();
+                ArrayList<String> programs = new ArrayList<String>();
+                BackendClient backendClient = getBackendClient();
+
+                dataSets = new ArrayList<String>(backendClient.getDataSets());
+                runCreation.setDataSets(dataSets);
+
+                programs = new ArrayList<String>(backendClient.getPrograms());
+                runCreation.setPrograms(programs);
+            } catch (ConnectException e) {
+                return "runs/notRunning";
+            } catch (Exception e) {
+            }
+            return "runs/create";
+        }
+
         //Create test file
         try {
             File file = new File(path + "/runs/" + runCreation.getName() + ".run");
@@ -154,5 +176,9 @@ public class RunController {
         }
 
         return "redirect:/runs";
+    }
+
+    public BackendClient getBackendClient() throws ConnectException, Exception {
+        return new BackendClient(new String[]{"-port", Integer.toString(port), "-clientId", Integer.toString(clientId)});
     }
 }
