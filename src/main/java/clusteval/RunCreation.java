@@ -6,11 +6,12 @@ import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class RunCreation {
     @NotNull(message = "Please enter a name for the run")
     private String name;
 
-    @NotNull
     private String mode;
 
     @NotNull
@@ -75,6 +76,14 @@ public class RunCreation {
         String run = "";
 
         run += "mode: parameter_optimization\n";
+
+        run += "programConfig = ";
+        run += StringUtils.join(programs, ',');
+        run += "\n";
+
+        run += "dataConfig = ";
+        run += StringUtils.join(dataSets, ',');
+        run += "\n";
 
         return run;
     }

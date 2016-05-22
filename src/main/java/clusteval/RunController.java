@@ -18,6 +18,7 @@ import java.rmi.ConnectException;
 
 import java.util.ArrayList;
 import java.util.Map;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.*;
 
@@ -117,15 +118,12 @@ public class RunController {
 
     @RequestMapping(value="/runs/create")
     public String createRun(RunCreation runCreation, Model model) {
-        ArrayList<String> dataSets = new ArrayList<String>();
-        ArrayList<String> programs = new ArrayList<String>();
+        ArrayList<String> dataSets = getFileNames("data/configs");
+        ArrayList<String> programs = getFileNames("programs/configs");
         try {
             BackendClient backendClient = getBackendClient();
 
-            dataSets = new ArrayList<String>(backendClient.getDataSets());
             runCreation.setDataSets(dataSets);
-
-            programs = new ArrayList<String>(backendClient.getPrograms());
             runCreation.setPrograms(programs);
         } catch (ConnectException e) {
             return "runs/notRunning";
@@ -140,14 +138,12 @@ public class RunController {
         //Return to form if there were validation errors
         if (bindingResult.hasErrors()) {
             try {
-                ArrayList<String> dataSets = new ArrayList<String>();
-                ArrayList<String> programs = new ArrayList<String>();
+                ArrayList<String> dataSets = getFileNames("data/configs");
+                ArrayList<String> programs = getFileNames("programs/configs");
                 BackendClient backendClient = getBackendClient();
 
-                dataSets = new ArrayList<String>(backendClient.getDataSets());
                 runCreation.setDataSets(dataSets);
 
-                programs = new ArrayList<String>(backendClient.getPrograms());
                 runCreation.setPrograms(programs);
             } catch (ConnectException e) {
                 return "runs/notRunning";
@@ -166,7 +162,7 @@ public class RunController {
 
             FileWriter writer = new FileWriter(file);
             BufferedWriter bw = new BufferedWriter(writer);
-            writer.write("This is a just a test!");
+            writer.write(runCreation.toString());
             writer.close();
 
             redirectAttributes.addFlashAttribute("success", "The run has been succcesfully created.");
@@ -178,7 +174,23 @@ public class RunController {
         return "redirect:/runs";
     }
 
-    public BackendClient getBackendClient() throws ConnectException, Exception {
+    private BackendClient getBackendClient() throws ConnectException, Exception {
         return new BackendClient(new String[]{"-port", Integer.toString(port), "-clientId", Integer.toString(clientId)});
+    }
+
+    private ArrayList<String> getFileNames(String location) {
+        ArrayList<String> fileNames = new ArrayList<String>();
+
+        File folder = new File(path + "/" + location);
+
+        File[] files = folder.listFiles();
+
+        for (File file : files) {
+            if (file.isFile()) {
+                fileNames.add(FilenameUtils.removeExtension(file.getName()));
+            }
+        }
+
+        return fileNames;
     }
 }

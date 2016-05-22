@@ -28,6 +28,8 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     compile("org.springframework.boot:spring-boot-devtools")
     compile("net.sourceforge.nekohtml:nekohtml:1.9.21")
+    compile("org.apache.commons:commons-io:1.3.2")
+    compile("org.apache.commons:commons-lang3:3.0")
     testCompile("junit:junit")
     compile fileTree(dir: 'lib', include: ['*.jar'])
 }
