@@ -21,6 +21,10 @@
         </div>
 
         <h1>Available runs</h1>
+        <div class="pull-right">
+            <a href="/runs/create" class="btn btn-success">Create new run</a>
+        </div>
+        <div class="clearfix"></div>
         <div class="row" th:each="run : ${runs}" th:object="${run}">
             <div class="col-md-8">
                 <span th:text="*{name}" />

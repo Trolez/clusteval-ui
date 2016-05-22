@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<body>
+    <div layout:fragment="content">
+        <form class="run-creation" th:action="@{/runs/create}" method="post" th:object="${runCreation}">
+            <ul class="myAccordion">
+                <li class="open">
+                    <span class="section-header">
+                        <span>Run type</span>
+                    </span>
+                    <div class="section-content">
+                        <h1>Run type</h1>
+                        <span class="info">
+                            Set the basic run settings below.
+                        </span>
+                        <div class="form-group">
+                            <label>Name of run</label>
+                            <input type="text" name="name" th:field="${runCreation.name}" class="form-control"><br>
+                        </div>
+                        <div class="form-group">
+                            <label>Parameter optimization run</label>
+                            <input type="radio" name="run_type" value="parameter_optimization" checked>
+                            <br>
+                            <label>Robustness analysis run</label>
+                            <input type="radio" name="run_type" value="robustnessAnalysis">
+                            <br>
+                            <label>Data analysis run</label>
+                            <input type="radio" name="run_type" value="dataAnalysis">
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <span class="section-header">
+                        <span>Programs</span>
+                    </span>
+                    <div class="section-content">
+                        <h1>Programs</h1>
+                        <select class="select2-multiple" multiple>
+                            <option th:each="program : ${programs}" th:value="${program}" th:text="${program}">
+                        </select>
+                    </div>
+                </li>
+                <li>
+                    <span class="section-header">
+                        <span>Data</span>
+                    </span>
+                    <div class="section-content">
+                        <h1>Data</h1>
+                        <select class="select2-multiple" multiple>
+                            <option th:each="dataSet : ${dataSets}" th:value="${dataSet}" th:text="${dataSet}">
+                        </select>
+                    </div>
+                </li>
+                <li>
+                    <span class="section-header">
+                        <span>Other settings</span>
+                    </span>
+                    <div class="section-content">
+                        <input type="submit" value="Create run">
+                    </div>
+                </li>
+            </ul>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,5 +1,4 @@
 * { margin: 0px; padding: 0px; }
-* { transition: all 0.4s; }
 
 body { background-color: #c0c0c0; height: 100%; overflow-x: hidden; }
 
@@ -20,3 +19,17 @@ header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transfo
 
 /* Content Wrapper */
 #content-wrapper { margin-left: 65px; min-height: 1200px; background: #fafbff; padding-top: 15px; }
+
+/* Accordion */
+.myAccordion { list-style: none; overflow: hidden; position: relative; width: 100%; display: flex; flex-wrap: wrap; }
+.myAccordion li { display: flex; width: 75px; float: left; overflow: hidden; }
+.myAccordion li.animated { -webkit-transition: all 0.6s ease-in-out; -moz-transition: all 0.6s ease-in-out; -o-transition: all 0.6s ease-in-out; -ms-transition: all 0.6s ease-in-out; transition : all 0.6s ease-in-out; }
+.myAccordion li .section-header { display: block; height: 100%; background: #eee; position: absolute; top: 0px; bottom: 0px; width: 75px; cursor: pointer; border: 1px dashed #ccc; }
+.myAccordion li .section-header span { font-weight: bold; color: #777; display: block; position: relative; top: 50%; transform: translateY(-50%) rotate(-90deg); text-align: center; white-space: nowrap; }
+.myAccordion li .section-content { width: 100%; background: #f3f3f3; }
+.myAccordion li .section-content { display: block; padding: 10px; margin-left: 75px; overflow: hidden; }
+
+/* Main */
+main form.run-creation h1 { margin-top: 0px; color: #444; text-shadow: 2px 0px 1px #ccc; }
+main form.run-creation label { width: 300px; }
+main form.run-creation span.info { font-size: 12px; color: #999; font-style: italic; }
