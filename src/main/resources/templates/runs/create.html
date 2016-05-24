@@ -22,19 +22,19 @@
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="run_type" value="parameter_optimization" checked>
+                                <input type="radio" name="mode" th:field="*{mode}" value="parameter_optimization">
                                 Parameter optimization run
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="run_type" value="robustnessAnalysis">
+                                <input type="radio" name="mode" th:field="*{mode}" value="robustnessAnalysis">
                                 Robustness analysis run
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="run_type" value="dataAnalysis">
+                                <input type="radio" name="mode" th:field="*{mode}" value="dataAnalysis">
                                 Data analysis run
                             </label>
                         </div>
@@ -47,7 +47,7 @@
                     <div class="section-content">
                         <h1>Programs</h1>
                         <select class="select2-multiple" multiple="multiple" name="programs">
-                            <option th:each="program : *{programs}" th:value="${program}" th:text="${program}">
+                            <option th:each="program : *{allPrograms}" th:value="${program}" th:text="${program}" th:selected="${#lists.contains(runCreation.programs, program)}">
                         </select>
                     </div>
                 </li>
@@ -59,6 +59,16 @@
                         <h1>Data</h1>
                         <select class="select2-multiple" multiple="multiple" name="dataSets">
                             <option th:each="dataSet : *{dataSets}" th:value="${dataSet}" th:text="${dataSet}">
+                        </select>
+
+                        <h1>Quality measures</h1>
+                        <select class="select2-multiple" multiple="multiple" name="qualityMeasures">
+                            <option th:each="qualityMeasure : *{qualityMeasures}" th:value="${qualityMeasure}" th:text="${qualityMeasure}">
+                        </select>
+
+                        <h1>Optimization criterion</h1>
+                        <select class="select2-multiple" name="optimizationCriterion">
+                            <option th:each="qualityMeasure : *{qualityMeasures}" th:value="${qualityMeasure}" th:text="${qualityMeasure}">
                         </select>
                     </div>
                 </li>

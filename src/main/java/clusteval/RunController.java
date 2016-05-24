@@ -118,13 +118,16 @@ public class RunController {
 
     @RequestMapping(value="/runs/create")
     public String createRun(RunCreation runCreation, Model model) {
-        ArrayList<String> dataSets = getFileNames("data/configs");
-        ArrayList<String> programs = getFileNames("programs/configs");
+        ArrayList<String> dataSets = getDataConfigurations();
+        ArrayList<String> programs = getProgramConfigurations();
+        ArrayList<String> qualityMeasures = getQualityMeasures();
         try {
             BackendClient backendClient = getBackendClient();
 
             runCreation.setDataSets(dataSets);
-            runCreation.setPrograms(programs);
+            runCreation.setAllPrograms(programs);
+            runCreation.setPrograms(new ArrayList<String>());
+            runCreation.setQualityMeasures(qualityMeasures);
         } catch (ConnectException e) {
             return "runs/notRunning";
         } catch (Exception e) {
@@ -137,14 +140,15 @@ public class RunController {
     public String createRun(@Valid RunCreation runCreation, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         //Return to form if there were validation errors
         if (bindingResult.hasErrors()) {
+            ArrayList<String> dataSets = getDataConfigurations();
+            ArrayList<String> programs = getProgramConfigurations();
+            ArrayList<String> qualityMeasures = getQualityMeasures();
             try {
-                ArrayList<String> dataSets = getFileNames("data/configs");
-                ArrayList<String> programs = getFileNames("programs/configs");
                 BackendClient backendClient = getBackendClient();
 
                 runCreation.setDataSets(dataSets);
-
-                runCreation.setPrograms(programs);
+                runCreation.setAllPrograms(programs);
+                runCreation.setQualityMeasures(qualityMeasures);
             } catch (ConnectException e) {
                 return "runs/notRunning";
             } catch (Exception e) {
@@ -178,7 +182,31 @@ public class RunController {
         return new BackendClient(new String[]{"-port", Integer.toString(port), "-clientId", Integer.toString(clientId)});
     }
 
-    private ArrayList<String> getFileNames(String location) {
+    private ArrayList<String> getProgramConfigurations() {
+        return getFileNames("programs/configs", "config");
+    }
+
+    private ArrayList<String> getDataConfigurations() {
+        return getFileNames("data/configs", "dataconfig");
+    }
+
+    private ArrayList<String> getQualityMeasures() {
+        return getFileNames("supp/clustering/qualityMeasures", "jar");
+    }
+
+    private ArrayList<String> getOptimizationMethods() {
+        return getFileNames("supp/clustering/paramOptimization", "jar");
+    }
+
+    private ArrayList<String> getRandomizers() {
+        return getFileNames("supp/randomizers/data", "jar");
+    }
+
+    private ArrayList<String> getDataStatistics() {
+        return getFileNames("supp/statistics/data", "jar");
+    }
+
+    private ArrayList<String> getFileNames(String location, String extension) {
         ArrayList<String> fileNames = new ArrayList<String>();
 
         File folder = new File(path + "/" + location);
@@ -186,9 +214,11 @@ public class RunController {
         File[] files = folder.listFiles();
 
         for (File file : files) {
-            if (file.isFile()) {
-                fileNames.add(FilenameUtils.removeExtension(file.getName()));
+            if (!file.isFile() || !FilenameUtils.getExtension(file.getName()).equals(extension)) {
+                continue;
             }
+
+            fileNames.add(FilenameUtils.removeExtension(file.getName()));
         }
 
         return fileNames;

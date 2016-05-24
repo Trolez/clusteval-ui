@@ -12,16 +12,22 @@ public class RunCreation {
     @NotNull(message = "Please enter a name for the run")
     private String name;
 
+    @NotNull
     private String mode;
+
+    private String optimizationCriterion;
+
+    private int optimizationIterations;
 
     @NotNull
     private ArrayList<String> programs;
+    public ArrayList<String> allPrograms;
 
     private ArrayList<String> dataSets;
+    private ArrayList<String> allDataSets;
 
-    private ArrayList<String> selectedPrograms;
-
-    private ArrayList<String> selectedDataSets;
+    private ArrayList<String> qualityMeasures;
+    private ArrayList<String> allQualityMeasures;
 
     public String getName() {
         return name;
@@ -39,12 +45,28 @@ public class RunCreation {
         this.mode = mode;
     }
 
+    public String getOptimizationCriterion() {
+        return optimizationCriterion;
+    }
+
+    public void setOptimizationCriterion(String optimizationCriterion) {
+        this.optimizationCriterion = optimizationCriterion;
+    }
+
     public ArrayList<String> getPrograms() {
         return programs;
     }
 
     public void setPrograms(Collection programs) {
         this.programs = new ArrayList<String>(programs);
+    }
+
+    public ArrayList<String> getAllPrograms() {
+        return allPrograms;
+    }
+
+    public void setAllPrograms(Collection programs) {
+        this.allPrograms = new ArrayList<String>(programs);
     }
 
     public ArrayList<String> getDataSets() {
@@ -55,27 +77,19 @@ public class RunCreation {
         this.dataSets = new ArrayList<String>(dataSets);
     }
 
-    public ArrayList<String> getSelectedPrograms() {
-        return selectedPrograms;
+    public ArrayList<String> getQualityMeasures() {
+        return qualityMeasures;
     }
 
-    public void setSelectedPrograms(Collection selectedPrograms) {
-        this.selectedPrograms = new ArrayList<String>(selectedPrograms);
-    }
-
-    public ArrayList<String> getSelectedDataSets() {
-        return selectedDataSets;
-    }
-
-    public void setSelectedDataSets(Collection selectedDataSets) {
-        this.selectedDataSets = new ArrayList<String>(selectedDataSets);
+    public void setQualityMeasures(Collection qualityMeasures) {
+        this.qualityMeasures = new ArrayList<String>(qualityMeasures);
     }
 
     public String toString() {
         //TODO: replace placeholders with actual values
         String run = "";
 
-        run += "mode: parameter_optimization\n";
+        run += "mode = " + mode + "\n";
 
         run += "programConfig = ";
         run += StringUtils.join(programs, ',');
@@ -84,6 +98,17 @@ public class RunCreation {
         run += "dataConfig = ";
         run += StringUtils.join(dataSets, ',');
         run += "\n";
+
+        run += "qualityMeasures = ";
+        run += StringUtils.join(qualityMeasures, ',');
+        run += "\n";
+
+        run += "optimizationCriterion = " + optimizationCriterion + "\n";
+
+        run += "optimizationIterations = " + 1000 + "\n";
+
+        run += "\n[DBSCAN]\n";
+        run += "optimizationParameters = eps,MinPts";
 
         return run;
     }
