@@ -28,14 +28,38 @@
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="mode" th:field="*{mode}" value="robustnessAnalysis">
+                                <input type="radio" name="mode" th:field="*{mode}" value="dataAnalysis">
+                                Data analysis run
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="mode" th:field="*{mode}" value="robustnessAnalysis" disabled="disabled">
                                 Robustness analysis run
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="mode" th:field="*{mode}" value="dataAnalysis">
-                                Data analysis run
+                                <input type="radio" name="mode" th:field="*{mode}" value="" disabled="disabled">
+                                Clustering run
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="mode" th:field="*{mode}" value="" disabled="disabled">
+                                Internal parameter optimization run
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="mode" th:field="*{mode}" value="" disabled="disabled">
+                                Run analysis run
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="mode" th:field="*{mode}" value="" disabled="disabled">
+                                Run-data analysis run
                             </label>
                         </div>
                     </div>
@@ -57,19 +81,44 @@
                     </span>
                     <div class="section-content">
                         <h1>Data</h1>
-                        <select class="select2-multiple" multiple="multiple" name="dataSets">
-                            <option th:each="dataSet : *{dataSets}" th:value="${dataSet}" th:text="${dataSet}">
-                        </select>
+                        <div class="form-group">
+                            <label>Data configs</label>
+                            <select class="select2-multiple" multiple="multiple" name="dataSets">
+                                <option th:each="dataSet : *{dataSets}" th:value="${dataSet}" th:text="${dataSet}">
+                            </select>
+                        </div>
 
-                        <h1>Quality measures</h1>
-                        <select class="select2-multiple" multiple="multiple" name="qualityMeasures">
-                            <option th:each="qualityMeasure : *{qualityMeasures}" th:value="${qualityMeasure}" th:text="${qualityMeasure}">
-                        </select>
+                        <div data-mode="parameter_optimization">
+                            <div class="form-group">
+                                <label>Quality measures</label>
+                                <select class="select2-multiple" multiple="multiple" name="qualityMeasures">
+                                    <option th:each="qualityMeasure : *{qualityMeasures}" th:value="${qualityMeasure}" th:text="${qualityMeasure}">
+                                </select>
+                            </div>
 
-                        <h1>Optimization criterion</h1>
-                        <select class="select2-multiple" name="optimizationCriterion">
-                            <option th:each="qualityMeasure : *{qualityMeasures}" th:value="${qualityMeasure}" th:text="${qualityMeasure}">
-                        </select>
+                            <div class="form-group">
+                                <label>Optimization criterion</label>
+                                <select class="select2-multiple" name="optimizationCriterion">
+                                    <option th:each="qualityMeasure : *{qualityMeasures}" th:value="${qualityMeasure}" th:text="${qualityMeasure}">
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Optimization method</label>
+                                <select class="select2-multiple" name="optimizationMethod">
+                                    <option th:each="optimizationMethod : ${optimizationMethods}" th:value="${optimizationMethod}" th:text="${optimizationMethod}" th:selected="${optimizationMethod} eq ${runCreation.optimizationMethod}">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div data-mode="dataAnalysis">
+                            <div class="form-group">
+                                <label>Data statistics</label>
+                                <select class="select2-multiple" multiple="multiple" name="dataStatistics">
+                                    <option th:each="dataStatistic : *{dataStatistics}" th:value="${dataStatistic}" th:text="${dataStatistic}">
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </li>
                 <li>

@@ -2,6 +2,7 @@ $(document).ready(function() {
     /****************
     *** Accordion ***
     ****************/
+
     var subtract = ($('.myAccordion > li').length - 1) * 75;
     $('.myAccordion > li:first-child').css('width', 'calc(100% - ' + subtract + 'px)');
 
@@ -17,6 +18,7 @@ $(document).ready(function() {
             $(this).css('width', 'calc(100% - ' + subtract + 'px)');
             $(this).find('.section-content').css('width', 'calc(100% - ' + subtract + 'px)');
     });
+
     /****************
     ****************/
 
@@ -24,4 +26,22 @@ $(document).ready(function() {
     $('.select2-multiple').select2({
         width: '100%'
     });
+
+    /************************
+    *** Run creation form ***
+    ************************/
+
+    //Make all mode-specific sections initially invisible
+    $('form.run-creation [data-mode]').hide();
+
+    $('form.run-creation input[type=radio][name=mode]').change(function(){
+        var mode = $(this).val();
+
+        //Only show mode-specific sections for the selected mode
+        $('form.run-creation [data-mode]').hide();
+        $('form.run-creation [data-mode=' + mode + ']').show();
+    });
+
+    /****************
+    ****************/
 });

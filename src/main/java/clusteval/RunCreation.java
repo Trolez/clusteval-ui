@@ -17,17 +17,18 @@ public class RunCreation {
 
     private String optimizationCriterion;
 
+    private String optimizationMethod;
+
     private int optimizationIterations;
 
-    @NotNull
     private ArrayList<String> programs;
     public ArrayList<String> allPrograms;
 
     private ArrayList<String> dataSets;
-    private ArrayList<String> allDataSets;
 
     private ArrayList<String> qualityMeasures;
-    private ArrayList<String> allQualityMeasures;
+
+    private ArrayList<String> dataStatistics;
 
     public String getName() {
         return name;
@@ -51,6 +52,14 @@ public class RunCreation {
 
     public void setOptimizationCriterion(String optimizationCriterion) {
         this.optimizationCriterion = optimizationCriterion;
+    }
+
+    public String getOptimizationMethod() {
+        return optimizationMethod;
+    }
+
+    public void setOptimizationMethod(String optimizationMethod) {
+        this.optimizationMethod = optimizationMethod;
     }
 
     public ArrayList<String> getPrograms() {
@@ -85,30 +94,44 @@ public class RunCreation {
         this.qualityMeasures = new ArrayList<String>(qualityMeasures);
     }
 
+    public ArrayList<String> getDataStatistics() {
+        return dataStatistics;
+    }
+
+    public void setDataStatistics(Collection dataStatistics) {
+        this.dataStatistics = new ArrayList<String>(dataStatistics);
+    }
+
     public String toString() {
         //TODO: replace placeholders with actual values
-        String run = "";
-
-        run += "mode = " + mode + "\n";
-
-        run += "programConfig = ";
-        run += StringUtils.join(programs, ',');
-        run += "\n";
+        String run = "mode = " + mode + "\n";
 
         run += "dataConfig = ";
         run += StringUtils.join(dataSets, ',');
         run += "\n";
 
-        run += "qualityMeasures = ";
-        run += StringUtils.join(qualityMeasures, ',');
-        run += "\n";
+        if (mode.equals("parameter_optimization")) {
+            run += "programConfig = ";
+            run += StringUtils.join(programs, ',');
+            run += "\n";
 
-        run += "optimizationCriterion = " + optimizationCriterion + "\n";
+            run += "qualityMeasures = ";
+            run += StringUtils.join(qualityMeasures, ',');
+            run += "\n";
 
-        run += "optimizationIterations = " + 1000 + "\n";
+            run += "optimizationCriterion = " + optimizationCriterion + "\n";
 
-        run += "\n[DBSCAN]\n";
-        run += "optimizationParameters = eps,MinPts";
+            run += "optimizationIterations = " + 1000 + "\n";
+
+            run += "optimizationMethod = " + optimizationMethod + "\n";
+
+            run += "\n[DBSCAN]\n";
+            run += "optimizationParameters = eps,MinPts";
+        }
+
+        if (mode.equals("dataAnalysis")) {
+            run += "dataStatistics = " + StringUtils.join(dataStatistics, ',') + "\n";
+        }
 
         return run;
     }

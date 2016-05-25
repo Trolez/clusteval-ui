@@ -121,6 +121,11 @@ public class RunController {
         ArrayList<String> dataSets = getDataConfigurations();
         ArrayList<String> programs = getProgramConfigurations();
         ArrayList<String> qualityMeasures = getQualityMeasures();
+        ArrayList<String> optimizationMethods = getOptimizationMethods();
+        ArrayList<String> dataStatistics = getDataStatistics();
+
+        model.addAttribute("optimizationMethods", optimizationMethods);
+
         try {
             BackendClient backendClient = getBackendClient();
 
@@ -128,6 +133,7 @@ public class RunController {
             runCreation.setAllPrograms(programs);
             runCreation.setPrograms(new ArrayList<String>());
             runCreation.setQualityMeasures(qualityMeasures);
+            runCreation.setDataStatistics(dataStatistics);
         } catch (ConnectException e) {
             return "runs/notRunning";
         } catch (Exception e) {
@@ -137,12 +143,20 @@ public class RunController {
     }
 
     @RequestMapping(value="/runs/create", method=RequestMethod.POST)
-    public String createRun(@Valid RunCreation runCreation, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String createRun(@Valid RunCreation runCreation, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         //Return to form if there were validation errors
         if (bindingResult.hasErrors()) {
             ArrayList<String> dataSets = getDataConfigurations();
             ArrayList<String> programs = getProgramConfigurations();
             ArrayList<String> qualityMeasures = getQualityMeasures();
+            ArrayList<String> optimizationMethods = getOptimizationMethods();
+
+            model.addAttribute("optimizationMethods", optimizationMethods);
+
+            if (runCreation.getPrograms() == null) {
+                runCreation.setPrograms(new ArrayList<String>());
+            }
+
             try {
                 BackendClient backendClient = getBackendClient();
 
