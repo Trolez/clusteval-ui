@@ -141,9 +141,6 @@ public class RunCreation {
                     }
                 }
             } catch (Exception e) {}
-
-            run += "\n[DBSCAN]\n";
-            run += "optimizationParameters = eps,MinPts";
         }
 
         if (mode.equals("dataAnalysis")) {
