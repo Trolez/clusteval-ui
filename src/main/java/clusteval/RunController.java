@@ -180,7 +180,7 @@ public class RunController {
 
             FileWriter writer = new FileWriter(file);
             BufferedWriter bw = new BufferedWriter(writer);
-            writer.write(runCreation.toString());
+            writer.write(runCreation.toString(path));
             writer.close();
 
             redirectAttributes.addFlashAttribute("success", "The run has been succcesfully created.");

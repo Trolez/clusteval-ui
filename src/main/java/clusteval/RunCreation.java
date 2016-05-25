@@ -5,6 +5,7 @@ import javax.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.io.*;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -102,7 +103,7 @@ public class RunCreation {
         this.dataStatistics = new ArrayList<String>(dataStatistics);
     }
 
-    public String toString() {
+    public String toString(String path) {
         //TODO: replace placeholders with actual values
         String run = "mode = " + mode + "\n";
 
@@ -123,7 +124,23 @@ public class RunCreation {
 
             run += "optimizationIterations = " + 1000 + "\n";
 
-            run += "optimizationMethod = " + optimizationMethod + "\n";
+            run += "optimizationMethod = " + optimizationMethod + "\n\n";
+
+            try {
+                BufferedReader br;
+                String currentLine;
+                for (String program : programs) {
+                    run += "[" + program + "]\n";
+
+                    br = new BufferedReader(new FileReader(path + "/programs/configs/" + program + ".config"));
+
+                    while ((currentLine = br.readLine()) != null) {
+                        if (currentLine.startsWith("optimizationParameters")) {
+                            run += "optimizationParameters = " + currentLine.substring(currentLine.indexOf("=") + 1).trim() + "\n\n";
+                        }
+                    }
+                }
+            } catch (Exception e) {}
 
             run += "\n[DBSCAN]\n";
             run += "optimizationParameters = eps,MinPts";
