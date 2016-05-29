@@ -117,6 +117,10 @@ public class RunController {
         return "redirect:/runs";
     }
 
+    public void populateModel(Model model) {
+
+    }
+
     @RequestMapping(value="/runs/create")
     public String createRun(RunCreation runCreation, Model model) {
         try {
@@ -127,6 +131,8 @@ public class RunController {
             Collection<String> qualityMeasures = backendClient.getClusteringQualityMeasures();
             Collection<String> optimizationMethods = backendClient.getParameterOptimizationMethods();
             Collection<String> dataStatistics = backendClient.getDataStatistics();
+            Collection<String> runStatistics = backendClient.getRunStatistics();
+            Collection<String> uniqueRunIdentifiers = backendClient.getRunResults();
 
             model.addAttribute("optimizationMethods", optimizationMethods);
 
@@ -135,6 +141,8 @@ public class RunController {
             runCreation.setPrograms(new ArrayList<String>());
             runCreation.setQualityMeasures(qualityMeasures);
             runCreation.setDataStatistics(dataStatistics);
+            runCreation.setRunStatistics(runStatistics);
+            runCreation.setUniqueRunIdentifiers(uniqueRunIdentifiers);
         } catch (ConnectException e) {
             return "runs/notRunning";
         } catch (Exception e) {
@@ -155,6 +163,8 @@ public class RunController {
                 Collection<String> qualityMeasures = backendClient.getClusteringQualityMeasures();
                 Collection<String> optimizationMethods = backendClient.getParameterOptimizationMethods();
                 Collection<String> dataStatistics = backendClient.getDataStatistics();
+                Collection<String> runStatistics = backendClient.getRunStatistics();
+                Collection<String> uniqueRunIdentifiers = backendClient.getRunResults();
 
                 model.addAttribute("optimizationMethods", optimizationMethods);
 
@@ -166,6 +176,8 @@ public class RunController {
                 runCreation.setAllPrograms(programs);
                 runCreation.setQualityMeasures(qualityMeasures);
                 runCreation.setDataStatistics(dataStatistics);
+                runCreation.setRunStatistics(runStatistics);
+                runCreation.setUniqueRunIdentifiers(uniqueRunIdentifiers);
             } catch (ConnectException e) {
                 return "runs/notRunning";
             } catch (Exception e) {

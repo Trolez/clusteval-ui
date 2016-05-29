@@ -22,6 +22,12 @@
                         </div>
                         <div class="radio">
                             <label>
+                                <input type="radio" name="mode" th:field="*{mode}" value="clustering" disabled="disabled">
+                                Clustering run
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
                                 <input type="radio" name="mode" th:field="*{mode}" value="parameter_optimization">
                                 Parameter optimization run
                             </label>
@@ -34,25 +40,7 @@
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="mode" th:field="*{mode}" value="robustnessAnalysis" disabled="disabled">
-                                Robustness analysis run
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="mode" th:field="*{mode}" value="" disabled="disabled">
-                                Clustering run
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="mode" th:field="*{mode}" value="" disabled="disabled">
-                                Internal parameter optimization run
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="mode" th:field="*{mode}" value="" disabled="disabled">
+                                <input type="radio" name="mode" th:field="*{mode}" value="runAnalysis">
                                 Run analysis run
                             </label>
                         </div>
@@ -60,6 +48,18 @@
                             <label>
                                 <input type="radio" name="mode" th:field="*{mode}" value="" disabled="disabled">
                                 Run-data analysis run
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="mode" th:field="*{mode}" value="robustnessAnalysis" disabled="disabled">
+                                Robustness analysis run
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="mode" th:field="*{mode}" value="internal_parameter_optimization" disabled="disabled">
+                                Internal parameter optimization run
                             </label>
                         </div>
                     </div>
@@ -116,6 +116,22 @@
                                 <label>Data statistics</label>
                                 <select class="select2-multiple" multiple="multiple" name="dataStatistics">
                                     <option th:each="dataStatistic : *{dataStatistics}" th:value="${dataStatistic}" th:text="${dataStatistic}">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div data-mode="runAnalysis">
+                            <div class="form-group">
+                                <label>Run statistics</label>
+                                <select class="select2-multiple" multiple="multiple" name="runStatistics">
+                                    <option th:each="runStatistic : *{runStatistics}" th:value="${runStatistic}" th:text="${runStatistic}">
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Unique run identifiers</label>
+                                <select class="select2-multiple" multiple="multiple" name="uniqueRunIdentifiers">
+                                    <option th:each="uniqueRunIdentifier : *{uniqueRunIdentifiers}" th:value="${uniqueRunIdentifier}" th:text="${uniqueRunIdentifier}">
                                 </select>
                             </div>
                         </div>

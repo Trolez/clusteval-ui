@@ -31,6 +31,10 @@ public class RunCreation {
 
     private ArrayList<String> dataStatistics;
 
+    private ArrayList<String> runStatistics;
+
+    private ArrayList<String> uniqueRunIdentifiers;
+
     public String getName() {
         return name;
     }
@@ -103,13 +107,31 @@ public class RunCreation {
         this.dataStatistics = new ArrayList<String>(dataStatistics);
     }
 
+    public ArrayList<String> getRunStatistics() {
+        return runStatistics;
+    }
+
+    public void setRunStatistics(Collection runStatistics) {
+        this.runStatistics = new ArrayList<String>(runStatistics);
+    }
+
+    public ArrayList<String> getUniqueRunIdentifiers() {
+        return uniqueRunIdentifiers;
+    }
+
+    public void setUniqueRunIdentifiers(Collection uniqueRunIdentifiers) {
+        this.uniqueRunIdentifiers = new ArrayList<String>(uniqueRunIdentifiers);
+    }
+
     public String toString(String path) {
         //TODO: replace placeholders with actual values
         String run = "mode = " + mode + "\n";
 
-        run += "dataConfig = ";
-        run += StringUtils.join(dataSets, ',');
-        run += "\n";
+        if (mode.equals("parameter_optimization") || mode.equals("dataAnalysis")) {
+            run += "dataConfig = ";
+            run += StringUtils.join(dataSets, ',');
+            run += "\n";
+        }
 
         if (mode.equals("parameter_optimization")) {
             run += "programConfig = ";
@@ -145,6 +167,11 @@ public class RunCreation {
 
         if (mode.equals("dataAnalysis")) {
             run += "dataStatistics = " + StringUtils.join(dataStatistics, ',') + "\n";
+        }
+
+        if (mode.equals("runAnalysis")) {
+            run += "uniqueRunIdentifiers = " + StringUtils.join(uniqueRunIdentifiers, ',') + "\n";
+            run += "runStatistics = " + StringUtils.join(runStatistics, ',') + "\n";
         }
 
         return run;
