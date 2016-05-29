@@ -16,6 +16,7 @@ import de.clusteval.serverclient.BackendClient;
 
 import java.rmi.ConnectException;
 
+import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
@@ -118,16 +119,16 @@ public class RunController {
 
     @RequestMapping(value="/runs/create")
     public String createRun(RunCreation runCreation, Model model) {
-        ArrayList<String> dataSets = getDataConfigurations();
-        ArrayList<String> programs = getProgramConfigurations();
-        ArrayList<String> qualityMeasures = getQualityMeasures();
-        ArrayList<String> optimizationMethods = getOptimizationMethods();
-        ArrayList<String> dataStatistics = getDataStatistics();
-
-        model.addAttribute("optimizationMethods", optimizationMethods);
-
         try {
             BackendClient backendClient = getBackendClient();
+
+            Collection<String> dataSets = backendClient.getDataSetConfigurations();
+            Collection<String> programs = backendClient.getProgramConfigurations();
+            Collection<String> qualityMeasures = backendClient.getClusteringQualityMeasures();
+            Collection<String> optimizationMethods = backendClient.getParameterOptimizationMethods();
+            Collection<String> dataStatistics = backendClient.getDataStatistics();
+
+            model.addAttribute("optimizationMethods", optimizationMethods);
 
             runCreation.setDataSets(dataSets);
             runCreation.setAllPrograms(programs);
@@ -146,23 +147,25 @@ public class RunController {
     public String createRun(@Valid RunCreation runCreation, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         //Return to form if there were validation errors
         if (bindingResult.hasErrors()) {
-            ArrayList<String> dataSets = getDataConfigurations();
-            ArrayList<String> programs = getProgramConfigurations();
-            ArrayList<String> qualityMeasures = getQualityMeasures();
-            ArrayList<String> optimizationMethods = getOptimizationMethods();
-
-            model.addAttribute("optimizationMethods", optimizationMethods);
-
-            if (runCreation.getPrograms() == null) {
-                runCreation.setPrograms(new ArrayList<String>());
-            }
-
             try {
                 BackendClient backendClient = getBackendClient();
+
+                Collection<String> dataSets = backendClient.getDataSetConfigurations();
+                Collection<String> programs = backendClient.getProgramConfigurations();
+                Collection<String> qualityMeasures = backendClient.getClusteringQualityMeasures();
+                Collection<String> optimizationMethods = backendClient.getParameterOptimizationMethods();
+                Collection<String> dataStatistics = backendClient.getDataStatistics();
+
+                model.addAttribute("optimizationMethods", optimizationMethods);
+
+                if (runCreation.getPrograms() == null) {
+                    runCreation.setPrograms(new ArrayList<String>());
+                }
 
                 runCreation.setDataSets(dataSets);
                 runCreation.setAllPrograms(programs);
                 runCreation.setQualityMeasures(qualityMeasures);
+                runCreation.setDataStatistics(dataStatistics);
             } catch (ConnectException e) {
                 return "runs/notRunning";
             } catch (Exception e) {
@@ -194,47 +197,5 @@ public class RunController {
 
     private BackendClient getBackendClient() throws ConnectException, Exception {
         return new BackendClient(new String[]{"-port", Integer.toString(port), "-clientId", Integer.toString(clientId)});
-    }
-
-    private ArrayList<String> getProgramConfigurations() {
-        return getFileNames("programs/configs", "config");
-    }
-
-    private ArrayList<String> getDataConfigurations() {
-        return getFileNames("data/configs", "dataconfig");
-    }
-
-    private ArrayList<String> getQualityMeasures() {
-        return getFileNames("supp/clustering/qualityMeasures", "jar");
-    }
-
-    private ArrayList<String> getOptimizationMethods() {
-        return getFileNames("supp/clustering/paramOptimization", "jar");
-    }
-
-    private ArrayList<String> getRandomizers() {
-        return getFileNames("supp/randomizers/data", "jar");
-    }
-
-    private ArrayList<String> getDataStatistics() {
-        return getFileNames("supp/statistics/data", "jar");
-    }
-
-    private ArrayList<String> getFileNames(String location, String extension) {
-        ArrayList<String> fileNames = new ArrayList<String>();
-
-        File folder = new File(path + "/" + location);
-
-        File[] files = folder.listFiles();
-
-        for (File file : files) {
-            if (!file.isFile() || !FilenameUtils.getExtension(file.getName()).equals(extension)) {
-                continue;
-            }
-
-            fileNames.add(FilenameUtils.removeExtension(file.getName()));
-        }
-
-        return fileNames;
     }
 }
