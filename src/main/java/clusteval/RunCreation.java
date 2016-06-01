@@ -10,7 +10,7 @@ import java.io.*;
 import org.apache.commons.lang3.StringUtils;
 
 public class RunCreation {
-    @NotNull(message = "Please enter a name for the run")
+    @Size(min=1)
     private String name;
 
     @NotNull
@@ -22,18 +22,21 @@ public class RunCreation {
 
     private int optimizationIterations;
 
-    private ArrayList<String> programs;
-    public ArrayList<String> allPrograms;
+    private ArrayList<String> programs = new ArrayList<String>();
 
-    private ArrayList<String> dataSets;
+    private ArrayList<String> dataSets = new ArrayList<String>();
 
-    private ArrayList<String> qualityMeasures;
+    private ArrayList<String> qualityMeasures = new ArrayList<String>();
 
-    private ArrayList<String> dataStatistics;
+    private ArrayList<String> dataStatistics = new ArrayList<String>();
 
-    private ArrayList<String> runStatistics;
+    private ArrayList<String> runStatistics = new ArrayList<String>();
 
-    private ArrayList<String> uniqueRunIdentifiers;
+    private ArrayList<String> runDataStatistics = new ArrayList<String>();
+
+    private ArrayList<String> uniqueRunIdentifiers = new ArrayList<String>();
+
+    private ArrayList<String> uniqueDataIdentifiers = new ArrayList<String>();
 
     public String getName() {
         return name;
@@ -75,14 +78,6 @@ public class RunCreation {
         this.programs = new ArrayList<String>(programs);
     }
 
-    public ArrayList<String> getAllPrograms() {
-        return allPrograms;
-    }
-
-    public void setAllPrograms(Collection programs) {
-        this.allPrograms = new ArrayList<String>(programs);
-    }
-
     public ArrayList<String> getDataSets() {
         return dataSets;
     }
@@ -115,12 +110,28 @@ public class RunCreation {
         this.runStatistics = new ArrayList<String>(runStatistics);
     }
 
+    public ArrayList<String> getRunDataStatistics() {
+        return runDataStatistics;
+    }
+
+    public void setRunDataStatistics(Collection runDataStatistics) {
+        this.runDataStatistics = new ArrayList<String>(runDataStatistics);
+    }
+
     public ArrayList<String> getUniqueRunIdentifiers() {
         return uniqueRunIdentifiers;
     }
 
     public void setUniqueRunIdentifiers(Collection uniqueRunIdentifiers) {
         this.uniqueRunIdentifiers = new ArrayList<String>(uniqueRunIdentifiers);
+    }
+
+    public ArrayList<String> getUniqueDataIdentifiers() {
+        return uniqueDataIdentifiers;
+    }
+
+    public void setUniqueDataIdentifiers(Collection uniqueDataIdentifiers) {
+        this.uniqueDataIdentifiers = new ArrayList<String>(uniqueDataIdentifiers);
     }
 
     public String toString(String path) {

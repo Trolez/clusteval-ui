@@ -22,7 +22,7 @@
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="mode" th:field="*{mode}" value="clustering" disabled="disabled">
+                                <input type="radio" name="mode" th:field="*{mode}" value="clustering">
                                 Clustering run
                             </label>
                         </div>
@@ -46,7 +46,7 @@
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="mode" th:field="*{mode}" value="" disabled="disabled">
+                                <input type="radio" name="mode" th:field="*{mode}" value="runDataAnalysis">
                                 Run-data analysis run
                             </label>
                         </div>
@@ -71,7 +71,7 @@
                     <div class="section-content">
                         <h1>Programs</h1>
                         <select class="select2-multiple" multiple="multiple" name="programs">
-                            <option th:each="program : *{allPrograms}" th:value="${program}" th:text="${program}" th:selected="${#lists.contains(runCreation.programs, program)}">
+                            <option th:each="program : ${programs}" th:value="${program}" th:text="${program}" th:selected="${#lists.contains(runCreation.programs, program)}">
                         </select>
                     </div>
                 </li>
@@ -81,18 +81,21 @@
                     </span>
                     <div class="section-content">
                         <h1>Data</h1>
-                        <div class="form-group">
-                            <label>Data configs</label>
-                            <select class="select2-multiple" multiple="multiple" name="dataSets">
-                                <option th:each="dataSet : *{dataSets}" th:value="${dataSet}" th:text="${dataSet}">
-                            </select>
+
+                        <div class="filter" data-mode="[&quot;clustering&quot;,&quot;parameter_optimization&quot;,&quot;dataAnalysis&quot;]">
+                            <div class="form-group">
+                                <label>Data configs</label>
+                                <select class="select2-multiple" multiple="multiple" name="dataSets">
+                                    <option th:each="dataSet : ${dataSets}" th:value="${dataSet}" th:text="${dataSet}" th:selected="${#lists.contains(runCreation.dataSets, dataSet)}">
+                                </select>
+                            </div>
                         </div>
 
-                        <div data-mode="parameter_optimization">
+                        <div class="filter" data-mode="[&quot;parameter_optimization&quot;]">
                             <div class="form-group">
                                 <label>Quality measures</label>
                                 <select class="select2-multiple" multiple="multiple" name="qualityMeasures">
-                                    <option th:each="qualityMeasure : *{qualityMeasures}" th:value="${qualityMeasure}" th:text="${qualityMeasure}">
+                                    <option th:each="qualityMeasure : ${qualityMeasures}" th:value="${qualityMeasure}" th:text="${qualityMeasure}" th:selected="${#lists.contains(runCreation.qualityMeasures, qualityMeasure)}">
                                 </select>
                             </div>
 
@@ -111,27 +114,45 @@
                             </div>
                         </div>
 
-                        <div data-mode="dataAnalysis">
+                        <div class="filter" data-mode="[&quot;dataAnalysis&quot;]">
                             <div class="form-group">
                                 <label>Data statistics</label>
                                 <select class="select2-multiple" multiple="multiple" name="dataStatistics">
-                                    <option th:each="dataStatistic : *{dataStatistics}" th:value="${dataStatistic}" th:text="${dataStatistic}">
+                                    <option th:each="dataStatistic : ${dataStatistics}" th:value="${dataStatistic}" th:text="${dataStatistic}" th:selected="${#lists.contains(runCreation.dataStatistics, dataStatistic)}">
                                 </select>
                             </div>
                         </div>
 
-                        <div data-mode="runAnalysis">
+                        <div class="filter" data-mode="[&quot;runAnalysis&quot;]">
                             <div class="form-group">
                                 <label>Run statistics</label>
                                 <select class="select2-multiple" multiple="multiple" name="runStatistics">
-                                    <option th:each="runStatistic : *{runStatistics}" th:value="${runStatistic}" th:text="${runStatistic}">
+                                    <option th:each="runStatistic : ${runStatistics}" th:value="${runStatistic}" th:text="${runStatistic}" th:selected="${#lists.contains(runCreation.runStatistics, runStatistic)}">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="filter" data-mode="[&quot;runDataAnalysis&quot;]">
+                            <div class="form-group">
+                                <label>Run-data statistics</label>
+                                <select class="select2-multiple" multiple="multiple" name="runDataStatistics">
+                                    <option th:each="runDataStatistic : ${runDataStatistics}" th:value="${runDataStatistic}" th:text="${runDataStatistic}">
                                 </select>
                             </div>
 
                             <div class="form-group">
+                                <label>Unique data identifiers</label>
+                                <select class="select2-multiple" multiple="multiple" name="uniqueDataIdentifiers">
+                                    <option th:each="uniqueDataIdentifier : ${uniqueRunIdentifiers}" th:value="${uniqueDataIdentifier}" th:text="${uniqueDataIdentifier}" th:selected="${#lists.contains(runCreation.uniqueDataIdentifiers, uniqueDataIdentifier)}">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="filter" data-mode="[&quot;runAnalysis&quot;,&quot;runDataAnalysis&quot;]">
+                            <div class="form-group">
                                 <label>Unique run identifiers</label>
                                 <select class="select2-multiple" multiple="multiple" name="uniqueRunIdentifiers">
-                                    <option th:each="uniqueRunIdentifier : *{uniqueRunIdentifiers}" th:value="${uniqueRunIdentifier}" th:text="${uniqueRunIdentifier}">
+                                    <option th:each="uniqueRunIdentifier : ${uniqueRunIdentifiers}" th:value="${uniqueRunIdentifier}" th:text="${uniqueRunIdentifier}" th:selected="${#lists.contains(runCreation.uniqueRunIdentifiers, uniqueRunIdentifier)}">
                                 </select>
                             </div>
                         </div>

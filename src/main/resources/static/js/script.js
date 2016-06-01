@@ -38,8 +38,15 @@ $(document).ready(function() {
         var mode = $(this).val();
 
         //Only show mode-specific sections for the selected mode
-        $('form.run-creation [data-mode]').hide();
-        $('form.run-creation [data-mode=' + mode + ']').show();
+        /*$('form.run-creation [data-mode]').hide();
+        $('form.run-creation [data-mode=' + mode + ']').show();*/
+
+        $('form.run-creation .filter').filter(function(){
+            return $.inArray(mode.toString(), $(this).data('mode')) < 0
+        }).hide();
+        $('form.run-creation .filter').filter(function(){
+            return $.inArray(mode.toString(), $(this).data('mode')) >= 0
+        }).show();
     });
 
     /****************

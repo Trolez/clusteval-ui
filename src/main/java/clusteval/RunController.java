@@ -117,12 +117,7 @@ public class RunController {
         return "redirect:/runs";
     }
 
-    public void populateModel(Model model) {
-
-    }
-
-    @RequestMapping(value="/runs/create")
-    public String createRun(RunCreation runCreation, Model model) {
+    private void populateModel(Model model) throws ConnectException {
         try {
             BackendClient backendClient = getBackendClient();
 
@@ -132,17 +127,37 @@ public class RunController {
             Collection<String> optimizationMethods = backendClient.getParameterOptimizationMethods();
             Collection<String> dataStatistics = backendClient.getDataStatistics();
             Collection<String> runStatistics = backendClient.getRunStatistics();
+            Collection<String> runDataStatistics = backendClient.getRunDataStatistics();
             Collection<String> uniqueRunIdentifiers = backendClient.getRunResults();
 
+            model.addAttribute("dataSets", dataSets);
+            model.addAttribute("programs", programs);
+            model.addAttribute("qualityMeasures", qualityMeasures);
             model.addAttribute("optimizationMethods", optimizationMethods);
+            model.addAttribute("dataStatistics", dataStatistics);
+            model.addAttribute("runStatistics", runStatistics);
+            model.addAttribute("runDataStatistics", runDataStatistics);
+            model.addAttribute("uniqueRunIdentifiers", uniqueRunIdentifiers);
+        } catch (ConnectException e) {
+            throw(e);
+        } catch (Exception e) {
+        }
+    }
 
-            runCreation.setDataSets(dataSets);
-            runCreation.setAllPrograms(programs);
-            runCreation.setPrograms(new ArrayList<String>());
-            runCreation.setQualityMeasures(qualityMeasures);
+    @RequestMapping(value="/runs/create")
+    public String createRun(RunCreation runCreation, Model model) {
+        try {
+            BackendClient backendClient = getBackendClient();
+
+            populateModel(model);
+
+            //runCreation.setDataSets(dataSets);
+            //runCreation.setAllPrograms(programs);
+            //runCreation.setPrograms(new ArrayList<String>());
+            /*runCreation.setQualityMeasures(qualityMeasures);
             runCreation.setDataStatistics(dataStatistics);
             runCreation.setRunStatistics(runStatistics);
-            runCreation.setUniqueRunIdentifiers(uniqueRunIdentifiers);
+            runCreation.setUniqueRunIdentifiers(uniqueRunIdentifiers);*/
         } catch (ConnectException e) {
             return "runs/notRunning";
         } catch (Exception e) {
@@ -156,7 +171,7 @@ public class RunController {
         //Return to form if there were validation errors
         if (bindingResult.hasErrors()) {
             try {
-                BackendClient backendClient = getBackendClient();
+                /*BackendClient backendClient = getBackendClient();
 
                 Collection<String> dataSets = backendClient.getDataSetConfigurations();
                 Collection<String> programs = backendClient.getProgramConfigurations();
@@ -173,11 +188,12 @@ public class RunController {
                 }
 
                 runCreation.setDataSets(dataSets);
-                runCreation.setAllPrograms(programs);
                 runCreation.setQualityMeasures(qualityMeasures);
                 runCreation.setDataStatistics(dataStatistics);
                 runCreation.setRunStatistics(runStatistics);
-                runCreation.setUniqueRunIdentifiers(uniqueRunIdentifiers);
+                runCreation.setUniqueRunIdentifiers(uniqueRunIdentifiers);*/
+
+                populateModel(model);
             } catch (ConnectException e) {
                 return "runs/notRunning";
             } catch (Exception e) {
