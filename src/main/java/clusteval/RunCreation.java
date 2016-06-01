@@ -10,7 +10,7 @@ import java.io.*;
 import org.apache.commons.lang3.StringUtils;
 
 public class RunCreation {
-    @Size(min=1)
+    @Size(min = 1, message = "Please specify a name for the run")
     private String name;
 
     @NotNull
@@ -37,6 +37,9 @@ public class RunCreation {
     private ArrayList<String> uniqueRunIdentifiers = new ArrayList<String>();
 
     private ArrayList<String> uniqueDataIdentifiers = new ArrayList<String>();
+
+    private String randomizer;
+    private int numberOfRandomizedDataSets;
 
     public String getName() {
         return name;
@@ -134,17 +137,33 @@ public class RunCreation {
         this.uniqueDataIdentifiers = new ArrayList<String>(uniqueDataIdentifiers);
     }
 
+    public String getRandomizer() {
+        return randomizer;
+    }
+
+    public void setRandomizer(String randomizer) {
+        this.randomizer = randomizer;
+    }
+
+    public int getNumberOfRandomizedDataSets() {
+        return numberOfRandomizedDataSets;
+    }
+
+    public void setNumberOfRandomizedDataSets(int numberOfRandomizedDataSets) {
+        this.numberOfRandomizedDataSets = numberOfRandomizedDataSets;
+    }
+
     public String toString(String path) {
         //TODO: replace placeholders with actual values
         String run = "mode = " + mode + "\n";
 
-        if (mode.equals("parameter_optimization") || mode.equals("dataAnalysis")) {
+        if (mode.equals("clustering") || mode.equals("parameter_optimization") || mode.equals("dataAnalysis") || mode.equals("robustnessAnalysis")) {
             run += "dataConfig = ";
             run += StringUtils.join(dataSets, ',');
             run += "\n";
         }
 
-        if (mode.equals("parameter_optimization")) {
+        if (mode.equals("clustering") || mode.equals("parameter_optimization") || mode.equals("robustnessAnalysis")) {
             run += "programConfig = ";
             run += StringUtils.join(programs, ',');
             run += "\n";
@@ -152,7 +171,9 @@ public class RunCreation {
             run += "qualityMeasures = ";
             run += StringUtils.join(qualityMeasures, ',');
             run += "\n";
+        }
 
+        if (mode.equals("parameter_optimization")) {
             run += "optimizationCriterion = " + optimizationCriterion + "\n";
 
             run += "optimizationIterations = " + 1000 + "\n";
@@ -180,9 +201,23 @@ public class RunCreation {
             run += "dataStatistics = " + StringUtils.join(dataStatistics, ',') + "\n";
         }
 
-        if (mode.equals("runAnalysis")) {
+        if (mode.equals("runAnalysis") || mode.equals("robustnessAnalysis")) {
             run += "uniqueRunIdentifiers = " + StringUtils.join(uniqueRunIdentifiers, ',') + "\n";
+        }
+
+        if (mode.equals("runAnalysis")) {
             run += "runStatistics = " + StringUtils.join(runStatistics, ',') + "\n";
+        }
+
+        if (mode.equals("runDataAnalysis")) {
+            run += "runDataStatistics = " + StringUtils.join(runDataStatistics, ',') + "\n";
+            run += "uniqueRunIdentifiers = " + StringUtils.join(uniqueRunIdentifiers, ',') + "\n";
+            run += "uniqueDataIdentifiers = " + StringUtils.join(uniqueDataIdentifiers, ',') + "\n";
+        }
+
+        if (mode.equals("robustnessAnalysis")) {
+            run += "randomizer = " + randomizer + "\n";
+            run += "numberOfRandomizedDataSets = " + numberOfRandomizedDataSets + "\n";
         }
 
         return run;

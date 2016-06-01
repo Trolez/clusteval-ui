@@ -18,7 +18,7 @@
                                 Name of run
                                 <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
                             </label>
-                            <input type="text" name="name" th:field="*{name}" class="form-control"><br>
+                            <input type="text" name="name" th:field="*{name}" class="form-control" th:errorclass="has-error"><br>
                         </div>
                         <div class="radio">
                             <label>
@@ -52,7 +52,7 @@
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="mode" th:field="*{mode}" value="robustnessAnalysis" disabled="disabled">
+                                <input type="radio" name="mode" th:field="*{mode}" value="robustnessAnalysis">
                                 Robustness analysis run
                             </label>
                         </div>
@@ -82,7 +82,7 @@
                     <div class="section-content">
                         <h1>Data</h1>
 
-                        <div class="filter" data-mode="[&quot;clustering&quot;,&quot;parameter_optimization&quot;,&quot;dataAnalysis&quot;]">
+                        <div class="filter" data-mode="[&quot;clustering&quot;,&quot;parameter_optimization&quot;,&quot;dataAnalysis&quot;,&quot;robustnessAnalysis&quot;]">
                             <div class="form-group">
                                 <label>Data configs</label>
                                 <select class="select2-multiple" multiple="multiple" name="dataSets">
@@ -91,14 +91,16 @@
                             </div>
                         </div>
 
-                        <div class="filter" data-mode="[&quot;parameter_optimization&quot;]">
+                        <div class="filter" data-mode="[&quot;clustering&quot;,&quot;parameter_optimization&quot;,&quot;robustnessAnalysis&quot;]">
                             <div class="form-group">
                                 <label>Quality measures</label>
                                 <select class="select2-multiple" multiple="multiple" name="qualityMeasures">
                                     <option th:each="qualityMeasure : ${qualityMeasures}" th:value="${qualityMeasure}" th:text="${qualityMeasure}" th:selected="${#lists.contains(runCreation.qualityMeasures, qualityMeasure)}">
                                 </select>
                             </div>
+                        </div>
 
+                        <div class="filter" data-mode="[&quot;parameter_optimization&quot;]">
                             <div class="form-group">
                                 <label>Optimization criterion</label>
                                 <select class="select2-multiple" name="optimizationCriterion">
@@ -148,12 +150,26 @@
                             </div>
                         </div>
 
-                        <div class="filter" data-mode="[&quot;runAnalysis&quot;,&quot;runDataAnalysis&quot;]">
+                        <div class="filter" data-mode="[&quot;runAnalysis&quot;,&quot;runDataAnalysis&quot;,&quot;robustnessAnalysis&quot;]">
                             <div class="form-group">
                                 <label>Unique run identifiers</label>
                                 <select class="select2-multiple" multiple="multiple" name="uniqueRunIdentifiers">
                                     <option th:each="uniqueRunIdentifier : ${uniqueRunIdentifiers}" th:value="${uniqueRunIdentifier}" th:text="${uniqueRunIdentifier}" th:selected="${#lists.contains(runCreation.uniqueRunIdentifiers, uniqueRunIdentifier)}">
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="filter" data-mode="[&quot;robustnessAnalysis&quot;]">
+                            <div class="form-group">
+                                <label>Randomizers</label>
+                                <select class="select2-multiple" name="randomizer">
+                                    <option th:each="randomizer : ${randomizers}" th:value="${randomizer}" th:text="${randomizer}" th:selected="${randomizer} eq ${runCreation.randomizer}">
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Number of randomized data sets</label>
+                                <input type="number" name="numberOfRandomizedDataSets" th:field="*{numberOfRandomizedDataSets}" class="form-control"><br>
                             </div>
                         </div>
                     </div>

@@ -34,13 +34,19 @@ $(document).ready(function() {
     //Make all mode-specific sections initially invisible
     $('form.run-creation [data-mode]').hide();
 
+    //If a mode is already selected on page load, show appropriate sections
+    var mode = $('form.run-creation input[type=radio][name=mode]:checked').val();
+    if (mode != null && mode != "") {
+        $('form.run-creation .filter').filter(function(){
+            return $.inArray(mode.toString(), $(this).data('mode')) >= 0
+        }).show();
+    }
+
+    //Mode select/change
     $('form.run-creation input[type=radio][name=mode]').change(function(){
         var mode = $(this).val();
 
         //Only show mode-specific sections for the selected mode
-        /*$('form.run-creation [data-mode]').hide();
-        $('form.run-creation [data-mode=' + mode + ']').show();*/
-
         $('form.run-creation .filter').filter(function(){
             return $.inArray(mode.toString(), $(this).data('mode')) < 0
         }).hide();
