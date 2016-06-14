@@ -20,47 +20,53 @@
                             </label>
                             <input type="text" name="name" th:field="*{name}" class="form-control" th:errorclass="has-error"><br>
                         </div>
-                        <div class="radio">
+                        <div class="form-group">
                             <label>
-                                <input type="radio" name="mode" th:field="*{mode}" value="clustering">
-                                Clustering run
+                                Run type
+                                <span class="error" th:if="${#fields.hasErrors('mode')}" th:errors="*{mode}">
                             </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="mode" th:field="*{mode}" value="parameter_optimization">
-                                Parameter optimization run
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="mode" th:field="*{mode}" value="dataAnalysis">
-                                Data analysis run
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="mode" th:field="*{mode}" value="runAnalysis">
-                                Run analysis run
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="mode" th:field="*{mode}" value="runDataAnalysis">
-                                Run-data analysis run
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="mode" th:field="*{mode}" value="robustnessAnalysis">
-                                Robustness analysis run
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="mode" th:field="*{mode}" value="internal_parameter_optimization" disabled="disabled">
-                                Internal parameter optimization run
-                            </label>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="mode" th:field="*{mode}" value="clustering">
+                                    Clustering run
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="mode" th:field="*{mode}" value="parameter_optimization">
+                                    Parameter optimization run
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="mode" th:field="*{mode}" value="dataAnalysis">
+                                    Data analysis run
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="mode" th:field="*{mode}" value="runAnalysis">
+                                    Run analysis run
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="mode" th:field="*{mode}" value="runDataAnalysis">
+                                    Run-data analysis run
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="mode" th:field="*{mode}" value="robustnessAnalysis">
+                                    Robustness analysis run
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="mode" th:field="*{mode}" value="internal_parameter_optimization" disabled="disabled">
+                                    Internal parameter optimization run
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </li>
@@ -69,10 +75,14 @@
                         <span>Programs</span>
                     </span>
                     <div class="section-content">
-                        <h1>Programs</h1>
-                        <select class="select2-multiple" multiple="multiple" name="programs">
-                            <option th:each="program : ${programs}" th:value="${program}" th:text="${program}" th:selected="${#lists.contains(runCreation.programs, program)}">
-                        </select>
+                        <div class="filter" data-mode="[&quot;clustering&quot;,&quot;parameter_optimization&quot;]">
+                            <div class="form-group">
+                                <h1>Programs</h1>
+                                <select class="select2-multiple" multiple="multiple" name="programs">
+                                    <option th:each="program : ${programs}" th:value="${program}" th:text="${program}" th:selected="${#lists.contains(runCreation.programs, program)}">
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </li>
                 <li>
@@ -179,7 +189,9 @@
                         <span>Other settings</span>
                     </span>
                     <div class="section-content">
-                        <input type="submit" value="Create run">
+                        <div class="form-group">
+                            <input type="submit" value="Create run">
+                        </div>
                     </div>
                 </li>
             </ul>

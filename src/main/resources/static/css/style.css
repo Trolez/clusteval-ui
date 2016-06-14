@@ -3,22 +3,26 @@
 body { background-color: #c0c0c0; height: 100%; overflow-x: hidden; }
 
 /* Header */
-header { height: 100px; background: rgb(67, 80, 109); padding-left: 75px; }
+header { height: 100px; background: rgb(67, 80, 109); padding-left: 115px; }
 header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transform: translateY(-50%); z-index: 2; text-shadow: 1px 1px 2px #0E1221; }
 
 /* Side menu */
-#side-menu { position: fixed; top: 0px; bottom: 0px; width: 65px; background: #0E1221; border-right: 5px solid rgb(67, 80, 109); padding-top: 100px; z-index: 1; }
+#side-menu { position: fixed; top: 0px; bottom: 0px; width: 105px; background: #0E1221; border-right: 5px solid rgb(67, 80, 109); padding-top: 100px; z-index: 1; }
 #side-menu ul { list-style: none; padding-left: 0px; }
 #side-menu ul li { background: rgb(67, 80, 109); overflow: hidden; }
-#side-menu ul li:hover { width: 300px; }
-#side-menu ul li a { text-decoration: none; }
-#side-menu ul li a .icon { display: block; float: left; font-size: 24px; width: 60px; height: 60px; text-align: center; line-height: 60px; vertical-align: middle; color: #dedede; background: #0E1221; margin-right: 5px; }
-#side-menu ul li a:hover .icon { background: #171C2D; }
-#side-menu ul li a span { display: none; font-size: 25px; color: #0E1221; text-align: center; color: #dedede; text-shadow: 1px 1px 1px #0E1221;  }
-#side-menu ul li a:hover span { display: block; height: 60px; line-height: 60px; vertical-align: middle; }
+#side-menu ul li a { text-decoration: none; display: block; position: relative; width: 100px; height: 90px; }
+#side-menu ul li a .icon { display: block; float: left; font-size: 24px; width: 100px; height: 90px; text-align: center; line-height: 100px; vertical-align: middle; color: #dedede; background: #0E1221; margin-right: 5px; }
+#side-menu ul li a .icon i { opacity: 0.25; }
+#side-menu ul li a span { position: absolute; bottom: 0px; left: 0px; width: 100%; text-align: center; opacity: 0; }
+
+/* Side menu hover effect */
+#side-menu ul li a .icon i { -webkit-transition: opacity 0.4s ease-in-out; -moz-transition: opacity 0.4s ease-in-out; -o-transition: opacity 0.4s ease-in-out; -ms-transition: opacity 0.4s ease-in-out; transition : opacity 0.4s ease-in-out; }
+#side-menu ul li a span { -webkit-transition: opacity 0.4s ease-in-out; -moz-transition: opacity 0.4s ease-in-out; -o-transition: opacity 0.4s ease-in-out; -ms-transition: opacity 0.4s ease-in-out; transition : opacity 0.4s ease-in-out; }
+#side-menu:hover ul li a span { opacity: 1; }
+#side-menu:hover ul li a .icon i { opacity: 1; }
 
 /* Content Wrapper */
-#content-wrapper { margin-left: 65px; min-height: 1200px; background: #fafbff; padding-top: 15px; }
+#content-wrapper { margin-left: 105px; min-height: 1200px; background: #fafbff; padding-top: 15px; }
 
 /* Accordion */
 .myAccordion { list-style: none; overflow: hidden; position: relative; width: 100%; display: flex; flex-wrap: wrap; }
@@ -30,6 +34,6 @@ header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transfo
 .myAccordion li .section-content { display: block; padding: 10px; margin-left: 75px; overflow: hidden; }
 
 /* Main */
-main form.run-creation h1 { margin-top: 0px; color: #444; text-shadow: 2px 0px 1px #ccc; }
+main form.run-creation h1 { margin-top: 0px; color: #444; }
 main form.run-creation span.info { font-size: 12px; color: #999; font-style: italic; }
 main form.run-creation span.error { font-size: 12px; color: #cf3a3a; font-style: italic; }

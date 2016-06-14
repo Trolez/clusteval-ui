@@ -13,7 +13,7 @@ public class RunCreation {
     @Size(min = 1, message = "Please specify a name for the run")
     private String name;
 
-    @NotNull
+    @NotNull(message = "Please specify a mode for the run")
     private String mode;
 
     private String optimizationCriterion;
