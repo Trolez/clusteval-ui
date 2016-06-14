@@ -22,6 +22,7 @@ public class RunCreation {
 
     private int optimizationIterations;
 
+    @NotBlankOrNull(message = "Please select one or more programs for the run")
     private ArrayList<String> programs = new ArrayList<String>();
 
     private ArrayList<String> dataSets = new ArrayList<String>();

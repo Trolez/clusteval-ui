@@ -78,9 +78,17 @@
                         <div class="filter" data-mode="[&quot;clustering&quot;,&quot;parameter_optimization&quot;]">
                             <div class="form-group">
                                 <h1>Programs</h1>
-                                <select class="select2-multiple" multiple="multiple" name="programs">
+                                <label>
+                                    Select programs
+                                    <span class="error" th:if="${#fields.hasErrors('programs')}" th:errors="*{programs}">
+                                </label>
+                                <select class="select2-multiple" multiple="multiple" name="programs" th:if="${runCreation.programs.size() > 0}">
                                     <option th:each="program : ${programs}" th:value="${program}" th:text="${program}" th:selected="${#lists.contains(runCreation.programs, program)}">
                                 </select>
+                                <select class="select2-multiple" multiple="multiple" name="programs" th:if="${runCreation.programs.size() == 0}">
+                                    <option th:each="program : ${programs}" th:value="${program}" th:text="${program}">
+                                </select>
+                                <input type="hidden" name="programs" value="DUMMY" disabled>
                             </div>
                         </div>
                     </div>
@@ -168,7 +176,13 @@
                                 </select>
                             </div>
                         </div>
-
+                    </div>
+                </li>
+                <li>
+                    <span class="section-header">
+                        <span>Randomizers</span>
+                    </span>
+                    <div class="section-content">
                         <div class="filter" data-mode="[&quot;robustnessAnalysis&quot;]">
                             <div class="form-group">
                                 <label>Randomizers</label>
