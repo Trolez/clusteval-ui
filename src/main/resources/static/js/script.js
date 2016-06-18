@@ -10,13 +10,22 @@ $(document).ready(function() {
 
     //Make all mode-specific sections initially invisible
     $('form.run-creation [data-mode]').hide();
+    $('form.run-creation [data-mode]').find('input').prop('disabled', true);
+    $('form.run-creation [data-mode]').find('select').prop('disabled', true);
+    $('form.run-creation [data-mode]').find('input[type=hidden]').prop('disabled', false);
 
     //If a mode is already selected on page load, show appropriate sections
     var mode = $('form.run-creation input[type=radio][name=mode]:checked').val();
     if (mode != null && mode != "") {
-        $('form.run-creation .filter').filter(function(){
+        var elementsToShow = $('form.run-creation .filter').filter(function(){
             return $.inArray(mode.toString(), $(this).data('mode')) >= 0
-        }).show();
+        });
+
+        elementsToShow.show();
+
+        elementsToShow.find('input').prop('disabled', false);
+        elementsToShow.find('select').prop('disabled', false);
+        elementsToShow.find('input[type=hidden]').prop('disabled', true);
     }
 
     //Mode select/change
@@ -24,12 +33,25 @@ $(document).ready(function() {
         var mode = $(this).val();
 
         //Only show mode-specific sections for the selected mode
-        $('form.run-creation .filter').filter(function(){
+        var elementsToHide = $('form.run-creation .filter').filter(function(){
             return $.inArray(mode.toString(), $(this).data('mode')) < 0
-        }).hide();
-        $('form.run-creation .filter').filter(function(){
+        });
+
+        var elementsToShow = $('form.run-creation .filter').filter(function(){
             return $.inArray(mode.toString(), $(this).data('mode')) >= 0
-        }).show();
+        });
+
+        elementsToHide.hide();
+        elementsToShow.show();
+
+        elementsToHide.find('input').prop('disabled', true);
+        elementsToHide.find('select').prop('disabled', true);
+        elementsToHide.find('input[type=hidden]').prop('disabled', false);
+
+        elementsToShow.find('input').prop('disabled', false);
+        elementsToShow.find('select').prop('disabled', false);
+        elementsToShow.find('input[type=hidden]').prop('disabled', true);
+
         updateAccordion();
     });
 
@@ -46,17 +68,9 @@ $(document).ready(function() {
         }).hide();
     }
 
-    function showElementWithVisibleChildren(elements) {
-        //Show non-empty slides
-        $(elements).filter(function() {
-            return $(this).find('.section-content').children('div:visible').length > 0;
-        }).show();
-    }
-
     function updateAccordion() {
         $('.myAccordion > li').show();
         hideElementWithNoVisibleChildren('.myAccordion > li');
-        //showElementWithVisibleChildren('.myAccordion > li');
 
         $('.myAccordion > li').removeClass('animated');
 
@@ -71,6 +85,11 @@ $(document).ready(function() {
 
     //Initially hide appropriate slides
     hideElementWithNoVisibleChildren('.myAccordion > li');
+
+    //Add error class to any tabs that contains error
+    $('.myAccordion > li').filter(function() {
+        return $(this).find('span.error').length > 0;
+    }).find('.section-header').addClass('error');
 
     var subtract = ($('.myAccordion > li:visible').length - 1) * 75;
     $('.myAccordion > li:first-child').css('width', 'calc(100% - ' + subtract + 'px)');

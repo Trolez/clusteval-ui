@@ -16,8 +16,10 @@ public class RunCreation {
     @NotNull(message = "Please specify a mode for the run")
     private String mode;
 
+    @NotNull(message = "Please select a optimization criterion")
     private String optimizationCriterion;
 
+    @NotNull(message = "Please select a optimization method")
     private String optimizationMethod;
 
     private int optimizationIterations;
@@ -25,18 +27,25 @@ public class RunCreation {
     @NotBlankOrNull(message = "Please select one or more programs for the run")
     private ArrayList<String> programs = new ArrayList<String>();
 
+    @NotBlankOrNull(message = "Please select one or more data sets for the run")
     private ArrayList<String> dataSets = new ArrayList<String>();
 
+    @NotBlankOrNull(message = "Please select one or more quality measures for the run")
     private ArrayList<String> qualityMeasures = new ArrayList<String>();
 
+    @NotBlankOrNull(message = "Please select one or more data statistics for the run")
     private ArrayList<String> dataStatistics = new ArrayList<String>();
 
+    @NotBlankOrNull(message = "Please select one or more run statistics for the run")
     private ArrayList<String> runStatistics = new ArrayList<String>();
 
+    @NotBlankOrNull(message = "Please select one or more run data statistics for the run")
     private ArrayList<String> runDataStatistics = new ArrayList<String>();
 
+    @NotBlankOrNull(message = "Please select one or more unique run identifiers for the run")
     private ArrayList<String> uniqueRunIdentifiers = new ArrayList<String>();
 
+    @NotBlankOrNull(message = "Please select one or more unique data identifiers for the run")
     private ArrayList<String> uniqueDataIdentifiers = new ArrayList<String>();
 
     private String randomizer;

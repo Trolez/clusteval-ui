@@ -29,6 +29,7 @@ header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transfo
 .myAccordion li { display: flex; width: 75px; float: left; overflow: hidden; }
 .myAccordion li.animated { -webkit-transition: all 0.6s ease-in-out; -moz-transition: all 0.6s ease-in-out; -o-transition: all 0.6s ease-in-out; -ms-transition: all 0.6s ease-in-out; transition : all 0.6s ease-in-out; }
 .myAccordion li .section-header { display: block; height: 100%; background: #eee; position: absolute; top: 0px; bottom: 0px; width: 75px; cursor: pointer; border: 1px dashed #ccc; }
+.myAccordion li .section-header.error { border-color: #cf3a3a; font-style: normal; font-size: 14px; background-color: #ffd1d1; }
 .myAccordion li .section-header span { font-weight: bold; color: #777; display: block; position: relative; top: 50%; transform: translateY(-50%) rotate(-90deg); text-align: center; white-space: nowrap; }
 .myAccordion li .section-content { width: 100%; background: #f3f3f3; }
 .myAccordion li .section-content { display: block; padding: 10px; margin-left: 75px; overflow: hidden; }
