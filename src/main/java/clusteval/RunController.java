@@ -17,6 +17,7 @@ import de.clusteval.serverclient.BackendClient;
 import java.rmi.ConnectException;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
@@ -121,15 +122,25 @@ public class RunController {
         try {
             BackendClient backendClient = getBackendClient();
 
-            Collection<String> dataSets = backendClient.getDataSetConfigurations();
-            Collection<String> programs = backendClient.getProgramConfigurations();
-            Collection<String> qualityMeasures = backendClient.getClusteringQualityMeasures();
-            Collection<String> optimizationMethods = backendClient.getParameterOptimizationMethods();
-            Collection<String> dataStatistics = backendClient.getDataStatistics();
-            Collection<String> runStatistics = backendClient.getRunStatistics();
-            Collection<String> runDataStatistics = backendClient.getRunDataStatistics();
-            Collection<String> uniqueRunIdentifiers = backendClient.getRunResults();
-            Collection<String> randomizers = backendClient.getDataRandomizers();
+            ArrayList<String> dataSets = new ArrayList<String>(backendClient.getDataSetConfigurations());
+            ArrayList<String> programs = new ArrayList<String>(backendClient.getProgramConfigurations());
+            ArrayList<String> qualityMeasures = new ArrayList<String>(backendClient.getClusteringQualityMeasures());
+            ArrayList<String> optimizationMethods = new ArrayList<String>(backendClient.getParameterOptimizationMethods());
+            ArrayList<String> dataStatistics = new ArrayList<String>(backendClient.getDataStatistics());
+            ArrayList<String> runStatistics = new ArrayList<String>(backendClient.getRunStatistics());
+            ArrayList<String> runDataStatistics = new ArrayList<String>(backendClient.getRunDataStatistics());
+            ArrayList<String> uniqueRunIdentifiers = new ArrayList<String>(backendClient.getRunResults());
+            ArrayList<String> randomizers = new ArrayList<String>(backendClient.getDataRandomizers());
+
+            Collections.sort(dataSets, String.CASE_INSENSITIVE_ORDER);
+            Collections.sort(programs, String.CASE_INSENSITIVE_ORDER);
+            Collections.sort(qualityMeasures, String.CASE_INSENSITIVE_ORDER);
+            Collections.sort(optimizationMethods, String.CASE_INSENSITIVE_ORDER);
+            Collections.sort(dataStatistics, String.CASE_INSENSITIVE_ORDER);
+            Collections.sort(runStatistics, String.CASE_INSENSITIVE_ORDER);
+            Collections.sort(runDataStatistics, String.CASE_INSENSITIVE_ORDER);
+            Collections.sort(uniqueRunIdentifiers, String.CASE_INSENSITIVE_ORDER);
+            Collections.sort(randomizers, String.CASE_INSENSITIVE_ORDER);
 
             model.addAttribute("dataSets", dataSets);
             model.addAttribute("programs", programs);

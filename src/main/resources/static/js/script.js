@@ -5,6 +5,7 @@ $(document).ready(function() {
 
     //Add select2 to multiple select boxes
     $('.select2-multiple').select2({
+        closeOnSelect: false,
         width: '100%'
     });
 

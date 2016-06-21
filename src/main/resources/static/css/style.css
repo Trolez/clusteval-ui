@@ -10,9 +10,9 @@ header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transfo
 #side-menu { position: fixed; top: 0px; bottom: 0px; width: 105px; background: #0E1221; border-right: 5px solid rgb(67, 80, 109); padding-top: 100px; z-index: 1; }
 #side-menu ul { list-style: none; padding-left: 0px; }
 #side-menu ul li { background: rgb(67, 80, 109); overflow: hidden; }
-#side-menu ul li a { text-decoration: none; display: block; position: relative; width: 100px; height: 90px; }
-#side-menu ul li a .icon { display: block; float: left; font-size: 24px; width: 100px; height: 90px; text-align: center; line-height: 100px; vertical-align: middle; color: #dedede; background: #0E1221; margin-right: 5px; }
-#side-menu ul li a .icon i { opacity: 0.25; }
+#side-menu ul li a { text-decoration: none; display: block; position: relative; width: 100px; height: 75px; outline: none; }
+#side-menu ul li a .icon { display: block; float: left; font-size: 24px; width: 100px; height: 75px; text-align: center; line-height: 100px; vertical-align: middle; color: #dedede; background: #0E1221; margin-right: 5px; }
+#side-menu ul li a .icon i { opacity: 0.25; display: block; position: relative; top: 50%; transform: translateY(-50%); }
 #side-menu ul li a span { position: absolute; bottom: 0px; left: 0px; width: 100%; text-align: center; opacity: 0; }
 
 /* Side menu hover effect */
@@ -22,17 +22,17 @@ header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transfo
 #side-menu:hover ul li a .icon i { opacity: 1; }
 
 /* Content Wrapper */
-#content-wrapper { margin-left: 105px; min-height: 1200px; background: #fafbff; padding-top: 15px; }
+#content-wrapper { margin-left: 105px; min-height: calc(100vh - 100px); background: #fafbff; padding: 15px 0px; }
 
 /* Accordion */
-.myAccordion { list-style: none; overflow: hidden; position: relative; width: 100%; display: flex; flex-wrap: wrap; }
-.myAccordion li { display: flex; width: 75px; float: left; overflow: hidden; }
-.myAccordion li.animated { -webkit-transition: all 0.6s ease-in-out; -moz-transition: all 0.6s ease-in-out; -o-transition: all 0.6s ease-in-out; -ms-transition: all 0.6s ease-in-out; transition : all 0.6s ease-in-out; }
-.myAccordion li .section-header { display: block; height: 100%; background: #eee; position: absolute; top: 0px; bottom: 0px; width: 75px; cursor: pointer; border: 1px dashed #ccc; }
-.myAccordion li .section-header.error { border-color: #cf3a3a; font-style: normal; font-size: 14px; background-color: #ffd1d1; }
-.myAccordion li .section-header span { font-weight: bold; color: #777; display: block; position: relative; top: 50%; transform: translateY(-50%) rotate(-90deg); text-align: center; white-space: nowrap; }
-.myAccordion li .section-content { width: 100%; background: #f3f3f3; }
-.myAccordion li .section-content { display: block; padding: 10px; margin-left: 75px; overflow: hidden; }
+.myAccordion { list-style: none; overflow: hidden; position: relative; width: 100%; display: flex; flex-wrap: wrap; margin-bottom: 0px; height: calc(100vh - 130px); }
+.myAccordion > li { display: flex; width: 75px; float: left; overflow: hidden; }
+.myAccordion > li.animated { -webkit-transition: all 0.6s ease-in-out; -moz-transition: all 0.6s ease-in-out; -o-transition: all 0.6s ease-in-out; -ms-transition: all 0.6s ease-in-out; transition : all 0.6s ease-in-out; }
+.myAccordion > li .section-header { display: block; height: 100%; background: #eee; position: absolute; top: 0px; bottom: 0px; width: 75px; cursor: pointer; border: 1px dashed #ccc; }
+.myAccordion > li .section-header.error { border-color: #cf3a3a; font-style: normal; font-size: 14px; background-color: #ffd1d1; }
+.myAccordion > li .section-header span { font-weight: bold; color: #777; display: block; position: relative; top: 50%; transform: translateY(-50%) rotate(-90deg); text-align: center; white-space: nowrap; }
+.myAccordion > li .section-content { width: 100%; background: #f3f3f3; border-top: 1px dashed #ccc; border-bottom: 1px dashed #ccc; }
+.myAccordion > li .section-content { display: block; padding: 10px; margin-left: 75px; overflow: hidden; overflow-y: auto; }
 
 /* Main */
 main form.run-creation h1 { margin-top: 0px; color: #444; }
