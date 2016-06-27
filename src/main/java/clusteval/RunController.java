@@ -129,7 +129,7 @@ public class RunController {
             ArrayList<String> dataStatistics = new ArrayList<String>(backendClient.getDataStatistics());
             ArrayList<String> runStatistics = new ArrayList<String>(backendClient.getRunStatistics());
             ArrayList<String> runDataStatistics = new ArrayList<String>(backendClient.getRunDataStatistics());
-            ArrayList<String> uniqueRunIdentifiers = new ArrayList<String>(backendClient.getRunResults());
+            ArrayList<String> uniqueRunIdentifiers = new ArrayList<String>(backendClient.getClusteringRunResultIdentifiers());
             ArrayList<String> randomizers = new ArrayList<String>(backendClient.getDataRandomizers());
 
             Collections.sort(dataSets, String.CASE_INSENSITIVE_ORDER);

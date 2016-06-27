@@ -36,5 +36,6 @@ header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transfo
 
 /* Main */
 main form.run-creation h1 { margin-top: 0px; color: #444; }
+main form.run-creation select { width: 100% !important; }
 main form.run-creation span.info { font-size: 12px; color: #999; font-style: italic; }
 main form.run-creation span.error { font-size: 12px; color: #cf3a3a; font-style: italic; }

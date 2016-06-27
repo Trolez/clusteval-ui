@@ -130,7 +130,7 @@
                                     <span class="error" th:if="${#fields.hasErrors('optimizationCriterion')}" th:errors="*{optimizationCriterion}">
                                 </label>
                                 <select class="select2-multiple" name="optimizationCriterion">
-                                    <option th:each="qualityMeasure : ${qualityMeasures}" th:value="${qualityMeasure}" th:text="${qualityMeasure}">
+                                    <option th:each="qualityMeasure : ${qualityMeasures}" th:value="${qualityMeasure}" th:text="${qualityMeasure}" disabled th:selected="${qualityMeasure} eq ${runCreation.optimizationCriterion}">
                                 </select>
                                 <input type="hidden" name="optimizationCriterion" value="DUMMY" disabled>
                             </div>
@@ -144,6 +144,14 @@
                                     <option th:each="optimizationMethod : ${optimizationMethods}" th:value="${optimizationMethod}" th:text="${optimizationMethod}" th:selected="${optimizationMethod} eq ${runCreation.optimizationMethod}">
                                 </select>
                                 <input type="hidden" name="optimizationMethod" value="DUMMY" disabled>
+                            </div>
+
+                            <div class="form-group">
+                                <label>
+                                    Optimization iterations
+                                    <span class="error" th:if="${#fields.hasErrors('optimizationIterations')}" th:errors="*{optimizationIterations}">
+                                </label>
+                                <input type="number" name="optimizationIterations" th:field="*{optimizationIterations}" class="form-control"><br>
                             </div>
                         </div>
 

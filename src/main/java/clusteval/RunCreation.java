@@ -1,10 +1,12 @@
 package clusteval;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.io.*;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,10 +24,14 @@ public class RunCreation {
     @NotNull(message = "Please select a optimization method")
     private String optimizationMethod;
 
-    private int optimizationIterations;
+    @NotNull(message = "Please specify number of optimization iterations")
+    @Min(value = 1, message = "Please specify a positive integer")
+    private Integer optimizationIterations;
 
     @NotBlankOrNull(message = "Please select one or more programs for the run")
     private ArrayList<String> programs = new ArrayList<String>();
+
+    private ArrayList<HashMap<String,String>> programParameters = new ArrayList<HashMap<String,String>>();
 
     @NotBlankOrNull(message = "Please select one or more data sets for the run")
     private ArrayList<String> dataSets = new ArrayList<String>();
@@ -49,7 +55,7 @@ public class RunCreation {
     private ArrayList<String> uniqueDataIdentifiers = new ArrayList<String>();
 
     private String randomizer;
-    private int numberOfRandomizedDataSets;
+    private Integer numberOfRandomizedDataSets;
 
     public String getName() {
         return name;
@@ -81,6 +87,14 @@ public class RunCreation {
 
     public void setOptimizationMethod(String optimizationMethod) {
         this.optimizationMethod = optimizationMethod;
+    }
+
+    public Integer getOptimizationIterations() {
+        return optimizationIterations;
+    }
+
+    public void setOptimizationIterations(Integer optimizationIterations) {
+        this.optimizationIterations = optimizationIterations;
     }
 
     public ArrayList<String> getPrograms() {
@@ -155,11 +169,11 @@ public class RunCreation {
         this.randomizer = randomizer;
     }
 
-    public int getNumberOfRandomizedDataSets() {
+    public Integer getNumberOfRandomizedDataSets() {
         return numberOfRandomizedDataSets;
     }
 
-    public void setNumberOfRandomizedDataSets(int numberOfRandomizedDataSets) {
+    public void setNumberOfRandomizedDataSets(Integer numberOfRandomizedDataSets) {
         this.numberOfRandomizedDataSets = numberOfRandomizedDataSets;
     }
 
@@ -186,7 +200,7 @@ public class RunCreation {
         if (mode.equals("parameter_optimization")) {
             run += "optimizationCriterion = " + optimizationCriterion + "\n";
 
-            run += "optimizationIterations = " + 1000 + "\n";
+            run += "optimizationIterations = " + optimizationIterations + "\n";
 
             run += "optimizationMethod = " + optimizationMethod + "\n\n";
 

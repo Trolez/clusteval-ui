@@ -8,6 +8,9 @@ $(document).ready(function() {
         closeOnSelect: false,
         width: '100%'
     });
+    /*$('.select2-multiple').selectize({
+        maxOptions: 100
+    });*/
 
     //Make all mode-specific sections initially invisible
     $('form.run-creation [data-mode]').hide();
@@ -55,6 +58,23 @@ $(document).ready(function() {
 
         updateAccordion();
     });
+
+    //When selecting a quality measure, enable the corresponding optimization criterion
+    $('form.run-creation select[name=qualityMeasures]').change(function(){
+        updateOptimizationCriterion($(this));
+    });
+    function updateOptimizationCriterion(element) {
+        //$('form.run-creation select[name=optimizationCriterion]').clearOptions();
+
+        $('form.run-creation select[name=optimizationCriterion] option').attr('disabled', 'disabled');
+        $(element).find('option:selected').each(function(){
+            var value = $(this).val();
+            $('form.run-creation select[name=optimizationCriterion]').find('option[value=' + value + ']').removeAttr('disabled');
+            //$('form.run-creation select[name=optimizationCriterion]').addOption(value);
+        });
+        $('form.run-creation select[name=optimizationCriterion]').select2({ closeOnSelect: false, width: '100%' });
+    }
+    updateOptimizationCriterion('form.run-creation select[name=qualityMeasures]');
 
     /****************
     ****************/
