@@ -64,17 +64,20 @@ $(document).ready(function() {
         updateOptimizationCriterion($(this));
     });
     function updateOptimizationCriterion(element) {
-        //$('form.run-creation select[name=optimizationCriterion]').clearOptions();
-
         $('form.run-creation select[name=optimizationCriterion] option').attr('disabled', 'disabled');
         $(element).find('option:selected').each(function(){
             var value = $(this).val();
             $('form.run-creation select[name=optimizationCriterion]').find('option[value=' + value + ']').removeAttr('disabled');
-            //$('form.run-creation select[name=optimizationCriterion]').addOption(value);
         });
+
+        //Reinitialize select2 to reflect changes
         $('form.run-creation select[name=optimizationCriterion]').select2({ closeOnSelect: false, width: '100%' });
     }
+
+    //Initially update criterion
     updateOptimizationCriterion('form.run-creation select[name=qualityMeasures]');
+
+    
 
     /****************
     ****************/

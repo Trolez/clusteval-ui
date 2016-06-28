@@ -44,6 +44,7 @@ public class RunController {
         try {
             BackendClient backendClient = getBackendClient();
             runNames = new ArrayList<String>(backendClient.getRuns());
+            Collections.sort(runNames, String.CASE_INSENSITIVE_ORDER);
 
             for (String runName : runNames) {
                 runs.add(new Run(runName));

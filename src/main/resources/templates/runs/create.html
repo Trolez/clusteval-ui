@@ -86,6 +86,11 @@
                                     <option th:each="program : ${programs}" th:value="${program}" th:text="${program}" th:selected="${#lists.contains(runCreation.programs, program)}">
                                 </select>
                                 <input type="hidden" name="programs" value="DUMMY" disabled>
+                                <div class="program-parameters">
+                                    <div class="parameters">
+                                        <span class="program">DBSCAN</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
