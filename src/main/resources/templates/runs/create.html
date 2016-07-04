@@ -75,7 +75,7 @@
                         <span>Programs</span>
                     </span>
                     <div class="section-content">
-                        <div class="filter" data-mode="[&quot;clustering&quot;,&quot;parameter_optimization&quot;]">
+                        <div class="filter" data-mode="[&quot;clustering&quot;,&quot;parameter_optimization&quot;,&quot;robustnessAnalysis&quot;]">
                             <div class="form-group">
                                 <h1>Programs</h1>
                                 <label>
@@ -86,11 +86,6 @@
                                     <option th:each="program : ${programs}" th:value="${program}" th:text="${program}" th:selected="${#lists.contains(runCreation.programs, program)}">
                                 </select>
                                 <input type="hidden" name="programs" value="DUMMY" disabled>
-                                <div class="program-parameters">
-                                    <div class="parameters">
-                                        <span class="program">DBSCAN</span>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -156,7 +151,8 @@
                                     Optimization iterations
                                     <span class="error" th:if="${#fields.hasErrors('optimizationIterations')}" th:errors="*{optimizationIterations}">
                                 </label>
-                                <input type="number" name="optimizationIterations" th:field="*{optimizationIterations}" class="form-control"><br>
+                                <input type="number" name="optimizationIterations" th:field="*{optimizationIterations}" class="form-control">
+                                <input type="hidden" name="optimizationIterations" value="1" disabled>
                             </div>
                         </div>
 
@@ -239,7 +235,25 @@
 
                             <div class="form-group">
                                 <label>Number of randomized data sets</label>
-                                <input type="number" name="numberOfRandomizedDataSets" th:field="*{numberOfRandomizedDataSets}" class="form-control"><br>
+                                <input type="number" name="numberOfRandomizedDataSets" th:field="*{numberOfRandomizedDataSets}" class="form-control">
+                            </div>
+
+                            <div class="randomizers">
+                                <div th:each="randomizer, randStat : *{randomizers}" class="randomizer">
+                                    <div class="form-group" th:each="parameter, paramStat : ${randomizer.parameters}">
+                                        <label>
+                                            <span th:text="${parameter.name}"></span> -
+                                            <span th:text="${parameter.description}"></span>
+                                        </label>
+                                        <input class="form-control" type="text" th:field="*{randomizers[__${randStat.index}__].parameters[__${paramStat.index}__].value}" />
+                                        <input class="enabled" type="hidden" th:field="*{randomizers[__${randStat.index}__].parameters[__${paramStat.index}__].description}" />
+                                        <input class="enabled" type="hidden" th:field="*{randomizers[__${randStat.index}__].parameters[__${paramStat.index}__].name}" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="add-item add-randomizer" data-randomizer="RemoveAndAddNoiseDataRandomizer">
+                                <span>+</span>
                             </div>
                         </div>
                     </div>

@@ -48,7 +48,7 @@ public class RunCreation {
     @NotBlankOrNull(message = "Please select one or more run data statistics for the run")
     private ArrayList<String> runDataStatistics = new ArrayList<String>();
 
-    @NotBlankOrNull(message = "Please select one or more unique run identifiers for the run")
+    //@NotBlankOrNull(message = "Please select one or more unique run identifiers for the run")
     private ArrayList<String> uniqueRunIdentifiers = new ArrayList<String>();
 
     @NotBlankOrNull(message = "Please select one or more unique data identifiers for the run")
@@ -56,6 +56,8 @@ public class RunCreation {
 
     private String randomizer;
     private Integer numberOfRandomizedDataSets;
+
+    private ArrayList<Randomizer> randomizers = new ArrayList<Randomizer>();
 
     public String getName() {
         return name;
@@ -177,6 +179,14 @@ public class RunCreation {
         this.numberOfRandomizedDataSets = numberOfRandomizedDataSets;
     }
 
+    public ArrayList<Randomizer> getRandomizers() {
+        return randomizers;
+    }
+
+    public void setRandomizers(ArrayList<Randomizer> randomizers) {
+        this.randomizers = randomizers;
+    }
+
     public String toString(String path) {
         //TODO: replace placeholders with actual values
         String run = "mode = " + mode + "\n";
@@ -242,6 +252,16 @@ public class RunCreation {
         if (mode.equals("robustnessAnalysis")) {
             run += "randomizer = " + randomizer + "\n";
             run += "numberOfRandomizedDataSets = " + numberOfRandomizedDataSets + "\n";
+
+            int randomizerCounter = 1;
+            for (Randomizer rand : randomizers) {
+                run += "\n[" + randomizer + "_" + randomizerCounter + "]\n";
+                for (Parameter parameter : rand.getParameters()) {
+                    if (!parameter.getValue().isEmpty()) {
+                        run += parameter.getName() + " = " + parameter.getValue() + "\n";
+                    }
+                }
+            }
         }
 
         return run;

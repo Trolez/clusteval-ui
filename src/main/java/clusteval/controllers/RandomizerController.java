@@ -11,6 +11,7 @@ import de.clusteval.serverclient.BackendClient;
 
 import java.rmi.ConnectException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.HashMap;
@@ -19,47 +20,33 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
 @Controller
-public class ProgramController {
+public class RandomizerController {
     @Value("${port}")
     private int port;
 
     @Value("${clientId}")
     private int clientId;
 
-    @RequestMapping(value="/getProgram", method=RequestMethod.GET)
-    public @ResponseBody Program getProgram(@RequestParam(value="name", required=true) String name) {
-        Program program = null;
+    @RequestMapping(value="/getRandomizer", method=RequestMethod.GET)
+    public @ResponseBody Randomizer getRandomizerTest(@RequestParam(value="name", required=true) String name) {
+        Randomizer randomizer = new Randomizer();
+        randomizer.setName(name);
+        String result = "";
         try {
+            //HashMap<String, String> parameters = new HashMap<String, String>();
+            ArrayList<Parameter> parameters = new ArrayList<Parameter>();
             BackendClient backendClient = getBackendClient();
 
-            program = new Program(name, backendClient.getParametersForProgramConfiguration(name));
-        } catch (ConnectException e) {
-        } catch (Exception e) {
-        }
+            Options options = backendClient.getOptionsForDataRandomizer(name);
+            Collection<Option> fuck = options.getOptions();
 
-        return program;
-    }
-
-    @RequestMapping(value="/test", method=RequestMethod.GET)
-    public @ResponseBody String getProgramTest(@RequestParam(value="name", required=true) String name) {
-        String result = "Nothing";
-        try {
-            BackendClient backendClient = getBackendClient();
-
-            result += " - Looping now: ";
-            //result += "" + backendClient.getParametersForProgramConfiguration(name).values().size() + "";
-
-            Map<String, Map<String, String>> map = backendClient.getParametersForProgramConfiguration(name);
-
-            if (map == null) {
-                result += "null";
+            for (Option option : fuck) {
+                Parameter param = new Parameter();
+                param.setName(option.getArgName());
+                param.setDescription(option.getDescription());
+                parameters.add(param);
             }
-
-            /*for (Map.Entry<String, Map<String, String>> entry : map.entrySet())
-            {
-                result += "Iteration: ";
-                //result += entry.getKey().toString();
-            }*/
+            randomizer.setParameters(parameters);
         } catch (ConnectException e) {
             result = " There was a connect exception!";
         } catch (Exception e) {
@@ -68,7 +55,7 @@ public class ProgramController {
             e.printStackTrace();
         }
 
-        return result;
+        return randomizer;
     }
 
     private BackendClient getBackendClient() throws ConnectException, Exception {

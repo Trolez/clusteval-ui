@@ -18,7 +18,6 @@ public class Program {
         //this.parameters = parameters;
         this.testing = new ArrayList<String>();
 
-        System.out.println("Testing this shit out!");
         for (Map.Entry<String, Map<String, String>> entry : parameters.entrySet())
         {
             System.out.println(entry.getKey());

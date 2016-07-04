@@ -30,6 +30,7 @@ $(document).ready(function() {
         elementsToShow.find('input').prop('disabled', false);
         elementsToShow.find('select').prop('disabled', false);
         elementsToShow.find('input[type=hidden]').prop('disabled', true);
+        elementsToShow.find('input[type=hidden].enabled').prop('disabled', false);
     }
 
     //Mode select/change
@@ -55,6 +56,7 @@ $(document).ready(function() {
         elementsToShow.find('input').prop('disabled', false);
         elementsToShow.find('select').prop('disabled', false);
         elementsToShow.find('input[type=hidden]').prop('disabled', true);
+        elementsToShow.find('input[type=hidden].enabled').prop('disabled', false);
 
         updateAccordion();
     });
@@ -74,10 +76,35 @@ $(document).ready(function() {
         $('form.run-creation select[name=optimizationCriterion]').select2({ closeOnSelect: false, width: '100%' });
     }
 
+    //Add randomizer
+    $('form.run-creation .add-randomizer').click(function() {
+        var index = $('form.run-creation .randomizers .randomizer').length;
+        var randomizer = $(this).data('randomizer');
+
+        $.ajax({
+            url: "/getRandomizer?name=" + randomizer,
+            type: 'get',
+            dataType: 'html',
+            success: function(data) {
+                result = $.parseJSON(data);
+
+                var returnValue = '<div class="randomizer"><div class="form-group">';
+                var paramIndex = 0;
+                $.each(result.parameters, function(key,value) {
+                    returnValue += '<label>' + value.name + ' - ' + value.description + '</label>';
+                    returnValue += '<input class="form-control" type="text" id="randomizers' + index + '.parameters' + paramIndex + '.value" name="randomizers[' + index + '].parameters[' + paramIndex + '].value" />'
+                    returnValue += '<input class="enabled" type="hidden" id="randomizers' + index + '.parameters' + paramIndex + '.description" name="randomizers[' + index + '].parameters[' + paramIndex + '].description" value="' + value.description + '" />'
+                    returnValue += '<input class="enabled" type="hidden" id="randomizers' + index + '.parameters' + paramIndex + '.name" name="randomizers[' + index + '].parameters[' + paramIndex + '].name" value="' + value.name + '" />'
+                    paramIndex++;
+                });
+                returnValue += '</div></div>';
+                $(".randomizers").append(returnValue);
+            }
+        });
+    });
+
     //Initially update criterion
     updateOptimizationCriterion('form.run-creation select[name=qualityMeasures]');
-
-    
 
     /****************
     ****************/

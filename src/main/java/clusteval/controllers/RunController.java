@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.HashMap;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.*;
@@ -123,7 +124,7 @@ public class RunController {
         try {
             BackendClient backendClient = getBackendClient();
 
-            ArrayList<String> dataSets = new ArrayList<String>(backendClient.getDataSetConfigurations());
+            ArrayList<String> dataSets = new ArrayList<String>(backendClient.getDataConfigurations());
             ArrayList<String> programs = new ArrayList<String>(backendClient.getProgramConfigurations());
             ArrayList<String> qualityMeasures = new ArrayList<String>(backendClient.getClusteringQualityMeasures());
             ArrayList<String> optimizationMethods = new ArrayList<String>(backendClient.getParameterOptimizationMethods());

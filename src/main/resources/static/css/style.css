@@ -47,3 +47,5 @@ main form.run-creation .radio { background: #f7f7f7; border: 1px dashed #ccc; pa
 main form.run-creation .radio input[type=radio] { margin-top: 1px; }
 main form.run-creation span.info { font-size: 12px; color: #999; font-style: italic; }
 main form.run-creation span.error { font-size: 12px; color: #cf3a3a; font-style: italic; }
+main form.run-creation .add-item { height: 60px; width: 60px; background: rgb(221, 221, 221) none repeat scroll 0% 0%; text-align: center; border-radius: 30px; font-size: 40px; padding-top: -5px; box-shadow: inset 0px 0px 3px #999; cursor: pointer; }
+main form.run-creation .randomizer { padding: 10px; border: 1px dashed #ccc; margin-bottom: 10px; background: #fdfdfd; box-shadow: 0px 0px 2px #aaa inset; }
