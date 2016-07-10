@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<div th:fragment="run-form">
+    <ul class="myAccordion">
+        <li class="open">
+            <span class="section-header">
+                <span>Run type</span>
+            </span>
+            <div class="section-content">
+                <h1>Run type</h1>
+                <span class="info">
+                    Set the basic run settings below.
+                </span>
+                <div class="form-group">
+                    <label>
+                        Name of run
+                        <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                    </label>
+                    <input type="text" name="name" th:field="*{name}" class="form-control" th:errorclass="has-error"><br>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Run type
+                        <span class="error" th:if="${#fields.hasErrors('mode')}" th:errors="*{mode}">
+                    </label>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="mode" th:field="*{mode}" value="clustering">
+                            Clustering run
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="mode" th:field="*{mode}" value="parameter_optimization">
+                            Parameter optimization run
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="mode" th:field="*{mode}" value="dataAnalysis">
+                            Data analysis run
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="mode" th:field="*{mode}" value="runAnalysis">
+                            Run analysis run
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="mode" th:field="*{mode}" value="runDataAnalysis">
+                            Run-data analysis run
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="mode" th:field="*{mode}" value="robustnessAnalysis">
+                            Robustness analysis run
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <span class="section-header">
+                <span>Programs</span>
+            </span>
+            <div class="section-content">
+                <div class="filter" data-mode="[&quot;clustering&quot;,&quot;parameter_optimization&quot;,&quot;robustnessAnalysis&quot;]">
+                    <div class="form-group">
+                        <h1>Programs</h1>
+                        <label>
+                            Select programs
+                            <span class="error" th:if="${#fields.hasErrors('programs')}" th:errors="*{programs}">
+                        </label>
+                        <select class="select2-multiple" multiple="multiple" name="programs">
+                            <option th:each="program : ${programs}" th:value="${program}" th:text="${program}" th:selected="${#lists.contains(runCreation.programs, program)}">
+                        </select>
+                        <input type="hidden" name="programs" value="DUMMY" disabled>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <span class="section-header">
+                <span>Data</span>
+            </span>
+            <div class="section-content">
+                <h1>Data</h1>
+
+                <div class="filter" data-mode="[&quot;clustering&quot;,&quot;parameter_optimization&quot;,&quot;dataAnalysis&quot;,&quot;robustnessAnalysis&quot;]">
+                    <div class="form-group">
+                        <label>
+                            Data configs
+                            <span class="error" th:if="${#fields.hasErrors('dataSets')}" th:errors="*{dataSets}">
+                        </label>
+                        <select class="select2-multiple" multiple="multiple" name="dataSets">
+                            <option th:each="dataSet : ${dataSets}" th:value="${dataSet}" th:text="${dataSet}" th:selected="${#lists.contains(runCreation.dataSets, dataSet)}">
+                        </select>
+                        <input type="hidden" name="dataSets" value="DUMMY" disabled>
+                    </div>
+                </div>
+
+                <div class="filter" data-mode="[&quot;clustering&quot;,&quot;parameter_optimization&quot;,&quot;robustnessAnalysis&quot;]">
+                    <div class="form-group">
+                        <label>
+                            Quality measures
+                            <span class="error" th:if="${#fields.hasErrors('qualityMeasures')}" th:errors="*{qualityMeasures}">
+                        </label>
+                        <select class="select2-multiple" multiple="multiple" name="qualityMeasures">
+                            <option th:each="qualityMeasure : ${qualityMeasures}" th:value="${qualityMeasure}" th:text="${qualityMeasure}" th:selected="${#lists.contains(runCreation.qualityMeasures, qualityMeasure)}">
+                        </select>
+                        <input type="hidden" name="qualityMeasures" value="DUMMY" disabled>
+                    </div>
+                </div>
+
+                <div class="filter" data-mode="[&quot;parameter_optimization&quot;]">
+                    <div class="form-group">
+                        <label>
+                            Optimization criterion
+                            <span class="error" th:if="${#fields.hasErrors('optimizationCriterion')}" th:errors="*{optimizationCriterion}">
+                        </label>
+                        <select class="select2-multiple" name="optimizationCriterion">
+                            <option th:each="qualityMeasure : ${qualityMeasures}" th:value="${qualityMeasure}" th:text="${qualityMeasure}" disabled th:selected="${qualityMeasure} eq ${runCreation.optimizationCriterion}">
+                        </select>
+                        <input type="hidden" name="optimizationCriterion" value="DUMMY" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            Optimization method
+                            <span class="error" th:if="${#fields.hasErrors('optimizationMethod')}" th:errors="*{optimizationMethod}">
+                        </label>
+                        <select class="select2-multiple" name="optimizationMethod">
+                            <option th:each="optimizationMethod : ${optimizationMethods}" th:value="${optimizationMethod}" th:text="${optimizationMethod}" th:selected="${optimizationMethod} eq ${runCreation.optimizationMethod}">
+                        </select>
+                        <input type="hidden" name="optimizationMethod" value="DUMMY" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            Optimization iterations
+                            <span class="error" th:if="${#fields.hasErrors('optimizationIterations')}" th:errors="*{optimizationIterations}">
+                        </label>
+                        <input type="number" name="optimizationIterations" th:field="*{optimizationIterations}" class="form-control">
+                        <input type="hidden" name="optimizationIterations" value="1" disabled>
+                    </div>
+                </div>
+
+                <div class="filter" data-mode="[&quot;dataAnalysis&quot;]">
+                    <div class="form-group">
+                        <label>
+                            Data statistics
+                            <span class="error" th:if="${#fields.hasErrors('dataStatistics')}" th:errors="*{dataStatistics}">
+                        </label>
+                        <select class="select2-multiple" multiple="multiple" name="dataStatistics">
+                            <option th:each="dataStatistic : ${dataStatistics}" th:value="${dataStatistic}" th:text="${dataStatistic}" th:selected="${#lists.contains(runCreation.dataStatistics, dataStatistic)}">
+                        </select>
+                        <input type="hidden" name="dataStatistics" value="DUMMY" disabled>
+                    </div>
+                </div>
+
+                <div class="filter" data-mode="[&quot;runAnalysis&quot;]">
+                    <div class="form-group">
+                        <label>
+                            Run statistics
+                            <span class="error" th:if="${#fields.hasErrors('runStatistics')}" th:errors="*{runStatistics}">
+                        </label>
+                        <select class="select2-multiple" multiple="multiple" name="runStatistics">
+                            <option th:each="runStatistic : ${runStatistics}" th:value="${runStatistic}" th:text="${runStatistic}" th:selected="${#lists.contains(runCreation.runStatistics, runStatistic)}">
+                        </select>
+                        <input type="hidden" name="runStatistics" value="DUMMY" disabled>
+                    </div>
+                </div>
+
+                <div class="filter" data-mode="[&quot;runDataAnalysis&quot;]">
+                    <div class="form-group">
+                        <label>
+                            Run-data statistics
+                            <span class="error" th:if="${#fields.hasErrors('runDataStatistics')}" th:errors="*{runDataStatistics}">
+                        </label>
+                        <select class="select2-multiple" multiple="multiple" name="runDataStatistics">
+                            <option th:each="runDataStatistic : ${runDataStatistics}" th:value="${runDataStatistic}" th:text="${runDataStatistic}" th:selected="${#lists.contains(runCreation.runDataStatistics, runDataStatistic)}">
+                        </select>
+                        <input type="hidden" name="runDataStatistics" value="DUMMY" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            Unique data identifiers
+                            <span class="error" th:if="${#fields.hasErrors('uniqueDataIdentifiers')}" th:errors="*{uniqueDataIdentifiers}">
+                        </label>
+                        <select class="select2-multiple" multiple="multiple" name="uniqueDataIdentifiers">
+                            <option th:each="uniqueDataIdentifier : ${uniqueRunIdentifiers}" th:value="${uniqueDataIdentifier}" th:text="${uniqueDataIdentifier}" th:selected="${#lists.contains(runCreation.uniqueDataIdentifiers, uniqueDataIdentifier)}">
+                        </select>
+                        <input type="hidden" name="uniqueDataIdentifiers" value="DUMMY" disabled>
+                    </div>
+                </div>
+
+                <div class="filter" data-mode="[&quot;runAnalysis&quot;,&quot;runDataAnalysis&quot;,&quot;robustnessAnalysis&quot;]">
+                    <div class="form-group">
+                        <label>
+                            Unique run identifiers
+                            <span class="error" th:if="${#fields.hasErrors('uniqueRunIdentifiers')}" th:errors="*{uniqueRunIdentifiers}">
+                        </label>
+                        <select class="select2-multiple" multiple="multiple" name="uniqueRunIdentifiers">
+                            <option th:each="uniqueRunIdentifier : ${uniqueRunIdentifiers}" th:value="${uniqueRunIdentifier}" th:text="${uniqueRunIdentifier}" th:selected="${#lists.contains(runCreation.uniqueRunIdentifiers, uniqueRunIdentifier)}">
+                        </select>
+                        <input type="hidden" name="uniqueRunIdentifiers" value="DUMMY" disabled>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <span class="section-header">
+                <span>Randomizers</span>
+            </span>
+            <div class="section-content">
+                <div class="filter" data-mode="[&quot;robustnessAnalysis&quot;]">
+                    <div class="form-group">
+                        <label>Randomizers</label>
+                        <select class="select2-multiple" name="randomizer">
+                            <option th:each="randomizer : ${randomizers}" th:value="${randomizer}" th:text="${randomizer}" th:selected="${randomizer} eq ${runCreation.randomizer}">
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Number of randomized data sets</label>
+                        <input type="number" name="numberOfRandomizedDataSets" th:field="*{numberOfRandomizedDataSets}" class="form-control">
+                    </div>
+
+                    <div class="randomizers">
+                        <div th:each="randomizer, randStat : *{randomizers}" class="randomizer">
+                            <div class="form-group" th:each="parameter, paramStat : ${randomizer.parameters}">
+                                <label>
+                                    <span th:text="${parameter.name}"></span> -
+                                    <span th:text="${parameter.description}"></span>
+                                </label>
+                                <input class="form-control" type="text" th:field="*{randomizers[__${randStat.index}__].parameters[__${paramStat.index}__].value}" />
+                                <input class="enabled" type="hidden" th:field="*{randomizers[__${randStat.index}__].parameters[__${paramStat.index}__].description}" />
+                                <input class="enabled" type="hidden" th:field="*{randomizers[__${randStat.index}__].parameters[__${paramStat.index}__].name}" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="add-item add-randomizer" data-randomizer="RemoveAndAddNoiseDataRandomizer">
+                        <span>+</span>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <span class="section-header">
+                <span>Other settings</span>
+            </span>
+            <div class="section-content">
+                <div class="form-group">
+                    <input type="submit" value="Create run">
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

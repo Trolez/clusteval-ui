@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
 <body>
     <div layout:fragment="content">
-        <form class="run-creation" th:action="@{/runs/create}" method="post" th:object="${runCreation}" th:include="runs/form :: run-form">
+        <form class="run-creation" th:action="@{/runs/edit}" method="post" th:object="${runCreation}" th:include="runs/form :: run-form">
 
         </form>
     </div>

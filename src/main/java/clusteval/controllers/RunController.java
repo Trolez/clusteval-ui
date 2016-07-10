@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import de.clusteval.serverclient.BackendClient;
 
 import java.rmi.ConnectException;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.ArrayList;
@@ -184,7 +186,7 @@ public class RunController {
             return "runs/create";
         }
 
-        //Create test file
+        //Create run file
         try {
             File file = new File(path + "/runs/" + runCreation.getName() + ".run");
 
@@ -204,6 +206,26 @@ public class RunController {
         }
 
         return "redirect:/runs";
+    }
+
+    @RequestMapping(value="/runs/edit")
+    public String editRun(@RequestParam(value="name", required=true) String fileName, RunCreation runCreation, Model model) {
+        try {
+            runCreation.parse(path, fileName);
+            populateModel(model);
+        } catch (ConnectException e) {
+            return "runs/notRunning";
+        } catch (Exception e) {
+        }
+
+        return "runs/edit";
+    }
+
+    @RequestMapping(value="/getRun", method=RequestMethod.GET)
+    public @ResponseBody RunCreation getRunCreationFromFileName(@RequestParam(value="name", required=true) String name) {
+        RunCreation runCreation = new RunCreation();
+        runCreation.parse(path, name);
+        return runCreation;
     }
 
     private BackendClient getBackendClient() throws ConnectException, Exception {

@@ -4,6 +4,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -185,6 +186,25 @@ public class RunCreation {
 
     public void setRandomizers(ArrayList<Randomizer> randomizers) {
         this.randomizers = randomizers;
+    }
+
+    public void parse(String path, String fileName) {
+        this.setName(fileName);
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(path + "/runs/" + fileName + ".run"));;
+            String currentLine;
+
+            while ((currentLine = br.readLine()) != null) {
+                if (currentLine.startsWith("mode")) {
+                    this.setMode(currentLine.substring(currentLine.indexOf("=") + 1).trim());
+                }
+                if (currentLine.startsWith("programConfig")) {
+                    String line = currentLine.substring(currentLine.indexOf("=") + 1).trim();
+                    this.setPrograms(Arrays.asList(line.split("\\s*,\\s*")));
+                }
+            }
+        } catch (Exception e) {}
     }
 
     public String toString(String path) {
