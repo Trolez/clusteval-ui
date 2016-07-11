@@ -189,21 +189,81 @@ public class RunCreation {
     }
 
     public void parse(String path, String fileName) {
-        this.setName(fileName);
+        setName(fileName);
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(path + "/runs/" + fileName + ".run"));;
             String currentLine;
 
             while ((currentLine = br.readLine()) != null) {
+                String line = currentLine.substring(currentLine.indexOf("=") + 1).trim();
                 if (currentLine.startsWith("mode")) {
-                    this.setMode(currentLine.substring(currentLine.indexOf("=") + 1).trim());
+                    setMode(line);
                 }
-                if (currentLine.startsWith("programConfig")) {
-                    String line = currentLine.substring(currentLine.indexOf("=") + 1).trim();
-                    this.setPrograms(Arrays.asList(line.split("\\s*,\\s*")));
+                else if (currentLine.startsWith("programConfig")) {
+                    setPrograms(Arrays.asList(line.split("\\s*,\\s*")));
+                }
+                else if (currentLine.startsWith("optimizationCriterion")) {
+                    setOptimizationCriterion(line);
+                }
+                else if (currentLine.startsWith("optimizationMethod")) {
+                    setOptimizationMethod(line);
+                }
+                else if (currentLine.startsWith("optimizationIterations")) {
+                    setOptimizationIterations(Integer.parseInt(line));
+                }
+                else if (currentLine.startsWith("dataConfig")) {
+                    setDataSets(Arrays.asList(line.split("\\s*,\\s*")));
+                }
+                else if (currentLine.startsWith("qualityMeasures")) {
+                    setQualityMeasures(Arrays.asList(line.split("\\s*,\\s*")));
+                }
+                else if (currentLine.startsWith("dataStatistics")) {
+                    setDataStatistics(Arrays.asList(line.split("\\s*,\\s*")));
+                }
+                else if (currentLine.startsWith("runStatistics")) {
+                    setRunStatistics(Arrays.asList(line.split("\\s*,\\s*")));
+                }
+                else if (currentLine.startsWith("runDataStatistics")) {
+                    setRunDataStatistics(Arrays.asList(line.split("\\s*,\\s*")));
+                }
+                else if (currentLine.startsWith("uniqueRunIdentifiers")) {
+                    setUniqueRunIdentifiers(Arrays.asList(line.split("\\s*,\\s*")));
+                }
+                else if (currentLine.startsWith("uniqueDataIdentifiers")) {
+                    setUniqueDataIdentifiers(Arrays.asList(line.split("\\s*,\\s*")));
+                }
+                else if (currentLine.startsWith("randomizer")) {
+                    setRandomizer(line);
+                }
+                else if (currentLine.startsWith("numberOfRandomizedDataSets")) {
+                    setNumberOfRandomizedDataSets(Integer.parseInt(line));
                 }
             }
+        } catch (Exception e) {}
+
+        //Randomizers
+        ArrayList<Randomizer> randomizers = new ArrayList<Randomizer>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(path + "/runs/" + fileName + ".run"));;
+            String currentLine;
+
+            while ((currentLine = br.readLine()) != null) {
+                if (currentLine.startsWith("[" + getRandomizer())) {
+                    Randomizer randomizer = new Randomizer();
+                    randomizer.setName(getRandomizer());
+                    ArrayList<Parameter> parameters = new ArrayList<Parameter>();
+                    while (!(currentLine = br.readLine()).equals("")) {
+                        Parameter parameter = new Parameter();
+                        parameter.setName(currentLine.split("=")[0].trim());
+                        parameter.setValue(currentLine.split("=")[1].trim());
+                        parameters.add(parameter);
+                    }
+                    randomizer.setParameters(parameters);
+                    randomizers.add(randomizer);
+                }
+            }
+            setRandomizers(randomizers);
         } catch (Exception e) {}
     }
 

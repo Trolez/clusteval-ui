@@ -4,6 +4,7 @@
 </head>
 <body>
 <div th:fragment="run-form">
+    <input type="hidden" name="old-name" th:value="${param.name[0]}" th:unless="${param.name == null}">
     <ul class="myAccordion">
         <li class="open">
             <span class="section-header">

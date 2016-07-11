@@ -221,6 +221,42 @@ public class RunController {
         return "runs/edit";
     }
 
+    @RequestMapping(value="/runs/edit", method=RequestMethod.POST)
+    public String editRun(@Valid RunCreation runCreation, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        //Return to form if there were validation errors
+        if (bindingResult.hasErrors()) {
+            try {
+                populateModel(model);
+            } catch (ConnectException e) {
+                return "runs/notRunning";
+            } catch (Exception e) {
+            }
+            return "runs/edit";
+        }
+
+        //Create run file
+        try {
+            File file = new File(path + "/runs/" + runCreation.getName() + ".run");
+
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileWriter writer = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(writer);
+            writer.write(runCreation.toString(path));
+            writer.close();
+
+            redirectAttributes.addFlashAttribute("success", "The run has been succcesfully edited.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("failure", "An error occurred during file writing.");
+        }
+
+        return "redirect:/runs";
+    }
+
+
     @RequestMapping(value="/getRun", method=RequestMethod.GET)
     public @ResponseBody RunCreation getRunCreationFromFileName(@RequestParam(value="name", required=true) String name) {
         RunCreation runCreation = new RunCreation();
