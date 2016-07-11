@@ -28,7 +28,7 @@
             <div class="run" th:each="run : ${runs}" th:object="${run}">
                 <div><span class="name" th:text="*{name}" /></div>
                 <form th:action="@{/runs}" method="post" th:object="${run}">
-                    <a class="btn btn-danger pull-right" th:href="@{/runs/edit(name=*{name})}">Delete run</a>
+                    <a class="btn btn-danger pull-right delete-run" th:href="@{/runs/delete(name=*{name})}">Delete run</a>
                     <input type="hidden" name="name" th:value="*{name}">
                     <input type="submit" name="send" value="Perform Run" class="btn btn-primary">
                     <a class="btn btn-primary" th:href="@{/runs/edit(name=*{name})}">Edit run</a>

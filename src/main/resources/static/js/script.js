@@ -160,4 +160,8 @@ $(document).ready(function() {
 
     /****************
     ****************/
+
+    $('.run-list .delete-run').click(function() {
+        return confirm("Delete this run?");
+    });
 });

@@ -256,6 +256,18 @@ public class RunController {
         return "redirect:/runs";
     }
 
+    @RequestMapping(value="/runs/delete")
+    public String deleteRun(@RequestParam(value="name", required=true) String fileName, RedirectAttributes redirectAttributes) {
+        File file = new File(path + "/runs/" + fileName + ".run");
+
+        if (file.exists()) {
+            file.delete();
+        }
+
+        redirectAttributes.addFlashAttribute("success", "The run has been succcesfully deleted.");
+
+        return "redirect:/runs";
+    }
 
     @RequestMapping(value="/getRun", method=RequestMethod.GET)
     public @ResponseBody RunCreation getRunCreationFromFileName(@RequestParam(value="name", required=true) String name) {
