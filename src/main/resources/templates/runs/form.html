@@ -74,14 +74,17 @@
                 <div class="filter" data-mode="[&quot;clustering&quot;,&quot;parameter_optimization&quot;,&quot;robustnessAnalysis&quot;]">
                     <div class="form-group">
                         <h1>Programs</h1>
-                        <label>
-                            Select programs
-                            <span class="error" th:if="${#fields.hasErrors('programs')}" th:errors="*{programs}">
-                        </label>
-                        <select class="select2-multiple" multiple="multiple" name="programs">
-                            <option th:each="program : ${programs}" th:value="${program}" th:text="${program}" th:selected="${#lists.contains(runCreation.programs, program)}">
-                        </select>
-                        <input type="hidden" name="programs" value="DUMMY" disabled>
+                        <div class="form-group">
+                            <label>
+                                Select programs
+                                <span class="error" th:if="${#fields.hasErrors('programs')}" th:errors="*{programs}">
+                            </label>
+                            <select class="select2-multiple programs" multiple="multiple" name="programs">
+                                <option th:each="program : ${programs}" th:value="${program}" th:text="${program}" th:selected="${#lists.contains(runCreation.programs, program)}">
+                            </select>
+                            <input type="hidden" name="programs" value="DUMMY" disabled>
+                        </div>
+                        <div id="program-parameters"></div>
                     </div>
                 </div>
             </div>

@@ -33,14 +33,13 @@ public class RandomizerController {
         randomizer.setName(name);
         String result = "";
         try {
-            //HashMap<String, String> parameters = new HashMap<String, String>();
             ArrayList<Parameter> parameters = new ArrayList<Parameter>();
             BackendClient backendClient = getBackendClient();
 
             Options options = backendClient.getOptionsForDataRandomizer(name);
-            Collection<Option> fuck = options.getOptions();
+            Collection<Option> optionValues = options.getOptions();
 
-            for (Option option : fuck) {
+            for (Option option : optionValues) {
                 Parameter param = new Parameter();
                 param.setName(option.getArgName());
                 param.setDescription(option.getDescription());

@@ -11,29 +11,21 @@ import java.util.HashMap;
 public class Program {
     private String name;
     //private Map<String, Map<String, String>> parameters;
-    private ArrayList<String> testing;
-
-    public Program(String name, Map<String, Map<String, String>> parameters) {
-        this.name = name;
-        //this.parameters = parameters;
-        this.testing = new ArrayList<String>();
-
-        for (Map.Entry<String, Map<String, String>> entry : parameters.entrySet())
-        {
-            System.out.println(entry.getKey());
-            //testing.add(entry.getKey());
-        }
-    }
+    private ArrayList<ProgramParameter> parameters;
 
     public String getName() {
         return name;
     }
 
-    /*public Map<String, Map<String, String>> getParameters() {
-        return parameters;
-    }*/
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public ArrayList<String> getTesting() {
-        return testing;
+    public ArrayList<ProgramParameter> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(ArrayList<ProgramParameter> parameters) {
+        this.parameters = parameters;
     }
 }

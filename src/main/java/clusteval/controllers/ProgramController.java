@@ -11,6 +11,7 @@ import de.clusteval.serverclient.BackendClient;
 
 import java.rmi.ConnectException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.HashMap;
@@ -28,47 +29,38 @@ public class ProgramController {
 
     @RequestMapping(value="/getProgram", method=RequestMethod.GET)
     public @ResponseBody Program getProgram(@RequestParam(value="name", required=true) String name) {
-        Program program = null;
+        Program program = new Program();
+        program.setName(name);
         try {
             BackendClient backendClient = getBackendClient();
 
-            program = new Program(name, backendClient.getParametersForProgramConfiguration(name));
+            Map<String, Map<String, String>> parameters = backendClient.getParametersForProgramConfiguration(name);
+
+            ArrayList<ProgramParameter> programParameters = new ArrayList<ProgramParameter>();
+            for (Map.Entry<String, Map<String, String>> entry : parameters.entrySet())
+            {
+                ProgramParameter programParameter = new ProgramParameter();
+                programParameter.setName(entry.getKey());
+
+                ArrayList<ProgramParameterOption> programParameterOptions = new ArrayList<ProgramParameterOption>();
+                for (Map.Entry<String, String> subEntry : entry.getValue().entrySet()) {
+                    ProgramParameterOption programParameterOption = new ProgramParameterOption();
+                    programParameterOption.setName(subEntry.getKey());
+                    programParameterOption.setValue(subEntry.getValue());
+
+                    programParameterOptions.add(programParameterOption);
+                }
+
+                programParameter.setOptions(programParameterOptions);
+                programParameters.add(programParameter);
+            }
+
+            program.setParameters(programParameters);
         } catch (ConnectException e) {
         } catch (Exception e) {
         }
 
         return program;
-    }
-
-    @RequestMapping(value="/test", method=RequestMethod.GET)
-    public @ResponseBody String getProgramTest(@RequestParam(value="name", required=true) String name) {
-        String result = "Nothing";
-        try {
-            BackendClient backendClient = getBackendClient();
-
-            result += " - Looping now: ";
-            //result += "" + backendClient.getParametersForProgramConfiguration(name).values().size() + "";
-
-            Map<String, Map<String, String>> map = backendClient.getParametersForProgramConfiguration(name);
-
-            if (map == null) {
-                result += "null";
-            }
-
-            /*for (Map.Entry<String, Map<String, String>> entry : map.entrySet())
-            {
-                result += "Iteration: ";
-                //result += entry.getKey().toString();
-            }*/
-        } catch (ConnectException e) {
-            result = " There was a connect exception!";
-        } catch (Exception e) {
-            result = " There was some exception!";
-            result += e.toString();
-            e.printStackTrace();
-        }
-
-        return result;
     }
 
     private BackendClient getBackendClient() throws ConnectException, Exception {

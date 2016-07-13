@@ -103,6 +103,44 @@ $(document).ready(function() {
         });
     });
 
+    //Add program
+    var val;
+    $('form.run-creation').on('change', 'select.programs', function() {
+        var newVal = $(this).val();
+        var selectedProgram;
+        var index = $('form.run-creation #program-parameters .program').length;
+        for (var i = 0; i < newVal.length; i++) {
+            if ($.inArray(newVal[i], val) == -1) {
+                selectedProgram = $(this).find('option[value="' + newVal[i] + '"]').text();
+                $.ajax({
+                    url: "/getProgram?name=" + selectedProgram,
+                    type: 'get',
+                    dataType: 'html',
+                    success: function(data) {
+                        result = $.parseJSON(data);
+
+                        var returnValue = '<div class="program"><div class="form-group">';
+                        returnValue += '<strong>Program: </strong>' + result.name;
+                        //var paramIndex = 0;
+                        $.each(result.parameters, function(key,value) {
+                            returnValue += '<hr><label>' + value.name + '</label><br>';
+                            $.each(value.options, function(key,value){
+                                returnValue += value.name;
+                                returnValue += '<input class="form-control" type="text" value="' + value.value + '" />';
+                            });
+                            //returnValue += '<input class="enabled" type="hidden" id="randomizers' + index + '.parameters' + paramIndex + '.description" name="randomizers[' + index + '].parameters[' + paramIndex + '].description" value="' + value.description + '" />'
+                            //returnValue += '<input class="enabled" type="hidden" id="randomizers' + index + '.parameters' + paramIndex + '.name" name="randomizers[' + index + '].parameters[' + paramIndex + '].name" value="' + value.name + '" />'
+                            //paramIndex++;
+                        });
+                        returnValue += '</div></div>';
+                        $("#program-parameters").append(returnValue);
+                    }
+                });
+            }
+        }
+        val = newVal;
+    });
+
     //Initially update criterion
     updateOptimizationCriterion('form.run-creation select[name=qualityMeasures]');
 
