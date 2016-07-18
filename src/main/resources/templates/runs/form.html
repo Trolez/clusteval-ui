@@ -84,24 +84,24 @@
                             <input type="hidden" name="programs" value="DUMMY" disabled>
                         </div>
                         <div id="program-parameters">
-                            <div class="program" th:each="programSetting, programSettingStat: *{programSettings}">
+                            <div class="program" th:each="programSetting, programSettingStat: *{programSettings}" th:attr="data-name=${programSetting.name}">
                                 <strong>Program: </strong><span class="name" th:text="${programSetting.name}"></span>
                                 <input class="enabled" type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].name}" />
                                 <span class="toggle"><i class="fa fa-expand"></i></span>
                                 <div class="program-content">
-                                    <div th:each="programParameter, programParamStat: ${programSetting.parameters}">
+                                    <th:block th:each="programParameter, programParamStat: ${programSetting.parameters}">
                                         <hr>
                                         <label th:text="${programParameter.name}"></label>
                                         <input class="enabled" type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].name}" />
-                                        <span th:each="programParameterOption, optionStat: ${programParameter.options}">
+                                        <th:block th:each="programParameterOption, optionStat: ${programParameter.options}">
                                             <br>
                                             <span th:text="${programParameterOption.name}"></span>:
                                             <span th:text="${programParameterOption.value}"></span>
                                             <input class="enabled" type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].options[__${optionStat.index}__].name}" />
                                             <input class="enabled" type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].options[__${optionStat.index}__].value}" />
-                                        </span>
+                                        </th:block>
                                         <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].value}" />
-                                    </div>
+                                    </th:block>
                                 </div>
                             </div>
 

@@ -165,10 +165,6 @@ public class RunController {
     public String createRun(RunCreation runCreation, Model model) {
         try {
             populateModel(model);
-            ProgramController programController = new ProgramController();
-            ArrayList<Program> programs = new ArrayList<Program>();
-            programs.add(programController.getProgram("DBSCAN"));
-            runCreation.setProgramSettings(programs);
         } catch (ConnectException e) {
             return "runs/notRunning";
         } catch (Exception e) {
@@ -179,6 +175,17 @@ public class RunController {
 
     @RequestMapping(value="/runs/create", method=RequestMethod.POST)
     public String createRun(@Valid RunCreation runCreation, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        /*Create a new array of program settings
+        * This fixes an error that occurs if a program
+        * was selected and then deselected in the form */
+        ArrayList<Program> programSettings = new ArrayList<Program>();
+        for (Program program : runCreation.getProgramSettings()) {
+            if (program != null && program.getParameters() != null && program.getParameters().size() > 0) {
+                programSettings.add(program);
+            }
+        }
+        runCreation.setProgramSettings(programSettings);
+
         //Return to form if there were validation errors
         if (bindingResult.hasErrors()) {
             try {
