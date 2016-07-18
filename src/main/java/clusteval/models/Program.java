@@ -10,7 +10,6 @@ import java.util.HashMap;
 
 public class Program {
     private String name;
-    //private Map<String, Map<String, String>> parameters;
     private ArrayList<ProgramParameter> parameters;
 
     public String getName() {

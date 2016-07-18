@@ -60,6 +60,8 @@ public class RunCreation {
 
     private ArrayList<Randomizer> randomizers = new ArrayList<Randomizer>();
 
+    private ArrayList<Program> programSettings = new ArrayList<Program>();
+
     public String getName() {
         return name;
     }
@@ -186,6 +188,14 @@ public class RunCreation {
 
     public void setRandomizers(ArrayList<Randomizer> randomizers) {
         this.randomizers = randomizers;
+    }
+
+    public ArrayList<Program> getProgramSettings() {
+        return programSettings;
+    }
+
+    public void setProgramSettings(ArrayList<Program> programSettings) {
+        this.programSettings = programSettings;
     }
 
     public void parse(String path, String fileName) {

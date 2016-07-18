@@ -165,6 +165,10 @@ public class RunController {
     public String createRun(RunCreation runCreation, Model model) {
         try {
             populateModel(model);
+            ProgramController programController = new ProgramController();
+            ArrayList<Program> programs = new ArrayList<Program>();
+            programs.add(programController.getProgram("DBSCAN"));
+            runCreation.setProgramSettings(programs);
         } catch (ConnectException e) {
             return "runs/notRunning";
         } catch (Exception e) {

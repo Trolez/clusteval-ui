@@ -119,26 +119,47 @@ $(document).ready(function() {
                     success: function(data) {
                         result = $.parseJSON(data);
 
-                        var returnValue = '<div class="program"><div class="form-group">';
-                        returnValue += '<strong>Program: </strong>' + result.name;
-                        //var paramIndex = 0;
-                        $.each(result.parameters, function(key,value) {
-                            returnValue += '<hr><label>' + value.name + '</label><br>';
-                            $.each(value.options, function(key,value){
-                                returnValue += value.name;
-                                returnValue += '<input class="form-control" type="text" value="' + value.value + '" />';
-                            });
-                            //returnValue += '<input class="enabled" type="hidden" id="randomizers' + index + '.parameters' + paramIndex + '.description" name="randomizers[' + index + '].parameters[' + paramIndex + '].description" value="' + value.description + '" />'
-                            //returnValue += '<input class="enabled" type="hidden" id="randomizers' + index + '.parameters' + paramIndex + '.name" name="randomizers[' + index + '].parameters[' + paramIndex + '].name" value="' + value.name + '" />'
-                            //paramIndex++;
-                        });
-                        returnValue += '</div></div>';
+                        var returnValue = '<div class="program">';
+                            returnValue += '<span class="name"><strong>Program: </strong>' + result.name + '</span>';
+                            returnValue += '<input class="enabled" type="hidden" id="programSettings' + index + '.name"' + 'name="programSettings[' + index + '].name" value="' + result.name + '" />';
+                            returnValue += '<span class="toggle"><i class="fa fa-expand"></i></span>'
+                            returnValue += '<div class="program-content">';
+                                var paramIndex = 0;
+                                $.each(result.parameters, function(key,value) {
+                                    var optionIndex = 0;
+                                    var defaultValue = '';
+                                    returnValue += '<hr><label>' + value.name + '</label><br>';
+                                    returnValue += '<input class="enabled" type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.name"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].name" value="' + value.name + '" />';
+                                    $.each(value.options, function(key,value){
+                                        returnValue += value.name + ': ' + value.value + '<br>';
+                                        if (value.name == "defaultValue") {
+                                            defaultValue = value.value;
+                                        }
+                                        returnValue += '<input class="enabled" type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.options' + optionIndex + '.name"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].options[' + optionIndex + '].name" value="' + value.name + '" />';
+                                        returnValue += '<input class="enabled" type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.options' + optionIndex + '.value"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].options[' + optionIndex + '].value" value="' + value.value + '" />';
+                                        returnValue += '<input class="enabled" type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.name"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].name" value="' + value.name + '" />';
+                                        optionIndex++;
+                                    });
+                                    returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].value" type="text" value="' + defaultValue + '" />';
+                                    //returnValue += '<input class="enabled" type="hidden" id="randomizers' + index + '.parameters' + paramIndex + '.description" name="randomizers[' + index + '].parameters[' + paramIndex + '].description" value="' + value.description + '" />'
+                                    //returnValue += '<input class="enabled" type="hidden" id="randomizers' + index + '.parameters' + paramIndex + '.name" name="randomizers[' + index + '].parameters[' + paramIndex + '].name" value="' + value.name + '" />'
+                                    paramIndex++;
+                                });
+                            returnValue += '</div>';
+                        returnValue += '</div>';
                         $("#program-parameters").append(returnValue);
                     }
                 });
             }
         }
         val = newVal;
+    });
+
+    //Toogle program parameter collapse
+    $('form.run-creation #program-parameters').on('click', '.toggle', function() {
+        $(this).parent().find('.program-content').slideToggle();
+        $(this).find('.fa').toggleClass('fa-expand');
+        $(this).find('.fa').toggleClass('fa-compress');
     });
 
     //Initially update criterion
