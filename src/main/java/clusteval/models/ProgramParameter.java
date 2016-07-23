@@ -6,6 +6,8 @@ public class ProgramParameter {
     private String name;
     private ArrayList<ProgramParameterOption> options;
     private String value;
+    private boolean optimizable = false;
+    private boolean optimize = true;
 
     public String getName() {
         return name;
@@ -29,5 +31,21 @@ public class ProgramParameter {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public boolean getOptimizable() {
+        return optimizable;
+    }
+
+    public void setOptimizable(boolean optimizable) {
+        this.optimizable = optimizable;
+    }
+
+    public boolean getOptimize() {
+        return optimize;
+    }
+
+    public void setOptimize(boolean optimize) {
+        this.optimize = optimize;
     }
 }

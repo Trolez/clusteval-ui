@@ -11,13 +11,14 @@ import de.clusteval.serverclient.BackendClient;
 
 import java.rmi.ConnectException;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.HashMap;
+import java.io.*;
 
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
+import org.apache.commons.lang3.StringUtils;
 
 @Controller
 public class ProgramController {
@@ -27,10 +28,30 @@ public class ProgramController {
     @Value("${clientId}")
     private int clientId;
 
+    @Value("${absRepoPath}")
+    private String path;
+
     @RequestMapping(value="/getProgram", method=RequestMethod.GET)
     public @ResponseBody Program getProgram(@RequestParam(value="name", required=true) String name) {
         Program program = new Program();
         program.setName(name);
+
+        //Get array of parameter eligible for parameter optimization
+        ArrayList<String> optimizationParameters = new ArrayList<String>();
+        try {
+            BufferedReader br;
+            String currentLine;
+            br = new BufferedReader(new FileReader(getPath() + "/programs/configs/" + program.getName() + ".config"));
+
+            while ((currentLine = br.readLine()) != null) {
+                if (currentLine.startsWith("optimizationParameters")) {
+                    optimizationParameters = new ArrayList<String>(Arrays.asList(StringUtils.split(currentLine.substring(currentLine.indexOf("=") + 1).trim(), ',')));
+                    break;
+                }
+            }
+        } catch (Exception e) {
+        }
+
         try {
             BackendClient backendClient = getBackendClient();
 
@@ -41,6 +62,10 @@ public class ProgramController {
             {
                 ProgramParameter programParameter = new ProgramParameter();
                 programParameter.setName(entry.getKey());
+
+                if (optimizationParameters.contains(programParameter.getName())) {
+                    programParameter.setOptimizable(true);
+                }
 
                 ArrayList<ProgramParameterOption> programParameterOptions = new ArrayList<ProgramParameterOption>();
                 for (Map.Entry<String, String> subEntry : entry.getValue().entrySet()) {
@@ -65,5 +90,18 @@ public class ProgramController {
 
     private BackendClient getBackendClient() throws ConnectException, Exception {
         return new BackendClient(new String[]{"-port", Integer.toString(port), "-clientId", Integer.toString(clientId)});
+    }
+
+    private String getPath() {
+        String path = "";
+        try {
+            BackendClient backendClient = getBackendClient();
+
+            path = backendClient.getAbsoluteRepositoryPath();
+        } catch (ConnectException e) {
+        } catch (Exception e) {
+        }
+
+        return path;
     }
 }

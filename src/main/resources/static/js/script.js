@@ -166,9 +166,22 @@ $(document).ready(function() {
                                 returnValue += '<input class="enabled" type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.options' + optionIndex + '.value"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].options[' + optionIndex + '].value" value="' + value.value + '" />';
                                 optionIndex++;
                             });
+
+                            if (value.optimizable) {
+                                if ($('form.run-creation input[name=mode]:checked').val() != "parameter_optimization") {
+                                    returnValue += '<div class="filter" data-mode="[&quot;parameter_optimization&quot;]" style="display: none;"><div class="checkbox">';
+                                } else {
+                                    returnValue += '<div class="filter" data-mode="[&quot;parameter_optimization&quot;]"><div class="checkbox">';
+                                }
+                                        returnValue += '<label>';
+                                            returnValue += '<input type="checkbox" checked value="true" id="programSettings' + index + '.parameters' + paramIndex + '.optimize1" name="programSettings[' + index + '].parameters[' + paramIndex + '].optimize">Optimize';
+                                        returnValue += '</label>';
+                                        returnValue += '<input class="enabled" type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.optimizable" name="programSettings[' + index + '].parameters[' + paramIndex + '].optimizable" value="true">';
+                                        returnValue += '<input class="enabled" name="_programSettings[' + index + '].parameters[' + paramIndex + '].optimize" value="on" type="hidden">';
+                                    returnValue += '</div></div>';
+                            }
+
                             returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].value" type="text" value="' + defaultValue + '" />';
-                            //returnValue += '<input class="enabled" type="hidden" id="randomizers' + index + '.parameters' + paramIndex + '.description" name="randomizers[' + index + '].parameters[' + paramIndex + '].description" value="' + value.description + '" />'
-                            //returnValue += '<input class="enabled" type="hidden" id="randomizers' + index + '.parameters' + paramIndex + '.name" name="randomizers[' + index + '].parameters[' + paramIndex + '].name" value="' + value.name + '" />'
                             paramIndex++;
                         });
                     returnValue += '</div>';

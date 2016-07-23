@@ -278,7 +278,6 @@ public class RunCreation {
     }
 
     public String toString(String path) {
-        //TODO: replace placeholders with actual values
         String run = "mode = " + mode + "\n";
 
         if (mode.equals("clustering") || mode.equals("parameter_optimization") || mode.equals("dataAnalysis") || mode.equals("robustnessAnalysis")) {

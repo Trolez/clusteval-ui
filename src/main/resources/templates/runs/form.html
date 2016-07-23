@@ -101,6 +101,15 @@
                                             <input class="enabled" type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].options[__${optionStat.index}__].value}" />
                                         </th:block>
                                         <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].value}" />
+                                        <th:block th:if="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimizable} == true">
+                                            <div class="filter" data-mode="[&quot;parameter_optimization&quot;]">
+                                                    <label>
+                                                        <input type="checkbox" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimize}" />
+                                                        Optimize
+                                                    </label>
+                                                <input class="enabled" type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimizable}" />
+                                            </div>
+                                        </th:block>
                                     </th:block>
                                 </div>
                             </div>
