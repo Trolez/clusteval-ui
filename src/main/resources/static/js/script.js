@@ -16,7 +16,7 @@ $(document).ready(function() {
     $('form.run-creation [data-mode]').hide();
     $('form.run-creation [data-mode]').find('input').prop('disabled', true);
     $('form.run-creation [data-mode]').find('select').prop('disabled', true);
-    $('form.run-creation [data-mode]').find('input[type=hidden]').prop('disabled', false);
+    $('form.run-creation [data-mode]').find('input[type=hidden].placeholder').prop('disabled', false);
 
     //If a mode is already selected on page load, show appropriate sections
     var mode = $('form.run-creation input[type=radio][name=mode]:checked').val();
@@ -29,8 +29,7 @@ $(document).ready(function() {
 
         elementsToShow.find('input').prop('disabled', false);
         elementsToShow.find('select').prop('disabled', false);
-        elementsToShow.find('input[type=hidden]').prop('disabled', true);
-        elementsToShow.find('input[type=hidden].enabled').prop('disabled', false);
+        elementsToShow.find('input[type=hidden].placeholder').prop('disabled', true);
     }
 
     //Mode select/change
@@ -51,12 +50,11 @@ $(document).ready(function() {
 
         elementsToHide.find('input').prop('disabled', true);
         elementsToHide.find('select').prop('disabled', true);
-        elementsToHide.find('input[type=hidden]').prop('disabled', false);
+        elementsToHide.find('input[type=hidden].placeholder').prop('disabled', false);
 
         elementsToShow.find('input').prop('disabled', false);
         elementsToShow.find('select').prop('disabled', false);
-        elementsToShow.find('input[type=hidden]').prop('disabled', true);
-        elementsToShow.find('input[type=hidden].enabled').prop('disabled', false);
+        elementsToShow.find('input[type=hidden].placeholder').prop('disabled', true);
 
         updateAccordion();
     });
@@ -93,8 +91,8 @@ $(document).ready(function() {
                 $.each(result.parameters, function(key,value) {
                     returnValue += '<label>' + value.name + ' - ' + value.description + '</label>';
                     returnValue += '<input class="form-control" type="text" id="randomizers' + index + '.parameters' + paramIndex + '.value" name="randomizers[' + index + '].parameters[' + paramIndex + '].value" />'
-                    returnValue += '<input class="enabled" type="hidden" id="randomizers' + index + '.parameters' + paramIndex + '.description" name="randomizers[' + index + '].parameters[' + paramIndex + '].description" value="' + value.description + '" />'
-                    returnValue += '<input class="enabled" type="hidden" id="randomizers' + index + '.parameters' + paramIndex + '.name" name="randomizers[' + index + '].parameters[' + paramIndex + '].name" value="' + value.name + '" />'
+                    returnValue += '<input type="hidden" id="randomizers' + index + '.parameters' + paramIndex + '.description" name="randomizers[' + index + '].parameters[' + paramIndex + '].description" value="' + value.description + '" />'
+                    returnValue += '<input type="hidden" id="randomizers' + index + '.parameters' + paramIndex + '.name" name="randomizers[' + index + '].parameters[' + paramIndex + '].name" value="' + value.name + '" />'
                     paramIndex++;
                 });
                 returnValue += '</div></div>';
@@ -148,7 +146,7 @@ $(document).ready(function() {
 
                 var returnValue = '<div class="program" data-name="' + result.name + '">';
                     returnValue += '<span class="name"><strong>Program: </strong>' + result.name + '</span>';
-                    returnValue += '<input class="enabled" type="hidden" id="programSettings' + index + '.name"' + 'name="programSettings[' + index + '].name" value="' + result.name + '" />';
+                    returnValue += '<input type="hidden" id="programSettings' + index + '.name"' + 'name="programSettings[' + index + '].name" value="' + result.name + '" />';
                     returnValue += '<span class="toggle"><i class="fa fa-expand"></i></span>'
                     returnValue += '<div class="program-content">';
                         var paramIndex = 0;
@@ -156,14 +154,14 @@ $(document).ready(function() {
                             var optionIndex = 0;
                             var defaultValue = '';
                             returnValue += '<hr><label>' + value.name + '</label><br>';
-                            returnValue += '<input class="enabled" type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.name"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].name" value="' + value.name + '" />';
+                            returnValue += '<input type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.name"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].name" value="' + value.name + '" />';
                             $.each(value.options, function(key,value){
                                 returnValue += value.name + ': ' + value.value + '<br>';
                                 if (value.name == "defaultValue") {
                                     defaultValue = value.value;
                                 }
-                                returnValue += '<input class="enabled" type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.options' + optionIndex + '.name"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].options[' + optionIndex + '].name" value="' + value.name + '" />';
-                                returnValue += '<input class="enabled" type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.options' + optionIndex + '.value"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].options[' + optionIndex + '].value" value="' + value.value + '" />';
+                                returnValue += '<input type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.options' + optionIndex + '.name"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].options[' + optionIndex + '].name" value="' + value.name + '" />';
+                                returnValue += '<input type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.options' + optionIndex + '.value"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].options[' + optionIndex + '].value" value="' + value.value + '" />';
                                 optionIndex++;
                             });
 
@@ -176,8 +174,8 @@ $(document).ready(function() {
                                         returnValue += '<label>';
                                             returnValue += '<input type="checkbox" checked value="true" id="programSettings' + index + '.parameters' + paramIndex + '.optimize1" name="programSettings[' + index + '].parameters[' + paramIndex + '].optimize">Optimize';
                                         returnValue += '</label>';
-                                        returnValue += '<input class="enabled" type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.optimizable" name="programSettings[' + index + '].parameters[' + paramIndex + '].optimizable" value="true">';
-                                        returnValue += '<input class="enabled" name="_programSettings[' + index + '].parameters[' + paramIndex + '].optimize" value="on" type="hidden">';
+                                        returnValue += '<input type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.optimizable" name="programSettings[' + index + '].parameters[' + paramIndex + '].optimizable" value="true">';
+                                        returnValue += '<input name="_programSettings[' + index + '].parameters[' + paramIndex + '].optimize" value="on" type="hidden">';
                                     returnValue += '</div></div>';
                             }
 

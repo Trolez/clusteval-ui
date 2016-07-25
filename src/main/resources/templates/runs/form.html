@@ -81,24 +81,24 @@
                             <select class="select2-multiple programs" multiple="multiple" name="programs">
                                 <option th:each="program : ${programs}" th:value="${program}" th:text="${program}" th:selected="${#lists.contains(runCreation.programs, program)}">
                             </select>
-                            <input type="hidden" name="programs" value="DUMMY" disabled>
+                            <input type="hidden" class="placeholder" name="programs" value="DUMMY" disabled>
                         </div>
                         <div id="program-parameters">
                             <div class="program" th:each="programSetting, programSettingStat: *{programSettings}" th:attr="data-name=${programSetting.name}">
                                 <strong>Program: </strong><span class="name" th:text="${programSetting.name}"></span>
-                                <input class="enabled" type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].name}" />
+                                <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].name}" />
                                 <span class="toggle"><i class="fa fa-expand"></i></span>
                                 <div class="program-content">
                                     <th:block th:each="programParameter, programParamStat: ${programSetting.parameters}">
                                         <hr>
                                         <label th:text="${programParameter.name}"></label>
-                                        <input class="enabled" type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].name}" />
+                                        <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].name}" />
                                         <th:block th:each="programParameterOption, optionStat: ${programParameter.options}">
                                             <br>
                                             <span th:text="${programParameterOption.name}"></span>:
                                             <span th:text="${programParameterOption.value}"></span>
-                                            <input class="enabled" type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].options[__${optionStat.index}__].name}" />
-                                            <input class="enabled" type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].options[__${optionStat.index}__].value}" />
+                                            <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].options[__${optionStat.index}__].name}" />
+                                            <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].options[__${optionStat.index}__].value}" />
                                         </th:block>
                                         <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].value}" />
                                         <th:block th:if="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimizable} == true">
@@ -107,26 +107,12 @@
                                                         <input type="checkbox" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimize}" />
                                                         Optimize
                                                     </label>
-                                                <input class="enabled" type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimizable}" />
+                                                <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimizable}" />
                                             </div>
                                         </th:block>
                                     </th:block>
                                 </div>
                             </div>
-
-                            <!--<div class="randomizers">
-                                <div th:each="randomizer, randStat : *{randomizers}" class="randomizer">
-                                    <div class="form-group" th:each="parameter, paramStat : ${randomizer.parameters}">
-                                        <label>
-                                            <span th:text="${parameter.name}"></span> -
-                                            <span th:text="${parameter.description}"></span>
-                                        </label>
-                                        <input class="form-control" type="text" th:field="*{randomizers[__${randStat.index}__].parameters[__${paramStat.index}__].value}" />
-                                        <input class="enabled" type="hidden" th:field="*{randomizers[__${randStat.index}__].parameters[__${paramStat.index}__].description}" />
-                                        <input class="enabled" type="hidden" th:field="*{randomizers[__${randStat.index}__].parameters[__${paramStat.index}__].name}" />
-                                    </div>
-                                </div>
-                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -148,7 +134,7 @@
                         <select class="select2-multiple" multiple="multiple" name="dataSets">
                             <option th:each="dataSet : ${dataSets}" th:value="${dataSet}" th:text="${dataSet}" th:selected="${#lists.contains(runCreation.dataSets, dataSet)}">
                         </select>
-                        <input type="hidden" name="dataSets" value="DUMMY" disabled>
+                        <input class="placeholder" type="hidden" name="dataSets" value="DUMMY" disabled>
                     </div>
                 </div>
 
@@ -161,7 +147,7 @@
                         <select class="select2-multiple" multiple="multiple" name="qualityMeasures">
                             <option th:each="qualityMeasure : ${qualityMeasures}" th:value="${qualityMeasure}" th:text="${qualityMeasure}" th:selected="${#lists.contains(runCreation.qualityMeasures, qualityMeasure)}">
                         </select>
-                        <input type="hidden" name="qualityMeasures" value="DUMMY" disabled>
+                        <input class="placeholder" type="hidden" name="qualityMeasures" value="DUMMY" disabled>
                     </div>
                 </div>
 
@@ -174,7 +160,7 @@
                         <select class="select2-multiple" name="optimizationCriterion">
                             <option th:each="qualityMeasure : ${qualityMeasures}" th:value="${qualityMeasure}" th:text="${qualityMeasure}" disabled th:selected="${qualityMeasure} eq ${runCreation.optimizationCriterion}">
                         </select>
-                        <input type="hidden" name="optimizationCriterion" value="DUMMY" disabled>
+                        <input class="placeholder" type="hidden" name="optimizationCriterion" value="DUMMY" disabled>
                     </div>
 
                     <div class="form-group">
@@ -185,7 +171,7 @@
                         <select class="select2-multiple" name="optimizationMethod">
                             <option th:each="optimizationMethod : ${optimizationMethods}" th:value="${optimizationMethod}" th:text="${optimizationMethod}" th:selected="${optimizationMethod} eq ${runCreation.optimizationMethod}">
                         </select>
-                        <input type="hidden" name="optimizationMethod" value="DUMMY" disabled>
+                        <input class="placeholder" type="hidden" name="optimizationMethod" value="DUMMY" disabled>
                     </div>
 
                     <div class="form-group">
@@ -194,7 +180,7 @@
                             <span class="error" th:if="${#fields.hasErrors('optimizationIterations')}" th:errors="*{optimizationIterations}">
                         </label>
                         <input type="number" name="optimizationIterations" th:field="*{optimizationIterations}" class="form-control">
-                        <input type="hidden" name="optimizationIterations" value="1" disabled>
+                        <input class="placeholder" type="hidden" name="optimizationIterations" value="1" disabled>
                     </div>
                 </div>
 
@@ -207,7 +193,7 @@
                         <select class="select2-multiple" multiple="multiple" name="dataStatistics">
                             <option th:each="dataStatistic : ${dataStatistics}" th:value="${dataStatistic}" th:text="${dataStatistic}" th:selected="${#lists.contains(runCreation.dataStatistics, dataStatistic)}">
                         </select>
-                        <input type="hidden" name="dataStatistics" value="DUMMY" disabled>
+                        <input class="placeholder" type="hidden" name="dataStatistics" value="DUMMY" disabled>
                     </div>
                 </div>
 
@@ -220,7 +206,7 @@
                         <select class="select2-multiple" multiple="multiple" name="runStatistics">
                             <option th:each="runStatistic : ${runStatistics}" th:value="${runStatistic}" th:text="${runStatistic}" th:selected="${#lists.contains(runCreation.runStatistics, runStatistic)}">
                         </select>
-                        <input type="hidden" name="runStatistics" value="DUMMY" disabled>
+                        <input class="placeholder" type="hidden" name="runStatistics" value="DUMMY" disabled>
                     </div>
                 </div>
 
@@ -233,7 +219,7 @@
                         <select class="select2-multiple" multiple="multiple" name="runDataStatistics">
                             <option th:each="runDataStatistic : ${runDataStatistics}" th:value="${runDataStatistic}" th:text="${runDataStatistic}" th:selected="${#lists.contains(runCreation.runDataStatistics, runDataStatistic)}">
                         </select>
-                        <input type="hidden" name="runDataStatistics" value="DUMMY" disabled>
+                        <input class="placeholder" type="hidden" name="runDataStatistics" value="DUMMY" disabled>
                     </div>
 
                     <div class="form-group">
@@ -244,7 +230,7 @@
                         <select class="select2-multiple" multiple="multiple" name="uniqueDataIdentifiers">
                             <option th:each="uniqueDataIdentifier : ${uniqueRunIdentifiers}" th:value="${uniqueDataIdentifier}" th:text="${uniqueDataIdentifier}" th:selected="${#lists.contains(runCreation.uniqueDataIdentifiers, uniqueDataIdentifier)}">
                         </select>
-                        <input type="hidden" name="uniqueDataIdentifiers" value="DUMMY" disabled>
+                        <input class="placeholder" type="hidden" name="uniqueDataIdentifiers" value="DUMMY" disabled>
                     </div>
                 </div>
 
@@ -257,7 +243,7 @@
                         <select class="select2-multiple" multiple="multiple" name="uniqueRunIdentifiers">
                             <option th:each="uniqueRunIdentifier : ${uniqueRunIdentifiers}" th:value="${uniqueRunIdentifier}" th:text="${uniqueRunIdentifier}" th:selected="${#lists.contains(runCreation.uniqueRunIdentifiers, uniqueRunIdentifier)}">
                         </select>
-                        <input type="hidden" name="uniqueRunIdentifiers" value="DUMMY" disabled>
+                        <input class="placeholder" type="hidden" name="uniqueRunIdentifiers" value="DUMMY" disabled>
                     </div>
                 </div>
             </div>
@@ -288,8 +274,8 @@
                                     <span th:text="${parameter.description}"></span>
                                 </label>
                                 <input class="form-control" type="text" th:field="*{randomizers[__${randStat.index}__].parameters[__${paramStat.index}__].value}" />
-                                <input class="enabled" type="hidden" th:field="*{randomizers[__${randStat.index}__].parameters[__${paramStat.index}__].description}" />
-                                <input class="enabled" type="hidden" th:field="*{randomizers[__${randStat.index}__].parameters[__${paramStat.index}__].name}" />
+                                <input type="hidden" th:field="*{randomizers[__${randStat.index}__].parameters[__${paramStat.index}__].description}" />
+                                <input type="hidden" th:field="*{randomizers[__${randStat.index}__].parameters[__${paramStat.index}__].name}" />
                             </div>
                         </div>
                     </div>
