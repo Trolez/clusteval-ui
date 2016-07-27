@@ -100,16 +100,29 @@
                                             <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].options[__${optionStat.index}__].name}" />
                                             <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].options[__${optionStat.index}__].value}" />
                                         </th:block>
-                                        <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].value}" />
-                                        <th:block th:if="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimizable} == true">
-                                            <div class="filter" data-mode="[&quot;parameter_optimization&quot;]">
-                                                    <label>
-                                                        <input type="checkbox" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimize}" />
-                                                        Optimize
-                                                    </label>
+                                        <div class="filter" data-mode="[&quot;clustering&quot;,&quot;robustnessAnalysis&quot;]">
+                                            <label>
+                                                Value
+                                                <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].value}" />
+                                            </label>
+                                        </div>
+                                        <div class="filter" data-mode="[&quot;parameter_optimization&quot;]">
+                                            <th:block th:if="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimizable} == true">
+                                                <label>
+                                                    <input type="checkbox" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimize}" />
+                                                    Optimize
+                                                </label>
                                                 <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimizable}" />
-                                            </div>
-                                        </th:block>
+                                            </th:block>
+                                            <label>
+                                                Min value
+                                                <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].minValue}" />
+                                            </label>
+                                            <label>
+                                                Max value
+                                                <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].maxValue}" />
+                                            </label>
+                                        </div>
                                     </th:block>
                                 </div>
                             </div>

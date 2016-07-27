@@ -34,14 +34,19 @@ $(document).ready(function() {
 
     //Mode select/change
     $('form.run-creation input[type=radio][name=mode]').change(function(){
-        var mode = $(this).val();
+        updateMode($(this), $('form.run-creation'));
+        updateAccordion();
+    });
+
+    function updateMode(radio, parent) {
+        var mode = $(radio).val();
 
         //Only show mode-specific sections for the selected mode
-        var elementsToHide = $('form.run-creation .filter').filter(function(){
+        var elementsToHide = parent.find('.filter').filter(function(){
             return $.inArray(mode.toString(), $(this).data('mode')) < 0
         });
 
-        var elementsToShow = $('form.run-creation .filter').filter(function(){
+        var elementsToShow = parent.find('.filter').filter(function(){
             return $.inArray(mode.toString(), $(this).data('mode')) >= 0
         });
 
@@ -55,9 +60,7 @@ $(document).ready(function() {
         elementsToShow.find('input').prop('disabled', false);
         elementsToShow.find('select').prop('disabled', false);
         elementsToShow.find('input[type=hidden].placeholder').prop('disabled', true);
-
-        updateAccordion();
-    });
+    }
 
     //When selecting a quality measure, enable the corresponding optimization criterion
     $('form.run-creation select[name=qualityMeasures]').change(function(){
@@ -153,6 +156,10 @@ $(document).ready(function() {
                         $.each(result.parameters, function(key,value) {
                             var optionIndex = 0;
                             var defaultValue = '';
+                            var minValue = '';
+                            var maxValue = '';
+                            var options = '';
+
                             returnValue += '<hr><label>' + value.name + '</label><br>';
                             returnValue += '<input type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.name"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].name" value="' + value.name + '" />';
                             $.each(value.options, function(key,value){
@@ -160,31 +167,56 @@ $(document).ready(function() {
                                 if (value.name == "defaultValue") {
                                     defaultValue = value.value;
                                 }
+                                if (value.name == "minValue") {
+                                    minValue = value.value;
+                                }
+                                if (value.name == "maxValue") {
+                                    maxValue = value.value;
+                                }
+                                if (value.name == "options") {
+                                    options = value.value;
+                                }
                                 returnValue += '<input type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.options' + optionIndex + '.name"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].options[' + optionIndex + '].name" value="' + value.name + '" />';
                                 returnValue += '<input type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.options' + optionIndex + '.value"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].options[' + optionIndex + '].value" value="' + value.value + '" />';
                                 optionIndex++;
                             });
 
-                            if (value.optimizable) {
-                                if ($('form.run-creation input[name=mode]:checked').val() != "parameter_optimization") {
-                                    returnValue += '<div class="filter" data-mode="[&quot;parameter_optimization&quot;]" style="display: none;"><div class="checkbox">';
-                                } else {
-                                    returnValue += '<div class="filter" data-mode="[&quot;parameter_optimization&quot;]"><div class="checkbox">';
-                                }
+                            returnValue += '<div class="filter" data-mode="[&quot;parameter_optimization&quot;]">';
+                                if (value.optimizable) {
+                                    returnValue += '<div class="checkbox">';
                                         returnValue += '<label>';
                                             returnValue += '<input type="checkbox" checked value="true" id="programSettings' + index + '.parameters' + paramIndex + '.optimize1" name="programSettings[' + index + '].parameters[' + paramIndex + '].optimize">Optimize';
                                         returnValue += '</label>';
                                         returnValue += '<input type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.optimizable" name="programSettings[' + index + '].parameters[' + paramIndex + '].optimizable" value="true">';
                                         returnValue += '<input name="_programSettings[' + index + '].parameters[' + paramIndex + '].optimize" value="on" type="hidden">';
-                                    returnValue += '</div></div>';
-                            }
+                                    returnValue += '</div>';
+                                }
+                                if (options == '') {
+                                    returnValue += '<label>Min value';
+                                        returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].minValue" type="text" value="' + minValue + '" />';
+                                    returnValue += '</label>';
+                                    returnValue += '<label>Max value';
+                                        returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].maxValue" type="text" value="' + maxValue + '" />';
+                                    returnValue += '</label>';
+                                } else {
+                                    returnValue += '<label>Values';
+                                        returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].value" type="text" value="' + options + '" />';
+                                    returnValue += '</label>';
+                                }
+                            returnValue += '</div>';
 
-                            returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].value" type="text" value="' + defaultValue + '" />';
+                            returnValue += '<div class="filter" data-mode="[&quot;clustering&quot;,&quot;robustnessAnalysis&quot;]">';
+                                returnValue += '<label>Value';
+                                    returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].value" type="text" value="' + defaultValue + '" />';
+                                returnValue += '</label>';
+                            returnValue += '</div>';
+
                             paramIndex++;
                         });
                     returnValue += '</div>';
                 returnValue += '</div>';
                 $("#program-parameters").append(returnValue);
+                updateMode($('form.run-creation input[type=radio][name=mode]:checked'), $('form.run-creation #program-parameters'));
             }
         });
     }

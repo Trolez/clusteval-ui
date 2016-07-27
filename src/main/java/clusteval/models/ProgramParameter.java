@@ -6,6 +6,8 @@ public class ProgramParameter {
     private String name;
     private ArrayList<ProgramParameterOption> options;
     private String value;
+    private String minValue;
+    private String maxValue;
     private boolean optimizable = false;
     private boolean optimize = true;
 
@@ -31,6 +33,22 @@ public class ProgramParameter {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getMinValue() {
+        return minValue;
+    }
+
+    public void setMinValue(String minValue) {
+        this.minValue = minValue;
+    }
+
+    public String getMaxValue() {
+        return maxValue;
+    }
+
+    public void setMaxValue(String maxValue) {
+        this.maxValue = maxValue;
     }
 
     public boolean getOptimizable() {
