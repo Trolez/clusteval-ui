@@ -4,10 +4,11 @@ import java.util.ArrayList;
 
 public class ProgramParameter {
     private String name;
-    private ArrayList<ProgramParameterOption> options;
+    private ArrayList<ProgramParameterOption> defaultOptions;
     private String value;
     private String minValue;
     private String maxValue;
+    private String options;
     private boolean optimizable = false;
     private boolean optimize = true;
 
@@ -19,12 +20,12 @@ public class ProgramParameter {
         this.name = name;
     }
 
-    public ArrayList<ProgramParameterOption> getOptions() {
-        return options;
+    public ArrayList<ProgramParameterOption> getDefaultOptions() {
+        return defaultOptions;
     }
 
-    public void setOptions(ArrayList<ProgramParameterOption> options) {
-        this.options = options;
+    public void setDefaultOptions(ArrayList<ProgramParameterOption> defaultOptions) {
+        this.defaultOptions = defaultOptions;
     }
 
     public String getValue() {
@@ -49,6 +50,14 @@ public class ProgramParameter {
 
     public void setMaxValue(String maxValue) {
         this.maxValue = maxValue;
+    }
+
+    public String getOptions() {
+        return options;
+    }
+
+    public void setOptions(String options) {
+        this.options = options;
     }
 
     public boolean getOptimizable() {

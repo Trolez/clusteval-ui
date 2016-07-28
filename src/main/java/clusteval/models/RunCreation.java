@@ -353,6 +353,26 @@ public class RunCreation {
             }
         }
 
+        if (mode.equals("clustering") || mode.equals("parameter_optimization") || mode.equals("robustnessAnalysis")) {
+            for (Program programSetting : programSettings) {
+                for (ProgramParameter programParameter : programSetting.getParameters()) {
+                    run += "\n[" + programSetting.getName() + ":" + programParameter.getName() + "]\n";
+                    if (programParameter.getMinValue() != null) {
+                        run += "minValue=" + programParameter.getMinValue() + "\n";
+                    }
+                    if (programParameter.getMaxValue() != null) {
+                        run += "maxValue=" + programParameter.getMaxValue() + "\n";
+                    }
+                    if (programParameter.getValue() != null) {
+                        run += "defaultValue=" + programParameter.getValue() + "\n";
+                    }
+                    if (programParameter.getOptions() != null) {
+                        run += "options=" + programParameter.getOptions() + "\n";
+                    }
+                }
+            }
+        }
+
         return run;
     }
 }

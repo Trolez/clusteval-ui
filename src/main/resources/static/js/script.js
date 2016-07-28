@@ -162,7 +162,7 @@ $(document).ready(function() {
 
                             returnValue += '<hr><label>' + value.name + '</label><br>';
                             returnValue += '<input type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.name"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].name" value="' + value.name + '" />';
-                            $.each(value.options, function(key,value){
+                            $.each(value.defaultOptions, function(key,value){
                                 returnValue += value.name + ': ' + value.value + '<br>';
                                 if (value.name == "defaultValue") {
                                     defaultValue = value.value;
@@ -176,8 +176,8 @@ $(document).ready(function() {
                                 if (value.name == "options") {
                                     options = value.value;
                                 }
-                                returnValue += '<input type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.options' + optionIndex + '.name"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].options[' + optionIndex + '].name" value="' + value.name + '" />';
-                                returnValue += '<input type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.options' + optionIndex + '.value"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].options[' + optionIndex + '].value" value="' + value.value + '" />';
+                                returnValue += '<input type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.defaultOptions' + optionIndex + '.name"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].defaultOptions[' + optionIndex + '].name" value="' + value.name + '" />';
+                                returnValue += '<input type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.defaultOptions' + optionIndex + '.value"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].defaultOptions[' + optionIndex + '].value" value="' + value.value + '" />';
                                 optionIndex++;
                             });
 
@@ -200,7 +200,7 @@ $(document).ready(function() {
                                     returnValue += '</label>';
                                 } else {
                                     returnValue += '<label>Values';
-                                        returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].value" type="text" value="' + options + '" />';
+                                        returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.options" name="programSettings[' + index + '].parameters[' + paramIndex + '].options" type="text" value="' + options + '" />';
                                     returnValue += '</label>';
                                 }
                             returnValue += '</div>';

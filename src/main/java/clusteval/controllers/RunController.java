@@ -17,12 +17,15 @@ import de.clusteval.serverclient.BackendClient;
 
 import java.rmi.ConnectException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.text.ParsePosition;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.*;
@@ -227,6 +230,20 @@ public class RunController {
     public String editRun(@RequestParam(value="name", required=true) String fileName, RunCreation runCreation, Model model) {
         try {
             runCreation.parse(path, fileName);
+
+            //Remove appended date if it is there
+            int index = runCreation.getName().lastIndexOf('_');
+            if (index > -1) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-kk-mm-ss");
+                try {
+                    if (dateFormat.parse(runCreation.getName(), new ParsePosition(index+1)) != null) {
+                        runCreation.setName(runCreation.getName().substring(0, index));
+                    }
+                } catch (Exception e){
+                    System.err.println(e.toString());
+                }
+            }
+
             populateModel(model);
         } catch (ConnectException e) {
             return "runs/notRunning";
@@ -248,6 +265,10 @@ public class RunController {
             }
             return "runs/edit";
         }
+
+        //Append date to run file to show when it was edited
+        String dateAppend = new SimpleDateFormat("_yyyy-MM-dd-kk-mm-ss").format(new Date());
+        runCreation.setName(runCreation.getName() + dateAppend);
 
         //Create run file
         try {

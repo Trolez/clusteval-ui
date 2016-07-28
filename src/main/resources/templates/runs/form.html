@@ -93,12 +93,12 @@
                                         <hr>
                                         <label th:text="${programParameter.name}"></label>
                                         <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].name}" />
-                                        <th:block th:each="programParameterOption, optionStat: ${programParameter.options}">
+                                        <th:block th:each="programParameterOption, optionStat: ${programParameter.defaultOptions}">
                                             <br>
                                             <span th:text="${programParameterOption.name}"></span>:
                                             <span th:text="${programParameterOption.value}"></span>
-                                            <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].options[__${optionStat.index}__].name}" />
-                                            <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].options[__${optionStat.index}__].value}" />
+                                            <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].defaultOptions[__${optionStat.index}__].name}" />
+                                            <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].defaultOptions[__${optionStat.index}__].value}" />
                                         </th:block>
                                         <div class="filter" data-mode="[&quot;clustering&quot;,&quot;robustnessAnalysis&quot;]">
                                             <label>
@@ -114,14 +114,22 @@
                                                 </label>
                                                 <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimizable}" />
                                             </th:block>
-                                            <label>
-                                                Min value
-                                                <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].minValue}" />
-                                            </label>
-                                            <label>
-                                                Max value
-                                                <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].maxValue}" />
-                                            </label>
+                                            <th:block th:if="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].options} == null">
+                                                <label>
+                                                    Min value
+                                                    <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].minValue}" />
+                                                </label>
+                                                <label>
+                                                    Max value
+                                                    <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].maxValue}" />
+                                                </label>
+                                            </th:block>
+                                            <th:block th:if="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].options} != null">
+                                                <label>
+                                                    Values
+                                                    <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].options}" />
+                                                </label>
+                                            </th:block>
                                         </div>
                                     </th:block>
                                 </div>

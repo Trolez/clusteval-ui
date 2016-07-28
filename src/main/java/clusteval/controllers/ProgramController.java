@@ -74,9 +74,19 @@ public class ProgramController {
                     programParameterOption.setValue(subEntry.getValue());
 
                     programParameterOptions.add(programParameterOption);
+
+                    if (subEntry.getKey().equals("minValue")) {
+                        programParameter.setMinValue(subEntry.getValue());
+                    } else if (subEntry.getKey().equals("maxValue")) {
+                        programParameter.setMaxValue(subEntry.getValue());
+                    } else if (subEntry.getKey().equals("defaultValue")) {
+                        programParameter.setValue(subEntry.getValue());
+                    } else if (subEntry.getKey().equals("options")) {
+                        programParameter.setOptions(subEntry.getValue());
+                    }
                 }
 
-                programParameter.setOptions(programParameterOptions);
+                programParameter.setDefaultOptions(programParameterOptions);
                 programParameters.add(programParameter);
             }
 
