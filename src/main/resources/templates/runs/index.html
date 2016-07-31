@@ -6,32 +6,67 @@
             <a href="/runs/create" class="btn btn-success">Create new run</a>
         </div>
         <div class="run-list">
+            <th:block th:if="${runningRuns.size() > 0}">
+                <h1>Currently running runs</h1>
+                <div class="run-container" th:each="runningRun : ${runningRuns}">
+                    <div class="run" th:attr="data-name=${runningRun}">
+                        <div><span class="name" th:text="${runningRun}" /></div>
+                        <form th:action="@{/terminate-run}" method="post">
+                            <input type="hidden" name="name" th:value="${runningRun}">
+                            <input type="submit" name="send" value="Pause Run" class="btn btn-primary">
+                        </form>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                <span class="sr-only">0% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+
+            <th:block th:if="${finishedRuns.size() > 0}">
+                <h1>Finished runs</h1>
+                <div class="run-container" th:each="finishedRun : ${finishedRuns}">
+                    <div class="run">
+                        <div><span class="name" th:text="${finishedRun}" /></div>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                <span class="sr-only">100% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+
             <h1>Resume runs</h1>
-            <div class="run" th:each="resume : ${resumes}" th:object="${resume}">
-                <div><span class="name" th:text="*{name}" /></div>
-                <form th:action="@{/resume-run}" method="post" th:object="${resume}">
-                    <input type="hidden" name="name" th:value="*{name}">
-                    <input type="submit" name="send" value="Resume Run" class="btn btn-primary">
-                </form>
-                <form th:action="@{/terminate-run}" method="post" th:object="${resume}">
-                    <input type="hidden" name="name" th:value="*{name}">
-                    <input type="submit" name="send" value="Pause Run" class="btn btn-primary">
-                </form>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
-                        <span class="sr-only">45% Complete</span>
+            <div class="run-container" th:each="resume : ${resumes}">
+                <div class="run">
+                    <div><span class="name" th:text="${resume}" /></div>
+                    <form th:action="@{/resume-run}" method="post">
+                        <input type="hidden" name="name" th:value="${resume}">
+                        <input type="submit" name="send" value="Resume Run" class="btn btn-primary">
+                    </form>
+                    <form th:action="@{/terminate-run}" method="post">
+                        <input type="hidden" name="name" th:value="${resume}">
+                        <input type="submit" name="send" value="Pause Run" class="btn btn-primary">
+                    </form>
+                    <a class="btn btn-danger delete-run" th:href="@{/delete-run(name=${resume})}">Delete run</a>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+                            <span class="sr-only">45% Complete</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <h1>Available runs</h1>
-            <div class="run" th:each="run : ${runs}" th:object="${run}">
-                <div><span class="name" th:text="*{name}" /></div>
-                <form th:action="@{/runs}" method="post" th:object="${run}">
-                    <a class="btn btn-danger pull-right delete-run" th:href="@{/runs/delete(name=*{name})}">Delete run</a>
-                    <input type="hidden" name="name" th:value="*{name}">
+            <div class="run" th:each="run : ${runs}">
+                <div><span class="name" th:text="${run}" /></div>
+                <form th:action="@{/runs}" method="post">
+                    <a class="btn btn-danger pull-right delete-run" th:href="@{/runs/delete(name=${run})}">Delete run</a>
+                    <input type="hidden" name="name" th:value="${run}">
                     <input type="submit" name="send" value="Perform Run" class="btn btn-primary">
-                    <a class="btn btn-primary" th:href="@{/runs/edit(name=*{name})}">Edit run</a>
+                    <a class="btn btn-primary" th:href="@{/runs/edit(name=${run})}">Edit run</a>
                 </form>
             </div>
         </div>

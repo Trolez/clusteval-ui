@@ -289,4 +289,27 @@ $(document).ready(function() {
     $('.run-list .delete-run').click(function() {
         return confirm("Delete this run?");
     });
+
+    //Function that updates the progress bars of runs that are in progress
+    function updateRunProgress() {
+        $.ajax({
+            url: "/getRunStatus",
+            type: 'get',
+            dataType: 'html',
+            success: function(data) {
+                result = $.parseJSON(data);
+
+                $.each(result, function (runName, status) {
+                    var progressBar = $('.run-list .run[data-name=' + runName + '] .progress-bar');
+                    progressBar.attr('aria-valuenow', status.second);
+                    progressBar.css('width', status.second + '%');
+                    progressBar.find('.sr-only').text(status.second + '% Complete');
+                });
+            }
+        });
+
+        //Update every 10 seconds
+        setTimeout(updateRunProgress, 10000);
+    }
+    updateRunProgress();
 });

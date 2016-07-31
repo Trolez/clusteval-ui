@@ -14,6 +14,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.beans.factory.annotation.*;
 
 import de.clusteval.serverclient.BackendClient;
+import de.clusteval.run.RUN_STATUS;
+import de.wiwie.wiutils.utils.Pair;
 
 import java.rmi.ConnectException;
 
@@ -27,6 +29,7 @@ import java.util.Map;
 import java.text.SimpleDateFormat;
 import java.text.ParsePosition;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 
@@ -43,33 +46,34 @@ public class RunController {
 
     @RequestMapping("/runs")
     public String showRuns(Model model) {
-        ArrayList<String> runNames = new ArrayList<String>();
-        ArrayList<Run> runs = new ArrayList<Run>();
-        ArrayList<Run> runResumes = new ArrayList<Run>();
+        ArrayList<String> runs = new ArrayList<String>();
+        ArrayList<String> runResumes = new ArrayList<String>();
+        //HashMap<String,String> runningRuns;
+        ArrayList<String> runningRuns;
+        ArrayList<String> finishedRuns;
 
         try {
             BackendClient backendClient = getBackendClient();
-            runNames = new ArrayList<String>(backendClient.getRuns());
-            Collections.sort(runNames, String.CASE_INSENSITIVE_ORDER);
 
-            for (String runName : runNames) {
-                runs.add(new Run(runName));
-            }
+            runs = new ArrayList<String>(backendClient.getRuns());
+            Collections.sort(runs, String.CASE_INSENSITIVE_ORDER);
+            model.addAttribute("runs", runs);
 
-            ArrayList<String> runResumeNames = new ArrayList<String>(backendClient.getRunResumes());
-
-            for (String runResumeName : runResumeNames) {
-                runResumes.add(new Run(runResumeName));
-            }
-
+            runResumes = new ArrayList<String>(backendClient.getRunResumes());
             model.addAttribute("resumes", runResumes);
 
+            for (String runningRun : backendClient.getRunningRuns()) {
+                //runningRuns.put(runningRun, )
+            }
+            runningRuns = new ArrayList<String>(backendClient.getRunningRuns());
+            model.addAttribute("runningRuns", runningRuns);
+
+            finishedRuns = new ArrayList<String>(backendClient.getFinishedRuns());
+            model.addAttribute("finishedRuns", finishedRuns);
         } catch (ConnectException e) {
             return "runs/notRunning";
         } catch (Exception e) {
         }
-
-        model.addAttribute("runs", runs);
 
         return "runs/index";
     }
@@ -123,6 +127,35 @@ public class RunController {
         }
 
         return "redirect:/runs";
+    }
+
+    @RequestMapping(value="/delete-run")
+    public String deleteRun(@RequestParam(value="name", required=true) String runName, Model model, RedirectAttributes redirectAttributes) {
+        String path = getPath();
+
+        try {
+            File directory = new File(path + "/results/" + runName);
+            FileUtils.deleteDirectory(directory);
+            redirectAttributes.addFlashAttribute("success", "The run '" + runName + "' has been succcesfully deleted.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("failure", "There was an error when deleting the run.");
+        }
+
+        return "redirect:/runs";
+    }
+
+    @RequestMapping(value="/getRunStatus", method=RequestMethod.GET)
+    public @ResponseBody Map<String, Pair<RUN_STATUS, Float>> getRunStatus() {
+        Map<String, Pair<RUN_STATUS, Float>> status = null;
+        try {
+            BackendClient backendClient = getBackendClient();
+
+            status = backendClient.getMyRunStatus();
+        } catch (ConnectException e) {
+        } catch (Exception e) {
+        }
+
+        return status;
     }
 
     private void populateModel(Model model) throws ConnectException {
@@ -314,5 +347,18 @@ public class RunController {
 
     private BackendClient getBackendClient() throws ConnectException, Exception {
         return new BackendClient(new String[]{"-port", Integer.toString(port), "-clientId", Integer.toString(clientId)});
+    }
+
+    private String getPath() {
+        String path = "";
+        try {
+            BackendClient backendClient = getBackendClient();
+
+            path = backendClient.getAbsoluteRepositoryPath();
+        } catch (ConnectException e) {
+        } catch (Exception e) {
+        }
+
+        return path;
     }
 }
