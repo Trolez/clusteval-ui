@@ -48,9 +48,9 @@ public class RunController {
     public String showRuns(Model model) {
         ArrayList<String> runs = new ArrayList<String>();
         ArrayList<String> runResumes = new ArrayList<String>();
-        //HashMap<String,String> runningRuns;
         ArrayList<String> runningRuns;
         ArrayList<String> finishedRuns;
+        ArrayList<String> terminatedRuns;
 
         try {
             BackendClient backendClient = getBackendClient();
@@ -70,6 +70,9 @@ public class RunController {
 
             finishedRuns = new ArrayList<String>(backendClient.getFinishedRuns());
             model.addAttribute("finishedRuns", finishedRuns);
+
+            terminatedRuns = new ArrayList<String>(backendClient.getTerminatedRuns());
+            model.addAttribute("terminatedRuns", terminatedRuns);
         } catch (ConnectException e) {
             return "runs/notRunning";
         } catch (Exception e) {

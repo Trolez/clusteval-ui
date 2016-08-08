@@ -303,21 +303,19 @@ public class RunCreation {
 
             run += "optimizationMethod = " + optimizationMethod + "\n\n";
 
-            try {
-                BufferedReader br;
-                String currentLine;
-                for (String program : programs) {
-                    run += "[" + program + "]\n";
+            ArrayList<String> parametersToOptimize;
+            for (Program program : programSettings) {
+                parametersToOptimize = new ArrayList<String>();
 
-                    br = new BufferedReader(new FileReader(path + "/programs/configs/" + program + ".config"));
+                run += "[" + program.getName() + "]\n";
 
-                    while ((currentLine = br.readLine()) != null) {
-                        if (currentLine.startsWith("optimizationParameters")) {
-                            run += "optimizationParameters = " + currentLine.substring(currentLine.indexOf("=") + 1).trim() + "\n\n";
-                        }
+                for (ProgramParameter parameter : program.getParameters()) {
+                    if (parameter.getOptimize()) {
+                        parametersToOptimize.add(parameter.getName());
                     }
                 }
-            } catch (Exception e) {}
+                run += "optimizationParameters = " + StringUtils.join(parametersToOptimize, ',') + "\n\n";
+            }
         }
 
         if (mode.equals("dataAnalysis")) {
