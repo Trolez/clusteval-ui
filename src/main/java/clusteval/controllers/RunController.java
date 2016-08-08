@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +57,30 @@ public class RunController {
             BackendClient backendClient = getBackendClient();
 
             runs = new ArrayList<String>(backendClient.getRuns());
-            Collections.sort(runs, String.CASE_INSENSITIVE_ORDER);
+            //Collections.sort(runs, String.CASE_INSENSITIVE_ORDER);
+            Collections.sort(runs, new Comparator<String>() {
+                public int compare(String left, String right) {
+                    //Remove dates when sorting the runs
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-kk-mm-ss");
+                    try {
+                        int index = left.lastIndexOf('_');
+                        if (index > -1) {
+                            if (dateFormat.parse(left, new ParsePosition(index+1)) != null) {
+                                left = left.substring(0, index+1);
+                            }
+                        }
+                        index = right.lastIndexOf('_');
+                        if (index > -1) {
+                            if (dateFormat.parse(right, new ParsePosition(index+1)) != null) {
+                                right = right.substring(0, index+1);
+                            }
+                        }
+                    } catch (Exception e){}
+
+                    return left.compareToIgnoreCase(right);
+                }
+            });
+
             model.addAttribute("runs", runs);
 
             runResumes = new ArrayList<String>(backendClient.getRunResumes());
@@ -93,9 +117,12 @@ public class RunController {
             redirectAttributes.addFlashAttribute("failure", "Could not connect to the Clusteval server. Is it running?");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("failure", "An unknown error occurred.");
+            System.err.println(e.toString());
         }
 
-        return "redirect:/runs";
+        redirectAttributes.addFlashAttribute("redirectUrl", "/runs");
+
+        return "redirect:/redirect";
     }
 
     @RequestMapping(value="/resume-run", method=RequestMethod.POST)
@@ -112,7 +139,9 @@ public class RunController {
             redirectAttributes.addFlashAttribute("failure", "An unknown error occurred.");
         }
 
-        return "redirect:/runs";
+        redirectAttributes.addFlashAttribute("redirectUrl", "/runs");
+
+        return "redirect:/redirect";
     }
 
     @RequestMapping(value="/terminate-run", method=RequestMethod.POST)
@@ -129,7 +158,9 @@ public class RunController {
             redirectAttributes.addFlashAttribute("failure", "An unknown error occurred.");
         }
 
-        return "redirect:/runs";
+        redirectAttributes.addFlashAttribute("redirectUrl", "/runs");
+
+        return "redirect:/redirect";
     }
 
     @RequestMapping(value="/delete-run")
@@ -144,7 +175,9 @@ public class RunController {
             redirectAttributes.addFlashAttribute("failure", "There was an error when deleting the run.");
         }
 
-        return "redirect:/runs";
+        redirectAttributes.addFlashAttribute("redirectUrl", "/runs");
+
+        return "redirect:/redirect";
     }
 
     @RequestMapping(value="/getRunStatus", method=RequestMethod.GET)
@@ -259,7 +292,9 @@ public class RunController {
             redirectAttributes.addFlashAttribute("failure", "An error occurred during file writing.");
         }
 
-        return "redirect:/runs";
+        redirectAttributes.addFlashAttribute("redirectUrl", "/runs");
+
+        return "redirect:/redirect";
     }
 
     @RequestMapping(value="/runs/edit")
@@ -325,11 +360,13 @@ public class RunController {
             redirectAttributes.addFlashAttribute("failure", "An error occurred during file writing.");
         }
 
-        return "redirect:/runs";
+        redirectAttributes.addFlashAttribute("redirectUrl", "/runs");
+
+        return "redirect:/redirect";
     }
 
     @RequestMapping(value="/runs/delete")
-    public String deleteRun(@RequestParam(value="name", required=true) String fileName, RedirectAttributes redirectAttributes) {
+    public String deleteRunConfig(@RequestParam(value="name", required=true) String fileName, Model model, RedirectAttributes redirectAttributes) {
         File file = new File(path + "/runs/" + fileName + ".run");
 
         if (file.exists()) {
@@ -338,7 +375,9 @@ public class RunController {
 
         redirectAttributes.addFlashAttribute("success", "The run has been succcesfully deleted.");
 
-        return "redirect:/runs";
+        redirectAttributes.addFlashAttribute("redirectUrl", "/runs");
+
+        return "redirect:/redirect";
     }
 
     @RequestMapping(value="/getRun", method=RequestMethod.GET)

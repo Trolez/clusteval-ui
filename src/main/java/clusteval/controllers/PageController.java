@@ -13,4 +13,9 @@ public class PageController {
     public String homePage(Model model) {
         return "pages/home";
     }
+
+    @RequestMapping("/redirect")
+    public String redirectPage(Model model) {
+        return "pages/redirect";
+    }
 }

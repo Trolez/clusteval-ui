@@ -1,0 +1,14 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<body>
+    <div layout:fragment="content">
+        You will be redirected in 3 seconds...
+
+        <script th:inline="javascript">
+            setTimeout(function () {
+                window.location.href = [[${redirectUrl}]];
+            }, 3000);
+        </script>
+    </div>
+</body>
+</html>
