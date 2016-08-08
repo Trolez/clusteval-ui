@@ -1,5 +1,6 @@
 package clusteval;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -60,6 +61,7 @@ public class RunCreation {
 
     private ArrayList<Randomizer> randomizers = new ArrayList<Randomizer>();
 
+    @Valid
     private ArrayList<Program> programSettings = new ArrayList<Program>();
 
     public String getName() {

@@ -20,6 +20,7 @@ public class Program {
         this.name = name;
     }
 
+    @HasOneOptimizationParameter(message = "Please select at least one parameter to optimize")
     public ArrayList<ProgramParameter> getParameters() {
         return parameters;
     }

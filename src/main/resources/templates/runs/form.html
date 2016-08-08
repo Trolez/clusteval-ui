@@ -86,10 +86,11 @@
                         <div id="program-parameters">
                             <div class="program" th:each="programSetting, programSettingStat: *{programSettings}" th:attr="data-name=${programSetting.name}">
                                 <strong>Program: </strong><span class="name" th:text="${programSetting.name}"></span>
+                                <span class="error" th:if="${#fields.hasErrors('programSettings[__${programSettingStat.index}__].parameters')}" th:errors="*{programSettings[__${programSettingStat.index}__].parameters}"></span>
                                 <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].name}" />
                                 <span class="toggle"><i class="fa fa-expand"></i></span>
                                 <div class="program-content">
-                                    <th:block th:each="programParameter, programParamStat: ${programSetting.parameters}">
+                                    <div class="program-content-parameter" th:each="programParameter, programParamStat: ${programSetting.parameters}">
                                         <hr>
                                         <label th:text="${programParameter.name}"></label>
                                         <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].name}" />
@@ -109,20 +110,28 @@
                                         <div class="filter" data-mode="[&quot;parameter_optimization&quot;]">
                                             <th:block th:if="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimizable} == true">
                                                 <label>
-                                                    <input type="checkbox" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimize}" />
+                                                    <input class="checkbox-optimize" type="checkbox" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimize}" />
                                                     Optimize
                                                 </label>
                                                 <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimizable}" />
                                             </th:block>
                                             <th:block th:if="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].options} == null">
-                                                <label>
-                                                    Min value
-                                                    <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].minValue}" />
-                                                </label>
-                                                <label>
-                                                    Max value
-                                                    <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].maxValue}" />
-                                                </label>
+                                                <div class="optimize-parameter optimize">
+                                                    <label>
+                                                        Min value
+                                                        <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].minValue}" />
+                                                    </label>
+                                                    <label>
+                                                        Max value
+                                                        <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].maxValue}" />
+                                                    </label>
+                                                </div>
+                                                <div class="optimize-parameter no-optimize">
+                                                    <label>
+                                                        Value
+                                                        <input disabled="disabled" class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].value}" />
+                                                    </label>
+                                                </div>
                                             </th:block>
                                             <th:block th:if="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].options} != null">
                                                 <label>
@@ -131,7 +140,7 @@
                                                 </label>
                                             </th:block>
                                         </div>
-                                    </th:block>
+                                    </div>
                                 </div>
                             </div>
                         </div>
