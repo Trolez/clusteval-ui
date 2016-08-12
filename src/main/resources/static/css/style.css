@@ -6,6 +6,14 @@ body { background-color: #c0c0c0; height: 100%; overflow-x: hidden; }
 header { height: 100px; background: rgb(67, 80, 109); padding-left: 115px; }
 header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transform: translateY(-50%); z-index: 2; text-shadow: 1px 1px 2px #0E1221; }
 
+/* Home */
+#home .connection { background-color: #63e45b; padding: 8px; border: 2px solid #36cf2c; position: relative; color: #fff; font-size: 16px; }
+#home .no-connection { background-color: #fcb231; border: 2px solid #d58f14; }
+#home .connection > div { display: inline-block; }
+#home .connection .icon { color: #36cf2c; font-size: 50px; position: absolute; top: 0px; bottom: 0px; }
+#home .connection .icon > i { display: block; position: relative; top: 50%; transform: translateY(-50%); }
+#home .no-connection .icon { color: #d58f14; }
+
 /* Side menu */
 #side-menu { position: fixed; top: 0px; bottom: 0px; width: 105px; background: #0E1221; border-right: 5px solid rgb(67, 80, 109); padding-top: 100px; z-index: 1; }
 #side-menu ul { list-style: none; padding-left: 0px; }

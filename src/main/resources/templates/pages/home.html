@@ -1,8 +1,19 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
 <body>
-    <div layout:fragment="content">
-        <h1>Home</h1>
+    <div layout:fragment="content" id="home">
+        <div class="connection" th:if="${connected}">
+            <div class="icon">
+                <i class="fa fa-check-square-o"></i>
+            </div>
+            <div>
+                Connected!!
+            </div>
+        </div>
+        <div class="connection no-connection" th:unless="${connected}">
+            <i class="fa fa-warning"></i>
+            Not connected!!
+        </div>
     </div>
 </body>
 </html>
