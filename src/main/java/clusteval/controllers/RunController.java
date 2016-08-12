@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.beans.factory.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.clusteval.serverclient.BackendClient;
 import de.clusteval.run.RUN_STATUS;
@@ -36,14 +38,13 @@ import java.io.*;
 
 @Controller
 public class RunController {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Value("${port}")
     private int port;
 
     @Value("${clientId}")
     private int clientId;
-
-    @Value("${absRepoPath}")
-    private String path;
 
     @RequestMapping("/runs")
     public String showRuns(Model model) {
@@ -112,12 +113,13 @@ public class RunController {
 
             backendClient.performRun(run.getName());
 
+            logger.info("An instance of the run '" + run.getName() + "' was started.");
             redirectAttributes.addFlashAttribute("success", "The run '" + run.getName() + "' was successfully started.");
         } catch (ConnectException e) {
             redirectAttributes.addFlashAttribute("failure", "Could not connect to the Clusteval server. Is it running?");
         } catch (Exception e) {
+            logger.error("An unknown error occurred when attempting to start an instance of the run '" + run.getName() + "'. Exception: " + e);
             redirectAttributes.addFlashAttribute("failure", "An unknown error occurred.");
-            System.err.println(e.toString());
         }
 
         redirectAttributes.addFlashAttribute("redirectUrl", "/runs");
@@ -136,6 +138,7 @@ public class RunController {
         } catch (ConnectException e) {
             redirectAttributes.addFlashAttribute("failure", "Could not connect to the Clusteval server. Is it running?");
         } catch (Exception e) {
+            logger.error("An unknown error occurred when attempting to resume the run '" + run.getName() + "'. Exception: " + e);
             redirectAttributes.addFlashAttribute("failure", "An unknown error occurred.");
         }
 
@@ -155,6 +158,7 @@ public class RunController {
         } catch (ConnectException e) {
             redirectAttributes.addFlashAttribute("failure", "Could not connect to the Clusteval server. Is it running?");
         } catch (Exception e) {
+            logger.error("An unknown error occurred when attempting to terminate the run '" + run.getName() + "'. Exception: " + e);
             redirectAttributes.addFlashAttribute("failure", "An unknown error occurred.");
         }
 
@@ -172,6 +176,7 @@ public class RunController {
             FileUtils.deleteDirectory(directory);
             redirectAttributes.addFlashAttribute("success", "The run '" + runName + "' has been succcesfully deleted.");
         } catch (Exception e) {
+            logger.error("An unknown error occurred when attempting to delete the run '" + runName + "'. Exception: " + e);
             redirectAttributes.addFlashAttribute("failure", "There was an error when deleting the run.");
         }
 
@@ -275,7 +280,7 @@ public class RunController {
 
         //Create run file
         try {
-            File file = new File(path + "/runs/" + runCreation.getName() + ".run");
+            File file = new File(getPath() + "/runs/" + runCreation.getName() + ".run");
 
             if (!file.exists()) {
                 file.createNewFile();
@@ -283,12 +288,12 @@ public class RunController {
 
             FileWriter writer = new FileWriter(file);
             BufferedWriter bw = new BufferedWriter(writer);
-            writer.write(runCreation.toString(path));
+            writer.write(runCreation.toString(getPath()));
             writer.close();
 
             redirectAttributes.addFlashAttribute("success", "The run has been succcesfully created.");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("An unknown error occurred when attempting to create a new run '" + runCreation.getName() + "'. Exception: " + e);
             redirectAttributes.addFlashAttribute("failure", "An error occurred during file writing.");
         }
 
@@ -300,7 +305,7 @@ public class RunController {
     @RequestMapping(value="/runs/edit")
     public String editRun(@RequestParam(value="name", required=true) String fileName, RunCreation runCreation, Model model) {
         try {
-            runCreation.parse(path, fileName);
+            runCreation.parse(getPath(), fileName);
 
             //Remove appended date if it is there
             int index = runCreation.getName().lastIndexOf('_');
@@ -343,7 +348,7 @@ public class RunController {
 
         //Create run file
         try {
-            File file = new File(path + "/runs/" + runCreation.getName() + ".run");
+            File file = new File(getPath() + "/runs/" + runCreation.getName() + ".run");
 
             if (!file.exists()) {
                 file.createNewFile();
@@ -351,12 +356,12 @@ public class RunController {
 
             FileWriter writer = new FileWriter(file);
             BufferedWriter bw = new BufferedWriter(writer);
-            writer.write(runCreation.toString(path));
+            writer.write(runCreation.toString(getPath()));
             writer.close();
 
             redirectAttributes.addFlashAttribute("success", "The run has been succcesfully edited.");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("An unknown error occurred when attempting to edit the run '" + runCreation.getName() + "'. Exception: " + e);
             redirectAttributes.addFlashAttribute("failure", "An error occurred during file writing.");
         }
 
@@ -367,7 +372,7 @@ public class RunController {
 
     @RequestMapping(value="/runs/delete")
     public String deleteRunConfig(@RequestParam(value="name", required=true) String fileName, Model model, RedirectAttributes redirectAttributes) {
-        File file = new File(path + "/runs/" + fileName + ".run");
+        File file = new File(getPath() + "/runs/" + fileName + ".run");
 
         if (file.exists()) {
             file.delete();
@@ -383,7 +388,7 @@ public class RunController {
     @RequestMapping(value="/getRun", method=RequestMethod.GET)
     public @ResponseBody RunCreation getRunCreationFromFileName(@RequestParam(value="name", required=true) String name) {
         RunCreation runCreation = new RunCreation();
-        runCreation.parse(path, name);
+        runCreation.parse(getPath(), name);
         return runCreation;
     }
 

@@ -28,9 +28,6 @@ public class ProgramController {
     @Value("${clientId}")
     private int clientId;
 
-    @Value("${absRepoPath}")
-    private String path;
-
     @RequestMapping(value="/getProgram", method=RequestMethod.GET)
     public @ResponseBody Program getProgram(@RequestParam(value="name", required=true) String name) {
         Program program = new Program();
