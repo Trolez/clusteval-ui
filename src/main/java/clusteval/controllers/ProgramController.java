@@ -1,5 +1,6 @@
 package clusteval;
 
+import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,6 +28,24 @@ public class ProgramController {
 
     @Value("${clientId}")
     private int clientId;
+
+    @RequestMapping(value="/programs")
+    public String showPrograms(Model model) {
+        ArrayList<String> programs;
+
+        try {
+            BackendClient backendClient = getBackendClient();
+            programs = new ArrayList<String>(backendClient.getProgramConfigurations());
+
+            model.addAttribute("programs", programs);
+        } catch (ConnectException e) {
+            return "runs/notRunning";
+        } catch (Exception e){
+
+        }
+
+        return "programs/index";
+    }
 
     @RequestMapping(value="/getProgram", method=RequestMethod.GET)
     public @ResponseBody Program getProgram(@RequestParam(value="name", required=true) String name) {

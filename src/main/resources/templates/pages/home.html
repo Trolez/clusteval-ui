@@ -7,12 +7,47 @@
                 <i class="fa fa-check-square-o"></i>
             </div>
             <div>
-                Connected!!
+                Successfully connected to the ClustEval server.<br>
+                Listening on port: <span th:text="${port}"></span>.<br>
+                Absolute repository path: <span th:text="${absRepoPath}"></span>.
             </div>
         </div>
         <div class="connection no-connection" th:unless="${connected}">
-            <i class="fa fa-warning"></i>
-            Not connected!!
+            <div class="icon">
+                <i class="fa fa-warning"></i>
+            </div>
+            <div>
+                A connection to the ClustEval server could not be established.
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="box">
+                    <div class="pull-right">
+                        <a href="/runs" class="btn btn-default">See all runs</a>
+                        <a href="/runs/create" class="btn btn-success">Create new run</a>
+                    </div>
+                    There are currently <span th:text="${numberOfRuns}"></span> runs available.
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="box">
+                    <div class="pull-right">
+                        <a href="/programs" class="btn btn-default">See all programs</a>
+                        <a href="#" class="btn btn-success">Upload program</a>
+                    </div>
+                    Programs: coming soon
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="box">
+                    <div class="pull-right">
+                        <a href="/data" class="btn btn-default">See all data</a>
+                        <a href="#" class="btn btn-success">Upload data</a>
+                    </div>
+                    Data: coming soon
+                </div>
+            </div>
         </div>
     </div>
 </body>

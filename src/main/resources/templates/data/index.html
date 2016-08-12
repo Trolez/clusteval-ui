@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<body>
+    <div layout:fragment="content">
+        <div class="pull-right">
+            <a href="#" class="btn btn-success">Upload data</a>
+        </div>
+
+        <h1>Available data</h1>
+        <ul>
+            <ol th:each="data: ${datas}" th:text="${data}"></ol>
+        </ul>
+    </div>
+</body>
+</html>

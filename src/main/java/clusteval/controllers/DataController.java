@@ -1,49 +1,52 @@
 package clusteval;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.beans.factory.annotation.*;
 
 import de.clusteval.serverclient.BackendClient;
+
 import java.rmi.ConnectException;
 
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.HashMap;
+import java.io.*;
+
+import org.apache.commons.lang3.StringUtils;
+
 @Controller
-public class PageController {
+public class DataController {
     @Value("${port}")
     private int port;
 
     @Value("${clientId}")
     private int clientId;
 
-    @RequestMapping("/")
-    public String homePage(Model model) {
-        boolean connectedToServer = true;
-        String absRepoPath = "";
-        int numberOfRuns = 0;
+    @RequestMapping(value="/data")
+    public String showData(Model model) {
+        ArrayList<String> data;
 
         try {
             BackendClient backendClient = getBackendClient();
-            absRepoPath = getPath();
-            numberOfRuns = backendClient.getRuns().size();
+            data = new ArrayList<String>(backendClient.getDataConfigurations());
+            Collections.sort(data, String.CASE_INSENSITIVE_ORDER);
+
+            model.addAttribute("datas", data);
         } catch (ConnectException e) {
-            connectedToServer = false;
-        } catch (Exception e) {}
+            return "runs/notRunning";
+        } catch (Exception e){
 
-        model.addAttribute("connected", connectedToServer);
-        model.addAttribute("absRepoPath", absRepoPath);
-        model.addAttribute("numberOfRuns", numberOfRuns);
-        model.addAttribute("port", port);
+        }
 
-        return "pages/home";
-    }
-
-    @RequestMapping("/redirect")
-    public String redirectPage(Model model) {
-        return "pages/redirect";
+        return "data/index";
     }
 
     private BackendClient getBackendClient() throws ConnectException, Exception {
