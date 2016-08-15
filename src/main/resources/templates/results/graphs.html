@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<head>
+    <!-- Highcarts -->
+    <script src="/js/highcharts/highcharts.js"></script>
+</head>
+<body>
+    <div layout:fragment="content">
+        <h1>Result representation - mockups</h1>
+        <h2>Clustering run</h2>
+        <div id="clustering-graph" style="width:100%; height:400px;"></div>
+        <h2>Parameter optimization run</h2>
+        <div id="parameter-optimization-graph" style="width:100%; height:400px;"></div>
+
+        <div class="box">
+            <form>
+                <label>Datasets</label>
+                <select class="select2-multiple datasets" multiple="multiple" name="datasets">
+                    <option value="Dataset_1">Dataset_1</option>
+                    <option value="Dataset_2">Dataset_2</option>
+                    <option value="Dataset_3">Dataset_3</option>
+                    <option value="Dataset_4">Dataset_4</option>
+                    <option value="Dataset_5">Dataset_5</option>
+                    <option value="Dataset_6">Dataset_6</option>
+                    <option value="Dataset_7">Dataset_7</option>
+                </select>
+                <label>Measures</label>
+                <select class="select2-multiple measures" multiple="multiple">
+                    <option value="Measure_1">Measure_1</option>
+                    <option value="Measure_2">Measure_2</option>
+                    <option value="Measure_3">Measure_3</option>
+                    <option value="Measure_4">Measure_4</option>
+                    <option value="Measure_5">Measure_5</option>
+                    <option value="Measure_6">Measure_6</option>
+                    <option value="Measure_7">Measure_7</option>
+                </select>
+            </form>
+            <div id="parameter-optimization-graph2" style="width:100%; height:400px;"></div>
+        </div>
+
+        <script>
+            $(function () {
+                $('#clustering-graph').highcharts({
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Clustering sizes'
+                    },
+                    xAxis: {
+                        categories: ['cluster_1', 'cluster_2', 'cluster_3', 'cluster_4', 'cluster_5', 'cluster_6', 'cluster_7', 'cluster_8', 'cluster_9', 'cluster_10']
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Elements in cluster'
+                        }
+                    },
+                    series: [{
+                        name: 'clustering_run',
+                        data: [20, 13, 5, 7, 19, 24, 23, 1, 3, 17]
+                    }]
+                });
+            });
+
+            $(function () {
+                $('#parameter-optimization-graph').highcharts({
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'Clustering quality'
+                    },
+                    xAxis: {
+                        categories: ['iteration_1', 'iteration_2', 'iteration_3', 'iteration_4', 'iteration_5', 'iteration_6', 'iteration_7', 'iteration_8', 'iteration_9', 'iteration_10']
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Score'
+                        }
+                    },
+                    series: [{
+                        name: 'score_1',
+                        data: [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.4, 0.3, 0.1]
+                    },{
+                        name: 'score_2',
+                        data: [0.4, 0.15, 0.25, 0.6, 0.5, 0.4, 0.3, 0.2, 0.05]
+                    }]
+                });
+
+                $('#parameter-optimization-graph2').highcharts({
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Clustering quality'
+                    },
+                    subTitle: {
+                        text: 'One program, multiple dataset, multiple measures'
+                    },
+                    xAxis: {
+                        categories: [],
+                        max: 0
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Score'
+                        }
+                    },
+                    /*series: [{
+                        name: 'score_1',
+                        data: [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.4, 0.3, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.4, 0.3, 0.1, 0.87, 0.45]
+                    },{
+                        name: 'score_2',
+                        data: [0.4, 0.15, 0.25, 0.6, 0.5, 0.4, 0.3, 0.2, 0.05, 0.4, 0.15, 0.25, 0.6, 0.5, 0.4, 0.3, 0.2, 0.05, 0.32, 0.12]
+                    }]*/
+                });
+
+                function addDataSetToGraph(name) {
+                    var chart = $('#parameter-optimization-graph2').highcharts();
+
+                    array = [];
+                    array = chart.xAxis[0].categories;
+                    array.push(name);
+
+                    chart.xAxis[0].setCategories(array, false);
+
+                    //Make x axis one longer
+                    chart.xAxis[0].update({
+                        max: (array.length - 1)
+                    });
+
+                    updateGraph();
+                }
+
+                function removeDataSetFromGraph(name) {
+                    var chart = $('#parameter-optimization-graph2').highcharts();
+
+                    array = chart.xAxis[0].categories;
+
+                    array = jQuery.grep(array, function(value) {
+                        return value != name;
+                    });
+
+                    chart.xAxis[0].setCategories(array, false);
+
+                    //Make x axis one shorter
+                    chart.xAxis[0].update({
+                        max: (array.length - 1)
+                    });
+
+                    updateGraph();
+                }
+
+                function updateGraph() {
+                    var chart = $('#parameter-optimization-graph2').highcharts();
+
+                    while(chart.series.length > 0) {
+                        chart.series[0].remove(false);
+                    }
+
+                    var array = [];
+
+                    var measures = $('.measures option:selected');
+                    var measure = "";
+                    var datasets = $('.datasets option:selected');
+                    var dataset = "";
+                    measures.each(function() {
+                        array = [];
+                        measure = $(this).val();
+                        datasets.each(function() {
+                            dataset = $(this).val()
+                            array.push(dataArray[dataset][measure]);
+                        });
+
+                        chart.addSeries({
+                            name: measure,
+                            data: array
+                        });
+                    });
+                }
+
+                //Add/remove dataset
+                var datasets = $('.datasets').val();
+                if (datasets == null) {
+                    datasets = [];
+                }
+                $('.box').on('change', '.datasets', function(){
+                    var newVal = $(this).val();
+                    var selectedDataSet;
+
+                    if (newVal == null) {
+                        newVal = [];
+                    }
+
+                    //Check if element was selected
+                    for (var i = 0; i < newVal.length; i++) {
+                        if ($.inArray(newVal[i], datasets) == -1) {
+                            selectedDataSet = $(this).find('option[value="' + newVal[i] + '"]').text();
+                            addDataSetToGraph(selectedDataSet);
+                        }
+                    }
+
+                    //Check if element was unselected
+                    for (var i = 0; i < datasets.length; i++) {
+                        if ($.inArray(datasets[i], newVal) == -1) {
+                            selectedDataSet = $(this).find('option[value="' + datasets[i] + '"]').text();
+                            removeDataSetFromGraph(selectedDataSet);
+                        }
+                    }
+
+                    datasets = newVal;
+                });
+
+                $('.box').on('change', '.measures', function(){
+                    updateGraph();
+                });
+
+                var dataArray = {
+                    Dataset_1: { Measure_1: 0.34, Measure_2: 0.13, Measure_3: 0.03, Measure_4: 0.43, Measure_5: 0.10, Measure_6: 0.18, Measure_7: 0.39 },
+                    Dataset_2: { Measure_1: 0.17, Measure_2: 0.23, Measure_3: 0.48, Measure_4: 0.52, Measure_5: 0.17, Measure_6: 0.21, Measure_7: 0.89 },
+                    Dataset_3: { Measure_1: 0.28, Measure_2: 0.73, Measure_3: 0.41, Measure_4: 0.09, Measure_5: 0.08, Measure_6: 0.49, Measure_7: 0.73 },
+                    Dataset_4: { Measure_1: 0.71, Measure_2: 0.34, Measure_3: 0.50, Measure_4: 0.48, Measure_5: 0.73, Measure_6: 0.09, Measure_7: 0.15 },
+                    Dataset_5: { Measure_1: 0.55, Measure_2: 0.25, Measure_3: 0.84, Measure_4: 0.16, Measure_5: 0.74, Measure_6: 0.26, Measure_7: 0.61 },
+                    Dataset_6: { Measure_1: 0.79, Measure_2: 0.11, Measure_3: 0.15, Measure_4: 0.40, Measure_5: 0.36, Measure_6: 0.50, Measure_7: 0.66 },
+                    Dataset_7: { Measure_1: 0.28, Measure_2: 0.14, Measure_3: 0.14, Measure_4: 0.90, Measure_5: 0.89, Measure_6: 0.17, Measure_7: 0.22 }
+                };
+            });
+        </script>
+    </div>
+</body>
+</html>

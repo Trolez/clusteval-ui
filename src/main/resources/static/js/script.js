@@ -8,9 +8,6 @@ $(document).ready(function() {
         closeOnSelect: false,
         width: '100%'
     });
-    /*$('.select2-multiple').selectize({
-        maxOptions: 100
-    });*/
 
     //Make all mode-specific sections initially invisible
     $('form.run-creation [data-mode]').hide();

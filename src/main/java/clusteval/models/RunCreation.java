@@ -350,6 +350,7 @@ public class RunCreation {
                         run += parameter.getName() + " = " + parameter.getValue() + "\n";
                     }
                 }
+                randomizerCounter++;
             }
         }
 

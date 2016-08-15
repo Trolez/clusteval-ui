@@ -1,0 +1,10 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<body>
+    <div layout:fragment="content">
+        <ul>
+            <li th:each="program : ${programs}" th:text="${program}"></li>
+        </ul>
+    </div>
+</body>
+</html>

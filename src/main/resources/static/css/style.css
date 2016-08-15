@@ -1,4 +1,4 @@
-/* 20px gutter */
+/* 14px gutter */
 .row {
   margin-right: -7px;
   margin-left: -7px;
@@ -11,6 +11,7 @@
 * { margin: 0px; padding: 0px; }
 
 body { background-color: #c0c0c0; height: 100%; overflow-x: hidden; }
+.box { margin-top: 14px; padding: 7px; background: #efefef; border: 2px solid #c9c9c9; font-size: 16px; overflow: hidden; }
 
 /* Header */
 header { height: 100px; background: rgb(67, 80, 109); padding-left: 115px; }
@@ -31,6 +32,7 @@ header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transfo
 #side-menu ul li a .icon { display: block; float: left; font-size: 24px; width: 100px; height: 75px; text-align: center; line-height: 100px; vertical-align: middle; color: #dedede; background: #0E1221; margin-right: 5px; }
 #side-menu ul li a .icon i { opacity: 0.25; display: block; position: relative; top: 50%; transform: translateY(-50%); }
 #side-menu ul li a span { position: absolute; bottom: 0px; left: 0px; width: 100%; text-align: center; opacity: 0; }
+#side-menu .version { position: absolute; bottom: 6px; width: 100%; text-align: center; color: rgba(255, 255, 255, 0.25); }
 
 /* Side menu hover effect */
 #side-menu ul li a .icon i { -webkit-transition: opacity 0.4s ease-in-out; -moz-transition: opacity 0.4s ease-in-out; -o-transition: opacity 0.4s ease-in-out; -ms-transition: opacity 0.4s ease-in-out; transition : opacity 0.4s ease-in-out; }
