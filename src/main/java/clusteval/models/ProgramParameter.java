@@ -10,7 +10,7 @@ public class ProgramParameter {
     private String maxValue;
     private String options;
     private boolean optimizable = false;
-    private boolean optimize = true;
+    private boolean optimize = false;
 
     public String getName() {
         return name;

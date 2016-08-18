@@ -116,7 +116,7 @@
                                                 <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimizable}" />
                                             </th:block>
                                             <th:block th:if="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].options} == null">
-                                                <div class="optimize-parameter optimize">
+                                                <div th:if="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimizable} == true" class="optimize-parameter optimize">
                                                     <label>
                                                         Min value
                                                         <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].minValue}" />

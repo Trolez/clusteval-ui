@@ -44,6 +44,11 @@ $(document).ready(function() {
         elementsToHide.hide();
         elementsToHide.find('input,select').prop('disabled', true);
         elementsToHide.find('input[type=hidden].placeholder').prop('disabled', false);
+
+        if (mode == "parameter_optimization") {
+            $('.optimize-parameter').find('input').prop('disabled', false);
+            $('.optimize-parameter.hidden').find('input').prop('disabled', true);
+        }
     }
 
     //When selecting a quality measure, enable the corresponding optimization criterion
@@ -177,19 +182,27 @@ $(document).ready(function() {
                                         returnValue += '</div>';
                                     }
                                     if (options == '') {
-                                        returnValue += '<div class="optimize-parameter optimize">';
-                                            returnValue += '<label>Min value';
-                                                returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.minValue" name="programSettings[' + index + '].parameters[' + paramIndex + '].minValue" type="text" value="' + minValue + '" />';
-                                            returnValue += '</label>';
-                                            returnValue += '<label>Max value';
-                                                returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.maxValue" name="programSettings[' + index + '].parameters[' + paramIndex + '].maxValue" type="text" value="' + maxValue + '" />';
-                                            returnValue += '</label>';
-                                        returnValue += '</div>';
-                                        returnValue += '<div class="optimize-parameter no-optimize" style="display: none;">';
-                                            returnValue += '<label>Value';
-                                                returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].value" type="text" value="' + defaultValue + '" />';
-                                            returnValue += '</label>';
-                                        returnValue += '</div>';
+                                        if (value.optimizable) {
+                                            returnValue += '<div class="optimize-parameter optimize">';
+                                                returnValue += '<label>Min value';
+                                                    returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.minValue" name="programSettings[' + index + '].parameters[' + paramIndex + '].minValue" type="text" value="' + minValue + '" />';
+                                                returnValue += '</label>';
+                                                returnValue += '<label>Max value';
+                                                    returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.maxValue" name="programSettings[' + index + '].parameters[' + paramIndex + '].maxValue" type="text" value="' + maxValue + '" />';
+                                                returnValue += '</label>';
+                                            returnValue += '</div>';
+                                            returnValue += '<div class="optimize-parameter no-optimize hidden">';
+                                                returnValue += '<label>Value';
+                                                    returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].value" type="text" value="' + defaultValue + '" />';
+                                                returnValue += '</label>';
+                                            returnValue += '</div>';
+                                        } else {
+                                            returnValue += '<div>';
+                                                returnValue += '<label>Value';
+                                                    returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].value" type="text" value="' + defaultValue + '" />';
+                                                returnValue += '</label>';
+                                            returnValue += '</div>';
+                                        }
                                     } else {
                                         returnValue += '<label>Values';
                                             returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.options" name="programSettings[' + index + '].parameters[' + paramIndex + '].options" type="text" value="' + options + '" />';
@@ -227,13 +240,19 @@ $(document).ready(function() {
         if ($(this).is(':checked')) {
             content.find('.optimize-parameter.optimize').show();
             content.find('.optimize-parameter.optimize').find('input').prop('disabled', false);
+            content.find('.optimize-parameter.optimize').removeClass('hidden');
+
             content.find('.optimize-parameter.no-optimize').hide();
             content.find('.optimize-parameter.no-optimize').find('input').prop('disabled', true);
+            content.find('.optimize-parameter.no-optimize').addClass('hidden');
         } else {
             content.find('.optimize-parameter.optimize').hide();
             content.find('.optimize-parameter.optimize').find('input').prop('disabled', true);
+            content.find('.optimize-parameter.optimize').removeClass('hidden');
+
             content.find('.optimize-parameter.no-optimize').show();
             content.find('.optimize-parameter.no-optimize').find('input').prop('disabled', false);
+            content.find('.optimize-parameter.no-optimize').addClass('hidden');
         }
     });
 

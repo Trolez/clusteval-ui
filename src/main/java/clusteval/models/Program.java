@@ -28,4 +28,14 @@ public class Program {
     public void setParameters(ArrayList<ProgramParameter> parameters) {
         this.parameters = parameters;
     }
+
+    public boolean equals(Object other) {
+        if (other == null) return false;
+        if (other == this) return true;
+        if (!(other instanceof Program)) return false;
+
+        Program otherProgram = (Program)other;
+
+        return name.equals(otherProgram.getName());
+    }
 }

@@ -5,6 +5,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -277,6 +279,65 @@ public class RunCreation {
             }
             setRandomizers(randomizers);
         } catch (Exception e) {}
+
+        //Program parameters
+        ArrayList<Program> programs = new ArrayList<Program>();
+        ArrayList<ProgramParameter> programParameters = new ArrayList<ProgramParameter>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(path + "/runs/" + fileName + ".run"));;
+            String currentLine;
+
+            Pattern pattern = Pattern.compile("\\[(.+):(.+)\\]"); //Should match [program:parameter]
+            Matcher matcher;
+            Program program = new Program();
+            ProgramParameter programParameter;
+
+            while ((currentLine = br.readLine()) != null) {
+                matcher = pattern.matcher(currentLine);
+                if (matcher.find()) {
+                    String programName = matcher.group(1); //Group count is 1-based
+                    String parameterName = matcher.group(2);
+
+                    Program programTest = new Program();
+                    programTest.setName(programName);
+                    if (!programs.contains(programTest)) {
+                        ProgramController programController = new ProgramController();
+                        program = programController.getProgram(programName);
+
+                        programs.add(program);
+                    }
+
+                    int i = 0;
+                    while (!program.getParameters().get(i).getName().equals(parameterName)) {
+                        i++;
+                    }
+
+                    programParameter = program.getParameters().get(i);
+                    System.err.println("Looking at parameter: " + programParameter.getName());
+
+                    while ((currentLine = br.readLine()) != null && !(currentLine = br.readLine()).equals("")) {
+                        System.err.println("Testing: " + currentLine);
+                        String line = currentLine.substring(currentLine.indexOf("=") + 1).trim();
+                        if (currentLine.startsWith("minValue")) {
+                            programParameter.setMinValue(line);
+                        }
+                        if (currentLine.startsWith("maxValue")) {
+                            programParameter.setMaxValue(line);
+                        }
+                        if (currentLine.startsWith("defaultValue")) {
+                            programParameter.setValue(line);
+                        }
+                        if (currentLine.startsWith("options")) {
+                            programParameter.setOptions(line);
+                        }
+                    }
+                    System.err.println();
+                }
+            }
+        } catch (Exception e) {
+        }
+
+        setProgramSettings(programs);
     }
 
     public String toString(String path) {
