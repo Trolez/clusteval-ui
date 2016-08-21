@@ -373,7 +373,7 @@ public class RunCreation {
                 run += "[" + program.getName() + "]\n";
 
                 for (ProgramParameter parameter : program.getParameters()) {
-                    if (parameter.getOptimize()) {
+                    if (parameter.getOptimize() && parameter.getOptimizable()) {
                         parametersToOptimize.add(parameter.getName());
                     }
                 }

@@ -10,6 +10,8 @@ import java.util.HashMap;
 
 public class Program {
     private String name;
+
+    @HasOneOptimizationParameter(message = "Please select at least one parameter to optimize")
     private ArrayList<ProgramParameter> parameters;
 
     public String getName() {
@@ -20,7 +22,6 @@ public class Program {
         this.name = name;
     }
 
-    @HasOneOptimizationParameter(message = "Please select at least one parameter to optimize")
     public ArrayList<ProgramParameter> getParameters() {
         return parameters;
     }

@@ -110,7 +110,7 @@
                                         <div class="filter" data-mode="[&quot;parameter_optimization&quot;]">
                                             <th:block th:if="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimizable} == true">
                                                 <label>
-                                                    <input class="checkbox-optimize" type="checkbox" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimize}" />
+                                                    <input class="checkbox-optimize" disabled="disabled" type="checkbox" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimize}" />
                                                     Optimize
                                                 </label>
                                                 <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimizable}" />

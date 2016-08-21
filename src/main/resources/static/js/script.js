@@ -191,9 +191,9 @@ $(document).ready(function() {
                                                     returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.maxValue" name="programSettings[' + index + '].parameters[' + paramIndex + '].maxValue" type="text" value="' + maxValue + '" />';
                                                 returnValue += '</label>';
                                             returnValue += '</div>';
-                                            returnValue += '<div class="optimize-parameter no-optimize hidden">';
+                                            returnValue += '<div class="optimize-parameter no-optimize hidden" style="display: none;">';
                                                 returnValue += '<label>Value';
-                                                    returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].value" type="text" value="' + defaultValue + '" />';
+                                                    returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].value" type="text" value="' + defaultValue + '" disabled />';
                                                 returnValue += '</label>';
                                             returnValue += '</div>';
                                         } else {
@@ -248,11 +248,11 @@ $(document).ready(function() {
         } else {
             content.find('.optimize-parameter.optimize').hide();
             content.find('.optimize-parameter.optimize').find('input').prop('disabled', true);
-            content.find('.optimize-parameter.optimize').removeClass('hidden');
+            content.find('.optimize-parameter.optimize').addClass('hidden');
 
             content.find('.optimize-parameter.no-optimize').show();
             content.find('.optimize-parameter.no-optimize').find('input').prop('disabled', false);
-            content.find('.optimize-parameter.no-optimize').addClass('hidden');
+            content.find('.optimize-parameter.no-optimize').removeClass('hidden');
         }
     });
 
