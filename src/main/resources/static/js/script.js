@@ -20,7 +20,7 @@ $(document).ready(function() {
     }
 
     //Mode select/change
-    $('form.run-creation input[type=radio][name=mode]').change(function(){
+    $('form.run-creation input[type=radio][name=mode]').change(function() {
         updateMode($(this), $('form.run-creation'));
         updateAccordion();
     });

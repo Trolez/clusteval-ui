@@ -48,26 +48,49 @@ public class ResultController {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @RequestMapping(value="/show-results")
-    public String showResults(Model model, @RequestParam(value="name", required=true) String name) {
-        String sql = "SELECT * FROM programs";
+    @RequestMapping(value="/results")
+    public String showResults(Model model) {
+        String sql = "SELECT * FROM run_results " +
+                      "INNER JOIN run_types ON (run_results.run_type_id = run_types.id)";
 
-        ArrayList<String> test = new ArrayList<String>();
+        ArrayList<String> results = new ArrayList<String>();
 
     	List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
     	for (Map row : rows) {
-    		test.add(new String((byte[])row.get("alias")));
+    		results.add(new String((byte[])row.get("unique_run_identifier")));
     	}
 
-        model.addAttribute("programs", test);
+        model.addAttribute("results", results);
+
+        return "results/index";
+    }
+
+    @RequestMapping(value="/results/show")
+    public String showResults(Model model, @RequestParam(value="name", required=true) String name) {
+        String sql = "SELECT * FROM run_results " +
+                      "INNER JOIN run_types ON (run_results.run_type_id = run_types.id) " +
+                      "WHERE unique_run_identifier = '" + name + "'";
+
+        Map<String, Object> row = jdbcTemplate.queryForMap(sql);
+        String runType = new String((byte[])row.get("name"));
+
+        model.addAttribute("runType", runType);
+
+        if (runType.equals("Parameter Optimization")) {
+            return showResultsParameterOptimization(model, name);
+        }
 
         return "results/show";
     }
 
-    @RequestMapping(value="/results")
+    public String showResultsParameterOptimization(Model model, String name) {
+        return "results/showParameterOptimization";
+    }
+
+    /*@RequestMapping(value="/results")
     public String resultsTest(Model model) {
         return "results/graphs";
-    }
+    }*/
 
     @RequestMapping(value="/resultTest")
     public @ResponseBody Map<Pair<String, String>, Map<String, Double>> test(@RequestParam(value="name", required=true) String name) {

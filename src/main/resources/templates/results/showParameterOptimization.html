@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<body>
+    <div layout:fragment="content">
+        <div id="results">
+            <div class="summary">
+                Run type: <span th:text="${runType}"></span>
+            </div>
+            <span>[Here we will show some results for this parameter optimization run]</span>
+        </div>
+    </div>
+</body>
+</html>

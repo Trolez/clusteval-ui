@@ -2,7 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
 <body>
     <div layout:fragment="content">
-        <span th:text="${runType}"></span>
+        <ul>
+            <li th:each="result : ${results}" th:text="${result}"></li>
+        </ul>
     </div>
 </body>
 </html>
