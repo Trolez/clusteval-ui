@@ -1,0 +1,9 @@
+${AnsiColor.BRIGHT_GREEN}
+
+   ________           __  ______            __
+  / ____/ /_  _______/ /_/ ____/   ______ _/ /
+ / /   / / / / / ___/ __/ __/ | | / / __ `/ /
+/ /___/ / /_/ (__  ) /_/ /___ | |/ / /_/ / /
+\____/_/\__,_/____/\__/_____/ |___/\__,_/_/
+
+${AnsiColor.BRIGHT_BLUE} Clusteval User Interface - Running on Spring Boot ${spring-boot.version}
