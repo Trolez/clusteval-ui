@@ -17,13 +17,6 @@ body { background-color: #c0c0c0; height: 100%; overflow-x: hidden; }
 header { height: 100px; background: rgb(67, 80, 109); padding-left: 115px; }
 header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transform: translateY(-50%); z-index: 2; text-shadow: 1px 1px 2px #0E1221; }
 
-/* Home */
-#home .connection { background-color: #9be196; padding: 7px; border: 2px solid #91cf8d; position: relative; color: #357831; font-size: 18px; overflow: hidden; }
-#home .no-connection { background-color: #fcb231; border: 2px solid #d58f14; color: #a76f0e; }
-#home .connection > div { display: inline-block; }
-#home .connection .icon { color: #fff; font-size: 50px; float: left; margin-right: 15px; }
-#home .box { margin-top: 14px; padding: 7px; background: #efefef; border: 2px solid #c9c9c9; font-size: 16px; line-height: 34px; overflow: hidden; }
-
 /* Side menu */
 #side-menu { position: fixed; top: 0px; bottom: 0px; width: 105px; background: #0E1221; border-right: 5px solid rgb(67, 80, 109); padding-top: 100px; z-index: 1; }
 #side-menu ul { list-style: none; padding-left: 0px; }
@@ -42,6 +35,21 @@ header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transfo
 
 /* Content Wrapper */
 #content-wrapper { margin-left: 105px; min-height: calc(100vh - 100px); background: #fafbff; padding: 14px 0px; }
+
+/* Home */
+#home .connection { background-color: #9be196; padding: 7px; border: 2px solid #91cf8d; position: relative; color: #357831; font-size: 18px; overflow: hidden; }
+#home .no-connection { background-color: #fcb231; border: 2px solid #d58f14; color: #a76f0e; }
+#home .connection > div { display: inline-block; }
+#home .connection .icon { color: #fff; font-size: 50px; float: left; margin-right: 15px; }
+#home .box { margin-top: 14px; padding: 7px; background: #efefef; border: 2px solid #c9c9c9; font-size: 16px; line-height: 34px; overflow: hidden; }
+
+/* Results */
+#results .parameter-optimization .name { font-size: 18px; font-weight: bold; }
+#results .parameter-optimization .program { margin-top: 10px; }
+#results .parameter-optimization .program .data-wrapper { padding-left: 30px; border-left: 2px solid #cfcfcf; }
+#results .parameter-optimization .program .data { border: 2px solid #cfcfcf; background: #efefef; padding: 7px; margin-top: 7px; position: relative; }
+#results .parameter-optimization .program .data .dash { position: absolute; left: -32px; top: 50%; transform: translateY(-50%); width: 30px; height: 2px; background: #cfcfcf; }
+#results .parameter-optimization .program .data ul { padding-left: 20px; }
 
 /* Accordion */
 .myAccordion { list-style: none; overflow: hidden; position: relative; width: 100%; display: flex; flex-wrap: wrap; margin-bottom: 0px; height: calc(100vh - 130px); }

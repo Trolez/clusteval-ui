@@ -6,24 +6,23 @@
             <div class="summary">
                 Run type: <span th:text="${runType}"></span>
             </div>
-            <span>[Here we will show some results for this parameter optimization run]</span><br><br>
 
-            <div th:object="${result}">
-                <ul>
-                    <li th:each="program : *{programs}">
-                        <span th:text="${program.name}"></span>
-                        <ul>
-                            <li th:each="data : ${program.data}">
-                                <span th:text="${data.name}"></span>
-                                <ul>
-                                    <li th:each="quality : ${data.qualities}">
-                                        <span th:text="${quality.name}"></span>: <span th:text="${quality.value}"></span>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+            <div th:object="${result}" class="parameter-optimization">
+                <div class="program" th:each="program : *{programs}">
+                    <span class="name">Program configuration: <span th:text="${program.name}"></span></span>
+                    <div class="data-wrapper">
+                        <div class="data" th:each="data : ${program.data}">
+                            <div class="dash"></div>
+                            <span class="name">Data configuration: <span th:text="${data.name}"></span></span><br><br>
+                            <strong>Best qualities</strong>
+                            <ul>
+                                <li th:each="quality : ${data.qualities}">
+                                    <span th:text="${quality.name}"></span>: <span th:text="${quality.value}"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
