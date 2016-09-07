@@ -123,11 +123,6 @@ public class ResultController {
                 resultData = new ParameterOptimizationResultData();
                 resultData.setName(currentData);
                 resultProgram.addToData(resultData);
-
-                resultQuality = new ParameterOptimizationResultQuality();
-                resultQuality.setName(quality);
-                resultQuality.setValue(qualityValue);
-                resultData.addToQualities(resultQuality);
             } else {
                 if (!data.equals(currentData)) {
                     currentData = data;
@@ -135,11 +130,24 @@ public class ResultController {
                     resultData.setName(currentData);
                     resultProgram.addToData(resultData);
                 }
+            }
 
-                resultQuality = new ParameterOptimizationResultQuality();
-                resultQuality.setName(quality);
-                resultQuality.setValue(qualityValue);
-                resultData.addToQualities(resultQuality);
+            resultQuality = new ParameterOptimizationResultQuality();
+            resultQuality.setName(quality);
+            resultQuality.setValue(qualityValue);
+            resultData.addToQualities(resultQuality);
+
+            String paramSql = "SELECT poi.quality, poi.param_set_as_string AS param_set " +
+                              "FROM parameter_optimization_iterations AS poi " +
+                              "INNER JOIN clustering_quality_measures ON (poi.clustering_quality_measure_id = clustering_quality_measures.id) " +
+                              "WHERE unique_run_identifier = '" + name + "' AND clustering_quality_measures.alias = '" + quality + "' " +
+                              "ORDER BY quality DESC LIMIT 1";
+
+            List<Map<String, Object>> paramSets = jdbcTemplate.queryForList(paramSql);
+
+            for (Map paramSet : paramSets) {
+                String paramSetAsString = new String((byte[])paramSet.get("param_set"));
+                resultQuality.setParameterSet(paramSetAsString);
             }
         }
 

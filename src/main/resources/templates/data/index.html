@@ -1,15 +1,19 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
 <body>
-    <div layout:fragment="content">
+    <div layout:fragment="content" id="data">
         <div class="pull-right">
             <a href="#" class="btn btn-success">Upload data</a>
         </div>
 
         <h1>Available data</h1>
-        <ul>
-            <ol th:each="data: ${datas}" th:text="${data}"></ol>
-        </ul>
+        <div class="box data-container" th:each="data: ${datas}">
+            <span class="toggle">
+                <i class="fa fa-expand"></i>
+            </span>
+            <span th:text="${data}" class="fetch-data"></span>
+            <div class="data-information"></div>
+        </div>
     </div>
 </body>
 </html>

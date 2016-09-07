@@ -5,6 +5,8 @@ public class ParameterOptimizationResultQuality {
 
     private double value;
 
+    private String parameterSet;
+
     public String getName() {
         return name;
     }
@@ -19,5 +21,13 @@ public class ParameterOptimizationResultQuality {
 
     public void setValue(double value) {
         this.value = value;
+    }
+
+    public String getParameterSet() {
+        return parameterSet;
+    }
+
+    public void setParameterSet(String parameterSet) {
+        this.parameterSet = parameterSet;
     }
 }

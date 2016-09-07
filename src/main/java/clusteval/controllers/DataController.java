@@ -31,7 +31,7 @@ public class DataController {
     private int clientId;
 
     @RequestMapping(value="/data")
-    public String showData(Model model) {
+    public String showAllData(Model model) {
         ArrayList<String> data;
 
         try {
@@ -47,6 +47,39 @@ public class DataController {
         }
 
         return "data/index";
+    }
+
+    @RequestMapping(value="/data/show")
+    public String showData(DataConfig dataConfig, @RequestParam(value="name", required=true) String name) {
+        dataConfig.setName(name);
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(getPath() + "/data/configs/" + name + ".dataconfig"));;
+            String currentLine;
+
+            while ((currentLine = br.readLine()) != null) {
+                String line = currentLine.substring(currentLine.indexOf("=") + 1).trim();
+                if (currentLine.startsWith("datasetConfig")) {
+                    dataConfig.setDataSetConfig(line);
+                } else if (currentLine.startsWith("goldstandardConfig")) {
+                    dataConfig.setGoldStandardConfig(line);
+                }
+            }
+
+            br = new BufferedReader(new FileReader(getPath() + "/data/datasets/configs/" + dataConfig.getDataSetConfig() + ".dsconfig"));;
+
+            while ((currentLine = br.readLine()) != null) {
+                String line = currentLine.substring(currentLine.indexOf("=") + 1).trim();
+                if (currentLine.startsWith("datasetName")) {
+                    dataConfig.setDataSetName(line);
+                } else if (currentLine.startsWith("datasetFile")) {
+                    dataConfig.setDataSetFile(line);
+                }
+            }
+        } catch (Exception e) {
+        }
+
+        return "data/show";
     }
 
     private BackendClient getBackendClient() throws ConnectException, Exception {

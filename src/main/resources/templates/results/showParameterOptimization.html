@@ -1,5 +1,9 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<head>
+    <!-- Highcarts -->
+    <script src="/js/highcharts/highcharts.js"></script>
+</head>
 <body>
     <div layout:fragment="content">
         <div id="results">
@@ -8,18 +12,59 @@
             </div>
 
             <div th:object="${result}" class="parameter-optimization">
-                <div class="program" th:each="program : *{programs}">
+                <div class="program" th:each="program, programStat : *{programs}">
                     <span class="name">Program configuration: <span th:text="${program.name}"></span></span>
                     <div class="data-wrapper">
-                        <div class="data" th:each="data : ${program.data}">
+                        <div class="data" th:each="data, dataStat : ${program.data}">
                             <div class="dash"></div>
                             <span class="name">Data configuration: <span th:text="${data.name}"></span></span><br><br>
                             <strong>Best qualities</strong>
                             <ul>
                                 <li th:each="quality : ${data.qualities}">
-                                    <span th:text="${quality.name}"></span>: <span th:text="${quality.value}"></span>
+                                    <span th:text="${quality.name}"></span>: <span th:text="${quality.value}"></span> -
+                                    <em>Achieved with parameter set: <span th:text="${quality.parameterSet}"></span></em>
                                 </li>
                             </ul>
+                            <div th:id="'best-qualities-' + ${programStat.index} + '_' + ${dataStat.index}" style="width: 100%;"></div>
+                            <script th:inline="javascript">
+                                $(function () {
+                                    $('#best-qualities-[[${programStat.index}]]_[[${dataStat.index}]]').height(150 + '[[${#lists.size(data.qualities)}]]'*35)
+                                    $('#best-qualities-[[${programStat.index}]]_[[${dataStat.index}]]').highcharts({
+                                        chart: {
+                                            type: 'bar'
+                                        },
+                                        title: {
+                                            text: 'Best qualities'
+                                        },
+                                        xAxis: {
+                                            categories: [[${data.qualities}]].map(function(item) {
+                                                return item.name;
+                                            })
+                                        },
+                                        yAxis: {
+                                            title: {
+                                                text: 'Qualities'
+                                            },
+                                            labels: {
+                                                overflow: 'justify'
+                                            }
+                                        },
+                                        plotOptions: {
+                                                bar: {
+                                                    dataLabels: {
+                                                        enabled: true
+                                                    }
+                                                }
+                                        },
+                                        series: [{
+                                            name: [[${program.name}]] + '/' + [[${data.name}]],
+                                            data:  [[${data.qualities}]].map(function(item) {
+                                                return item.value;
+                                            })
+                                        }]
+                                    });
+                                });
+                            </script>
                         </div>
                     </div>
                 </div>

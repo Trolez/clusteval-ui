@@ -343,4 +343,27 @@ $(document).ready(function() {
         setTimeout(updateRunProgress, 10000);
     }
     updateRunProgress();
+
+    //Fetch information about data config file on click
+    $('.data-container .toggle').click(function() {
+        var name = $(this).parent().find('.fetch-data').html();
+        var container = $(this).parent().find('.data-information');
+
+        $(this).find('.fa').toggleClass('fa-expand');
+        $(this).find('.fa').toggleClass('fa-compress');
+
+        if (container.is(':visible')) {
+            container.slideUp();
+        } else {
+            $.ajax({
+                url: "/data/show?name=" + name,
+                type: 'get',
+                dataType: 'html',
+                success: function(data) {
+                    container.html(data);
+                    container.slideDown();
+                }
+            });
+        }
+    });
 });
