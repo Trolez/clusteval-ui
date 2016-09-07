@@ -366,4 +366,27 @@ $(document).ready(function() {
             });
         }
     });
+
+    //Fetch information about program config file on click
+    $('.program-container .toggle').click(function() {
+        var name = $(this).parent().find('.fetch-program').html();
+        var container = $(this).parent().find('.program-information');
+
+        $(this).find('.fa').toggleClass('fa-expand');
+        $(this).find('.fa').toggleClass('fa-compress');
+
+        if (container.is(':visible')) {
+            container.slideUp();
+        } else {
+            $.ajax({
+                url: "/getProgram?name=" + name,
+                type: 'get',
+                dataType: 'html',
+                success: function(data) {
+                    container.html(data);
+                    container.slideDown();
+                }
+            });
+        }
+    });
 });

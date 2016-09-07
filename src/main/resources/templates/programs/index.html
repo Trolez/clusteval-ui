@@ -1,15 +1,19 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
 <body>
-    <div layout:fragment="content">
+    <div layout:fragment="content" id="programs">
         <div class="pull-right">
             <a href="#" class="btn btn-success">Upload program</a>
         </div>
 
         <h1>Available programs</h1>
-        <ul>
-            <ol th:each="program: ${programs}" th:text="${program}"></ol>
-        </ul>
+        <div class="box program-container" th:each="program: ${programs}">
+            <span class="toggle">
+                <i class="fa fa-expand"></i>
+            </span>
+            <span th:text="${program}" class="fetch-program"></span>
+            <div class="program-information"></div>
+        </div>
     </div>
 </body>
 </html>

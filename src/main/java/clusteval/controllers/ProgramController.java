@@ -66,13 +66,14 @@ public class ProgramController {
                 }
             }
         } catch (Exception e) {
+            System.err.println("Something happened 1!!");
         }
 
         try {
             BackendClient backendClient = getBackendClient();
 
             Map<String, Map<String, String>> parameters = backendClient.getParametersForProgramConfiguration(name);
-
+            System.err.println("Testing!!");
             ArrayList<ProgramParameter> programParameters = new ArrayList<ProgramParameter>();
             for (Map.Entry<String, Map<String, String>> entry : parameters.entrySet())
             {
@@ -109,6 +110,8 @@ public class ProgramController {
             program.setParameters(programParameters);
         } catch (ConnectException e) {
         } catch (Exception e) {
+            System.err.println("Something happened!!" + e.toString());
+            e.printStackTrace();
         }
 
         return program;
