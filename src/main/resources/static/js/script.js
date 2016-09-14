@@ -349,6 +349,7 @@ $(document).ready(function() {
         var name = $(this).parent().find('.fetch-data').html();
         var container = $(this).parent().find('.data-information');
 
+        $(this).toggleClass('open');
         $(this).find('.fa').toggleClass('fa-expand');
         $(this).find('.fa').toggleClass('fa-compress');
 
@@ -367,11 +368,20 @@ $(document).ready(function() {
         }
     });
 
+    $('#data .expand-all').click(function() {
+        $('.data-container .toggle:not(.open)').trigger('click');
+    });
+
+    $('#data .collapse-all').click(function() {
+        $('.data-container .toggle.open').trigger('click');
+    });
+
     //Fetch information about program config file on click
     $('.program-container .toggle').click(function() {
         var name = $(this).parent().find('.fetch-program').html();
         var container = $(this).parent().find('.program-information');
 
+        $(this).toggleClass('open');
         $(this).find('.fa').toggleClass('fa-expand');
         $(this).find('.fa').toggleClass('fa-compress');
 
@@ -379,7 +389,7 @@ $(document).ready(function() {
             container.slideUp();
         } else {
             $.ajax({
-                url: "/getProgram?name=" + name,
+                url: "/programs/show?name=" + name,
                 type: 'get',
                 dataType: 'html',
                 success: function(data) {
@@ -389,4 +399,24 @@ $(document).ready(function() {
             });
         }
     });
+
+    $('#programs .expand-all').click(function() {
+        $('.program-container .toggle:not(.open)').trigger('click');
+    });
+
+    $('#programs .collapse-all').click(function() {
+        $('.program-container .toggle.open').trigger('click');
+    });
+
+    //Show value of range input
+    $('.range-container').on('input change', 'input[type=range]', function() {
+        if ($(this).hasClass('options')) {
+            var options = $(this).data('options').split(',');
+            $(this).next('.range-value').html(options[$(this).val()]);
+        } else {
+            $(this).next('.range-value').html($(this).val());
+        }
+    });
+
+    $('.range-container input[type=range]').trigger('change');
 });

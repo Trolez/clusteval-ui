@@ -65,6 +65,35 @@ public class ResultController {
         return "results/index";
     }
 
+    @RequestMapping(value="/results/test")
+    public String showResults(Model model, @RequestParam(value="name", required=true) String name, @RequestParam(value="program", required=true) String program, @RequestParam(value="data", required=true) String data) {
+        String sql = "SELECT DISTINCT value, paramname FROM parameter_optimization_iterations " +
+                     "WHERE program_config_id = '" + program + "' AND data_config_id = '" + data + "' " +
+                     "ORDER BY paramname";
+
+        Map<String, ArrayList<String>> paramValues = new HashMap<String, ArrayList<String>>();
+
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+
+        String currentParam = "";
+        ArrayList<String> values = new ArrayList<String>();
+        for (Map<String, Object> row : rows) {
+            String param = new String((byte[])row.get("paramname"));
+            String value = new String((byte[])row.get("value"));
+            if (!param.equals(currentParam)) {
+                currentParam = param;
+                values = new ArrayList<String>();
+                paramValues.put(param, values);
+            }
+
+            values.add(value);
+        }
+
+        model.addAttribute("parameters", paramValues);
+
+        return "results/showParameterSlider";
+    }
+
     @RequestMapping(value="/results/show")
     public String showResults(Model model, @RequestParam(value="name", required=true) String name) {
         String sql = "SELECT * FROM run_results " +
@@ -84,21 +113,24 @@ public class ResultController {
     }
 
     public String showResultsParameterOptimization(Model model, String name) {
-        String sql = "SELECT MAX(poi.quality) AS best_quality, clustering_quality_measures.alias AS quality_alias, program_configs.name AS program, data_configs.name AS data " +
+        String sql = "SELECT MAX(poi.quality) AS best_quality, poi.program_config_id, poi.data_config_id, clustering_quality_measures.alias AS quality_alias, program_configs.name AS program, data_configs.name AS data " +
         "FROM parameter_optimization_iterations AS poi " +
         "INNER JOIN clustering_quality_measures ON (poi.clustering_quality_measure_id = clustering_quality_measures.id) " +
         "INNER JOIN program_configs ON (program_configs.id = poi.program_config_id) " +
         "INNER JOIN data_configs ON (data_configs.id = poi.data_config_id) " +
         "WHERE unique_run_identifier = '" + name + "' " +
-        "GROUP BY quality_alias, program, data " +
+        "GROUP BY quality_alias, program, data, poi.program_config_id, poi.data_config_id " +
         "ORDER BY program ASC, data ASC, quality_alias ASC";
 
         ParameterOptimizationResult result = new ParameterOptimizationResult();
+        result.setName(name);
 
         String currentProgram = "";
         String program = "";
+        int programId;
         String currentData = "";
         String data = "";
+        int dataId;
         String quality;
         double qualityValue;
 
@@ -109,7 +141,9 @@ public class ResultController {
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
         for (Map row : rows) {
             program = new String((byte[])row.get("program"));
+            programId = (int)row.get("program_config_id");
             data = new String((byte[])row.get("data"));
+            dataId = (int)row.get("data_config_id");
             quality = new String((byte[])row.get("quality_alias"));
             qualityValue = (double)row.get("best_quality");
 
@@ -117,17 +151,20 @@ public class ResultController {
                 currentProgram = program;
                 resultProgram = new ParameterOptimizationResultProgram();
                 resultProgram.setName(currentProgram);
+                resultProgram.setId(programId);
                 result.addToPrograms(resultProgram);
 
                 currentData = data;
                 resultData = new ParameterOptimizationResultData();
                 resultData.setName(currentData);
+                resultData.setId(dataId);
                 resultProgram.addToData(resultData);
             } else {
                 if (!data.equals(currentData)) {
                     currentData = data;
                     resultData = new ParameterOptimizationResultData();
                     resultData.setName(currentData);
+                    resultData.setId(dataId);
                     resultProgram.addToData(resultData);
                 }
             }

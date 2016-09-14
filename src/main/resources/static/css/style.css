@@ -11,8 +11,12 @@
 * { margin: 0px; padding: 0px; }
 
 body { background-color: #c0c0c0; height: 100%; overflow-x: hidden; }
+a { cursor: pointer; }
 .box { margin-top: 14px; padding: 7px; background: #efefef; border: 2px solid #c9c9c9; font-size: 16px; overflow: hidden; }
 .box .toggle { display: inline-block; float: right; width: 25px; height: 25px; background: #f9f9f9; text-align: center; line-height: 25px; vertical-align: middle; cursor: pointer; border-radius: 3px; border: 1px solid #ccc; }
+.range-container { overflow: hidden; border: 1px solid #ececec; padding: 4px; background: #fafafa; margin-bottom: 5px; }
+.range-container input[type="range"] { width: calc(100% - 140px); float: left; margin-right: 10px; }
+.range-container .range-value { width: 130px; display: inline-block; text-align: center; }
 
 /* Header */
 header { height: 100px; background: rgb(67, 80, 109); padding-left: 115px; }

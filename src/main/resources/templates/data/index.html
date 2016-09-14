@@ -7,11 +7,18 @@
         </div>
 
         <h1>Available data</h1>
+        <a class="expand-all">
+            <i class="fa fa-expand"></i>
+            Expand all</a> -
+        <a class="collapse-all">
+            <i class="fa fa-compress"></i>
+            Collapse all
+        </a>
         <div class="box data-container" th:each="data: ${datas}">
             <span class="toggle">
                 <i class="fa fa-expand"></i>
             </span>
-            <span th:text="${data}" class="fetch-data"></span>
+            <strong th:text="${data}" class="fetch-data"></strong>
             <div class="data-information"></div>
         </div>
     </div>

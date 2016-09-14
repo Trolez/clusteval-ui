@@ -7,11 +7,18 @@
         </div>
 
         <h1>Available programs</h1>
+        <a class="expand-all">
+            <i class="fa fa-expand"></i>
+            Expand all</a> -
+        <a class="collapse-all">
+            <i class="fa fa-compress"></i>
+            Collapse all
+        </a>
         <div class="box program-container" th:each="program: ${programs}">
             <span class="toggle">
                 <i class="fa fa-expand"></i>
             </span>
-            <span th:text="${program}" class="fetch-program"></span>
+            <strong th:text="${program}" class="fetch-program"></strong>
             <div class="program-information"></div>
         </div>
     </div>

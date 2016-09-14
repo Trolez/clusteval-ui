@@ -15,6 +15,7 @@ import java.rmi.ConnectException;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.HashMap;
 import java.io.*;
@@ -36,6 +37,7 @@ public class ProgramController {
         try {
             BackendClient backendClient = getBackendClient();
             programs = new ArrayList<String>(backendClient.getProgramConfigurations());
+            Collections.sort(programs, String.CASE_INSENSITIVE_ORDER);
 
             model.addAttribute("programs", programs);
         } catch (ConnectException e) {
@@ -45,6 +47,25 @@ public class ProgramController {
         }
 
         return "programs/index";
+    }
+
+    @RequestMapping(value="/programs/show")
+    public String showProgram(Model model, @RequestParam(value="name", required=true) String name) {
+        ArrayList<String> programConfigContent = new ArrayList<String>();
+        try {
+            BufferedReader br;
+            String currentLine;
+            br = new BufferedReader(new FileReader(getPath() + "/programs/configs/" + name + ".config"));
+
+            while ((currentLine = br.readLine()) != null) {
+                programConfigContent.add(currentLine);
+            }
+        } catch (Exception e) {
+        }
+
+        model.addAttribute("programConfigContent", programConfigContent);
+
+        return "programs/show";
     }
 
     @RequestMapping(value="/getProgram", method=RequestMethod.GET)
@@ -66,14 +87,13 @@ public class ProgramController {
                 }
             }
         } catch (Exception e) {
-            System.err.println("Something happened 1!!");
         }
 
         try {
             BackendClient backendClient = getBackendClient();
 
             Map<String, Map<String, String>> parameters = backendClient.getParametersForProgramConfiguration(name);
-            System.err.println("Testing!!");
+
             ArrayList<ProgramParameter> programParameters = new ArrayList<ProgramParameter>();
             for (Map.Entry<String, Map<String, String>> entry : parameters.entrySet())
             {
@@ -110,8 +130,6 @@ public class ProgramController {
             program.setParameters(programParameters);
         } catch (ConnectException e) {
         } catch (Exception e) {
-            System.err.println("Something happened!!" + e.toString());
-            e.printStackTrace();
         }
 
         return program;
