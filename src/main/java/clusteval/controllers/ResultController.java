@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.clusteval.serverclient.BackendClient;
-import de.wiwie.wiutils.utils.Pair;
 
 import java.rmi.ConnectException;
 
@@ -29,8 +28,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import java.io.*;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletOutputStream;
+
+import org.apache.commons.lang3.StringUtils;
 
 @Controller
 public class ResultController {
@@ -90,6 +93,9 @@ public class ResultController {
         }
 
         model.addAttribute("parameters", paramValues);
+        model.addAttribute("name", name);
+        model.addAttribute("program", program);
+        model.addAttribute("data", data);
 
         return "results/showParameterSlider";
     }
@@ -110,6 +116,51 @@ public class ResultController {
         }
 
         return "results/show";
+    }
+
+    @RequestMapping(value="/results/get-parameter-graph")
+    public void getParameterGraph(Model model, @RequestParam(value="active-parameter", required=true) String activeParameter,
+                                                 @RequestParam(value="parameters", required=true) String parameters,
+                                                 @RequestParam(value="name") String name,
+                                                 @RequestParam(value="program") String program,
+                                                 @RequestParam(value="data") String data, HttpServletResponse response) {
+        //We want to generate a CSV file, so we set the header accordingly
+        response.setContentType("application/csv");
+        //response.setContentType("text/plain; charset=utf-8");
+        response.setHeader("content-disposition","attachment;filename =filename.csv");
+
+        String sql = "SELECT * FROM parameter_optimization_iterations " +
+                     "WHERE unique_run_identifier = '" + name + "' " +
+                     "AND program_config_id = '" + program + "' " +
+                     "AND data_config_id = '" + data + "' " +
+                     "AND paramname = '" + activeParameter + "' ";
+
+        //Narrow down the selection to the locked parameters
+        /*String[] lockedParameters = StringUtils.split(parameters, ',');
+        for (int i = 0; i < lockedParameters.length; i++) {
+            String[] parts = StringUtils.split(lockedParameters[i], '=');
+            sql += "AND param_set_as_string LIKE '%" + parts[0] + "=" + parts[1] + "%' ";
+        }*/
+
+        sql += "ORDER BY paramname, value, clustering_quality_measure_id";
+
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+
+        for (Map row : rows) {
+            System.err.println("Paramname: " + new String((byte[])row.get("paramname")));
+            System.err.println("Value: " + new String((byte[])row.get("value")));
+            System.err.println("Quality: " + row.get("clustering_quality_measure_id"));
+            System.err.println("Quality value: " + row.get("quality"));
+            System.err.println();
+        }
+
+        try {
+            ServletOutputStream  writer = response.getOutputStream();
+            writer.print("k,a,b,c\n1,1,2,3\n2,3,4,5\n3,4,6,7");
+            writer.flush();
+            writer.close();
+        } catch(IOException e) {
+        }
     }
 
     public String showResultsParameterOptimization(Model model, String name) {

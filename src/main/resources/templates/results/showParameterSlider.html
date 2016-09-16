@@ -1,19 +1,32 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<head>
+    <!-- Highcarts -->
+    <script src="/js/highcharts/highcharts.js"></script>
+    <script src="/js/highcharts/modules/data.js"></script>
+</head>
 <body>
     <div layout:fragment="content">
         <h1>Slider test</h1>
         <div class="row">
             <div class="col-md-4">
-                <form action="" method="post">
+                <form action="" method="post" class="parameter-graph-form">
                     <div class="range-container" th:each="parameter : ${parameters}">
+                        <input type="radio" name="active-parameter" th:value="${parameter.key}">
                         <strong th:text="${parameter.key}"></strong> -
                         <span th:text="${#lists.size(parameter.value)}"></span> possible values
                         <br>
                         <input type="range" class="options" th:attr="data-options=${#strings.listJoin(parameter.value, ',')}, max=${#lists.size(parameter.value) - 1}" min="0" value="0" step="1">
                         <div class="range-value"></div>
+                        <input type="hidden" name="name" th:value="${name}">
+                        <input type="hidden" name="program" th:value="${program}">
+                        <input type="hidden" name="data" th:value="${data}">
                     </div>
+                    <input type="submit" value="Update Graph">
                 </form>
+            </div>
+            <div class="col-md-8">
+                <div id="parameter-graph"></div>
             </div>
         </div>
     </div>

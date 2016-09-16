@@ -419,4 +419,43 @@ $(document).ready(function() {
     });
 
     $('.range-container input[type=range]').trigger('change');
+
+    //Parameter graph form submit
+    $('.parameter-graph-form').on('submit', function(e) {
+        e.preventDefault();
+
+        var activeParameter = $(this).find('input[type=radio]:checked').val();
+
+        var parameters = [];
+
+        $(this).find('input[type=radio]:not(:checked)').each(function(n) {
+            var value = $(this).parent().find('.range-value').html();
+            parameters[n] = $(this).val() + "=" + value;
+        });
+
+        var name = $(this).find('input[name=name]').val();
+        var program = $(this).find('input[name=program]').val();
+        var data = $(this).find('input[name=data]').val();
+
+        $.get("/results/get-parameter-graph?active-parameter=" + activeParameter + "&parameters=" + parameters.join(',') + "&name=" + name + "&program=" + program + "&data=" + data, function(csv) {
+            $('#parameter-graph').highcharts({
+                chart: {
+                    type: 'line'
+                },
+                data: {
+                    csv: csv,
+                    itemDelimiter: ",",
+                    lineDelimiter: "\n"
+                },
+                title: {
+                    text: 'Qualities'
+                },
+                yAxis: {
+                    title: {
+                        text: 'Value'
+                    }
+                }
+            });
+        });
+    });
 });
