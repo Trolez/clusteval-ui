@@ -411,14 +411,33 @@ $(document).ready(function() {
     //Show value of range input
     $('.range-container').on('input change', 'input[type=range]', function() {
         if ($(this).hasClass('options')) {
-            var options = $(this).data('options').split(',');
-            $(this).next('.range-value').html(options[$(this).val()]);
+            try {
+                var options = $(this).data('options').split(',');
+                $(this).next('.range-value').html(options[$(this).val()]);
+            }
+            catch (err) {
+                var options = $(this).data('options');
+                $(this).next('.range-value').html(options);
+            }
         } else {
             $(this).next('.range-value').html($(this).val());
         }
     });
 
     $('.range-container input[type=range]').trigger('change');
+
+    //Change active radio on parameter slider
+    $('.parameter-graph-form input[type=radio]').change(function() {
+        $('.parameter-graph-form').find('.icon .locked').show();
+        $('.parameter-graph-form').find('.icon .unlocked').hide();
+        if ($(this).is(':checked')) {
+            $(this).closest('.range-container').find('.icon .locked').hide();
+            $(this).closest('.range-container').find('.icon .unlocked').show();
+        } else {
+            $(this).closest('.range-container').find('.icon .locked').show();
+            $(this).closest('.range-container').find('.icon .unlocked').hide();
+        }
+    });
 
     //Parameter graph form submit
     $('.parameter-graph-form').on('submit', function(e) {
@@ -438,6 +457,7 @@ $(document).ready(function() {
         var data = $(this).find('input[name=data]').val();
 
         $.get("/results/get-parameter-graph?active-parameter=" + activeParameter + "&parameters=" + parameters.join(',') + "&name=" + name + "&program=" + program + "&data=" + data, function(csv) {
+            //alert(csv);
             $('#parameter-graph').highcharts({
                 chart: {
                     type: 'line'

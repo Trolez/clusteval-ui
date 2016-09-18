@@ -129,34 +129,66 @@ public class ResultController {
         //response.setContentType("text/plain; charset=utf-8");
         response.setHeader("content-disposition","attachment;filename =filename.csv");
 
-        String sql = "SELECT * FROM parameter_optimization_iterations " +
+        String sql = "SELECT poi.value AS value, poi.clustering_quality_measure_id, poi.quality AS quality, quality.alias AS quality_alias, poi.clustering_quality_measure_id AS quality_id FROM parameter_optimization_iterations AS poi " +
+                     "INNER JOIN clustering_quality_measures AS quality ON (poi.clustering_quality_measure_id = quality.id) " +
                      "WHERE unique_run_identifier = '" + name + "' " +
                      "AND program_config_id = '" + program + "' " +
                      "AND data_config_id = '" + data + "' " +
                      "AND paramname = '" + activeParameter + "' ";
 
         //Narrow down the selection to the locked parameters
-        /*String[] lockedParameters = StringUtils.split(parameters, ',');
+        String[] lockedParameters = StringUtils.split(parameters, ',');
         for (int i = 0; i < lockedParameters.length; i++) {
             String[] parts = StringUtils.split(lockedParameters[i], '=');
             sql += "AND param_set_as_string LIKE '%" + parts[0] + "=" + parts[1] + "%' ";
-        }*/
-
-        sql += "ORDER BY paramname, value, clustering_quality_measure_id";
-
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
-
-        for (Map row : rows) {
-            System.err.println("Paramname: " + new String((byte[])row.get("paramname")));
-            System.err.println("Value: " + new String((byte[])row.get("value")));
-            System.err.println("Quality: " + row.get("clustering_quality_measure_id"));
-            System.err.println("Quality value: " + row.get("quality"));
-            System.err.println();
         }
+
+        sql += "ORDER BY paramname, length(value), value, quality_id";
 
         try {
             ServletOutputStream  writer = response.getOutputStream();
-            writer.print("k,a,b,c\n1,1,2,3\n2,3,4,5\n3,4,6,7");
+
+            ArrayList<Integer> qualities = new ArrayList<Integer>();
+            ArrayList<String> rowToPrint = new ArrayList<String>();
+            ArrayList<String> headerRow = new ArrayList<String>();
+            Integer currentQualityId;
+
+            //Print out header
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+            for (Map row : rows) {
+                currentQualityId = (int)row.get("quality_id");
+                if (qualities.contains(currentQualityId)) {
+                    qualities = new ArrayList<Integer>();
+                    break;
+                }
+
+                headerRow.add(new String((byte[])row.get("quality_alias")));
+                qualities.add((Integer)row.get("quality_id"));
+            }
+
+            writer.print(activeParameter + "," + StringUtils.join(headerRow, ',') + "\n");
+
+            String currentValue = "";
+            for (Map row : rows) {
+                currentQualityId = (int)row.get("quality_id");
+                if (qualities.contains(currentQualityId)) {
+                    currentValue = new String((byte[])row.get("value"));
+                    writer.print(currentValue + "," + StringUtils.join(rowToPrint, ',') + "\n");
+                    rowToPrint = new ArrayList<String>();
+                    qualities = new ArrayList<Integer>();
+                }
+
+                rowToPrint.add(Double.toString((double)row.get("quality")));
+                qualities.add((Integer)row.get("quality_id"));
+                /*System.err.println("Paramname: " + new String((byte[])row.get("paramname")));
+                System.err.println("Value: " + new String((byte[])row.get("value")));
+                System.err.println("Quality: " + row.get("clustering_quality_measure_id"));
+                System.err.println("Quality value: " + row.get("quality"));
+                System.err.println();*/
+            }
+
+            writer.print(currentValue + "," + StringUtils.join(rowToPrint, ',') + "\n");
+
             writer.flush();
             writer.close();
         } catch(IOException e) {
@@ -229,6 +261,7 @@ public class ResultController {
                               "FROM parameter_optimization_iterations AS poi " +
                               "INNER JOIN clustering_quality_measures ON (poi.clustering_quality_measure_id = clustering_quality_measures.id) " +
                               "WHERE unique_run_identifier = '" + name + "' AND clustering_quality_measures.alias = '" + quality + "' " +
+                              "AND program_config_id = '" + programId + "' AND data_config_id = '" + dataId + "' " +
                               "ORDER BY quality DESC LIMIT 1";
 
             List<Map<String, Object>> paramSets = jdbcTemplate.queryForList(paramSql);
@@ -265,4 +298,17 @@ public class ResultController {
 
         return path;
     }
+
+    /*private List<String> sortArrayAsInt(List<String> list) {
+        ArrayList<Integer> intList = new ArrayList<Integer>();
+        int[] myIntArray = new int[myarray.length];
+
+        for (int i = 0; i < myarray.length; i++) {
+            myIntArray[i] = Integer.parseInt(myarray[i]);
+        }
+    }
+
+    private List<String> sortArrayAsDouble(List<String> list) {
+
+    }*/
 }

@@ -12,12 +12,22 @@
             <div class="col-md-4">
                 <form action="" method="post" class="parameter-graph-form">
                     <div class="range-container" th:each="parameter : ${parameters}">
-                        <input type="radio" name="active-parameter" th:value="${parameter.key}">
-                        <strong th:text="${parameter.key}"></strong> -
-                        <span th:text="${#lists.size(parameter.value)}"></span> possible values
-                        <br>
-                        <input type="range" class="options" th:attr="data-options=${#strings.listJoin(parameter.value, ',')}, max=${#lists.size(parameter.value) - 1}" min="0" value="0" step="1">
-                        <div class="range-value"></div>
+                        <div class="icon">
+                            <div class="locked">
+                                <i class="fa fa-lock"></i>
+                            </div>
+                            <div class="unlocked" style="display: none;">
+                                <i class="fa fa-search"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="radio" name="active-parameter" th:value="${parameter.key}">
+                            <strong th:text="${parameter.key}"></strong> -
+                            <span th:text="${#lists.size(parameter.value)}"></span> possible values
+                            <br>
+                            <input type="range" class="options" th:attr="data-options=${#strings.listJoin(parameter.value, ',')}, max=${#lists.size(parameter.value) - 1}" min="0" value="0" step="1">
+                            <div class="range-value"></div>
+                        </div>
                         <input type="hidden" name="name" th:value="${name}">
                         <input type="hidden" name="program" th:value="${program}">
                         <input type="hidden" name="data" th:value="${data}">
