@@ -408,14 +408,22 @@ $(document).ready(function() {
         $('.program-container .toggle.open').trigger('click');
     });
 
+    //Toggle result graphs
+    $('.toggle-result-graphs').click(function() {
+        $(this).parent().find('.result-graphs').slideToggle();
+        $(this).find('.fa').toggleClass('fa-chevron-up');
+        $(this).find('.fa').toggleClass('fa-chevron-down');
+    });
+
     //Show value of range input
-    $('.range-container').on('input change', 'input[type=range]', function() {
+    $('.parameter-sliders').on('input change', '.range-container input[type=range]', function() {
         if ($(this).hasClass('options')) {
             try {
                 var options = $(this).data('options').split(',');
                 $(this).next('.range-value').html(options[$(this).val()]);
             }
             catch (err) {
+                //Fix in case there is only one option
                 var options = $(this).data('options');
                 $(this).next('.range-value').html(options);
             }
@@ -424,23 +432,22 @@ $(document).ready(function() {
         }
     });
 
-    $('.range-container input[type=range]').trigger('change');
-
     //Change active radio on parameter slider
-    $('.parameter-graph-form input[type=radio]').change(function() {
+    $('.parameter-sliders').on('change', '.parameter-graph-form input[type=radio]', function() {
         $('.parameter-graph-form').find('.icon .locked').show();
         $('.parameter-graph-form').find('.icon .unlocked').hide();
+        $('.parameter-graph-form').find('.range-input-container').show();
+        $('.parameter-graph-form').find('.range-input-locked').hide();
         if ($(this).is(':checked')) {
             $(this).closest('.range-container').find('.icon .locked').hide();
             $(this).closest('.range-container').find('.icon .unlocked').show();
-        } else {
-            $(this).closest('.range-container').find('.icon .locked').show();
-            $(this).closest('.range-container').find('.icon .unlocked').hide();
+            $(this).parent().find('.range-input-container').hide();
+            $(this).parent().find('.range-input-locked').show();
         }
     });
 
     //Parameter graph form submit
-    $('.parameter-graph-form').on('submit', function(e) {
+    $('.parameter-sliders').on('submit', '.parameter-graph-form', function(e) {
         e.preventDefault();
 
         var activeParameter = $(this).find('input[type=radio]:checked').val();
@@ -456,11 +463,18 @@ $(document).ready(function() {
         var program = $(this).find('input[name=program]').val();
         var data = $(this).find('input[name=data]').val();
 
+        var graphContainer = $(this).closest('.parameter-sliders').find('.parameter-graph');
+
         $.get("/results/get-parameter-graph?active-parameter=" + activeParameter + "&parameters=" + parameters.join(',') + "&name=" + name + "&program=" + program + "&data=" + data, function(csv) {
             //alert(csv);
-            $('#parameter-graph').highcharts({
+            graphContainer.highcharts({
                 chart: {
                     type: 'line'
+                },
+                plotOptions: {
+                    series: {
+                        step: 'left'
+                    }
                 },
                 data: {
                     csv: csv,
@@ -476,6 +490,32 @@ $(document).ready(function() {
                     }
                 }
             });
+        });
+    });
+
+    //Automatically submit graph form on change
+    $('.parameter-sliders').on('change', 'input', function (e) {
+        var form = $(this).closest('form');
+        if (form.find('input[type=radio]:checked').length >= 1) {
+            $(this).closest('form').submit();
+        }
+    });
+
+    //Load in all sliders on result page
+    $('.parameter-optimization .parameter-sliders').each(function() {
+        var container = $(this);
+        var name = $(this).data('name');
+        var program = $(this).data('program');
+        var data = $(this).data('data');
+        $.ajax({
+            url: "/results/get-parameter-sliders?name=" + name + "&program=" + program + "&data=" + data,
+            type: 'get',
+            dataType: 'html',
+            success: function(data) {
+                container.html(data);
+
+                container.find('input[type=range]').trigger('change');
+            }
         });
     });
 });

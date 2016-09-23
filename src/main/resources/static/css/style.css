@@ -19,6 +19,7 @@ a { cursor: pointer; }
 .range-container .range-value { width: 130px; display: inline-block; text-align: center; }
 .range-container .icon { position: absolute; left: 0px; top: 0px; bottom: 0px; width: 35px; text-align: center; font-size: 20px; color: #999; }
 .range-container .icon > div { position: relative; top: 50%; transform: translateY(-50%); }
+.range-container .range-input-locked { display: none; }
 
 /* Header */
 header { height: 100px; background: rgb(67, 80, 109); padding-left: 115px; }
@@ -63,6 +64,7 @@ header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transfo
 #results .parameter-optimization .program .data { border: 2px solid #cfcfcf; background: #efefef; padding: 7px; margin-top: 7px; position: relative; }
 #results .parameter-optimization .program .data .dash { position: absolute; left: -32px; top: 50%; transform: translateY(-50%); width: 30px; height: 2px; background: #cfcfcf; }
 #results .parameter-optimization .program .data ul { padding-left: 20px; }
+#results .parameter-optimization .toggle-result-graphs { display: inline-block; width: 25px; height: 25px; background: #f9f9f9; text-align: center; line-height: 25px; vertical-align: middle; cursor: pointer; border-radius: 3px; border: 1px solid #ccc; }
 
 /* Accordion */
 .myAccordion { list-style: none; overflow: hidden; position: relative; width: 100%; display: flex; flex-wrap: wrap; margin-bottom: 0px; height: calc(100vh - 130px); }

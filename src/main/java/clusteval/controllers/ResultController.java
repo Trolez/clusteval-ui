@@ -68,7 +68,7 @@ public class ResultController {
         return "results/index";
     }
 
-    @RequestMapping(value="/results/test")
+    @RequestMapping(value="/results/get-parameter-sliders")
     public String showResults(Model model, @RequestParam(value="name", required=true) String name, @RequestParam(value="program", required=true) String program, @RequestParam(value="data", required=true) String data) {
         String sql = "SELECT DISTINCT value, paramname FROM parameter_optimization_iterations " +
                      "WHERE program_config_id = '" + program + "' AND data_config_id = '" + data + "' " +

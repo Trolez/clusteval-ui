@@ -3,6 +3,7 @@
 <head>
     <!-- Highcarts -->
     <script src="/js/highcharts/highcharts.js"></script>
+    <script src="/js/highcharts/modules/data.js"></script>
 </head>
 <body>
     <div layout:fragment="content">
@@ -25,7 +26,21 @@
                                     <em>Achieved with parameter set: <span th:text="${quality.parameterSet}"></span></em>
                                 </li>
                             </ul>
-                            <div th:id="'best-qualities-' + ${programStat.index} + '_' + ${dataStat.index}" style="width: 100%;"></div>
+                            <div class="result-graphs">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div th:id="'best-qualities-' + ${programStat.index} + '_' + ${dataStat.index}" style="width: 100%;"></div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="parameter-sliders" th:attr="data-name=${result.name}, data-program=${program.id}, data-data=${data.id}">
+                                            <!-- AJAX: sliders are loaded here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="toggle-result-graphs">
+                                <i class="fa fa-chevron-up"></i>
+                            </div>
                             <script th:inline="javascript">
                                 $(function () {
                                     $('#best-qualities-[[${programStat.index}]]_[[${dataStat.index}]]').height(150 + '[[${#lists.size(data.qualities)}]]'*35)
@@ -65,7 +80,6 @@
                                     });
                                 });
                             </script>
-                            <a th:href="@{/results/test(name=${result.name}, program=${program.id}, data=${data.id})}">Show parameter slider</a>
                         </div>
                     </div>
                 </div>
