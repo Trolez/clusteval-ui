@@ -70,9 +70,10 @@ public class ResultController {
 
     @RequestMapping(value="/results/get-parameter-sliders")
     public String showResults(Model model, @RequestParam(value="name", required=true) String name, @RequestParam(value="program", required=true) String program, @RequestParam(value="data", required=true) String data) {
-        String sql = "SELECT DISTINCT value, paramname FROM parameter_optimization_iterations " +
-                     "WHERE program_config_id = '" + program + "' AND data_config_id = '" + data + "' " +
-                     "ORDER BY paramname";
+        String sql = "SELECT * FROM " +
+                     "(SELECT DISTINCT value, paramname FROM parameter_optimization_iterations " +
+                     "WHERE program_config_id = '" + program + "' AND data_config_id = '" + data + "') AS blabla " +
+                     "ORDER BY paramname, length(value), value";
 
         Map<String, ArrayList<String>> paramValues = new HashMap<String, ArrayList<String>>();
 
@@ -126,7 +127,6 @@ public class ResultController {
                                                  @RequestParam(value="data") String data, HttpServletResponse response) {
         //We want to generate a CSV file, so we set the header accordingly
         response.setContentType("application/csv");
-        //response.setContentType("text/plain; charset=utf-8");
         response.setHeader("content-disposition","attachment;filename =filename.csv");
 
         String sql = "SELECT poi.value AS value, poi.clustering_quality_measure_id, poi.quality AS quality, quality.alias AS quality_alias, poi.clustering_quality_measure_id AS quality_id FROM parameter_optimization_iterations AS poi " +
@@ -140,10 +140,17 @@ public class ResultController {
         String[] lockedParameters = StringUtils.split(parameters, ',');
         for (int i = 0; i < lockedParameters.length; i++) {
             String[] parts = StringUtils.split(lockedParameters[i], '=');
-            sql += "AND param_set_as_string LIKE '%" + parts[0] + "=" + parts[1] + "%' ";
+            sql += "AND (param_set_as_string LIKE '%" + parts[0] + "=" + parts[1] + "' OR param_set_as_string LIKE '%" + parts[0] + "=" + parts[1] + ",%')";
         }
 
-        sql += "ORDER BY paramname, length(value), value, quality_id";
+        sql += "ORDER BY length(value), value, iteration, quality_id ASC";
+
+        String qualitiesSql = "SELECT DISTINCT quality.alias AS quality_alias, poi.clustering_quality_measure_id AS quality_id FROM parameter_optimization_iterations AS poi " +
+                              "INNER JOIN clustering_quality_measures AS quality ON (poi.clustering_quality_measure_id = quality.id) " +
+                              "WHERE unique_run_identifier = '" + name + "' " +
+                              "AND program_config_id = '" + program + "' " +
+                              "AND data_config_id = '" + data + "' " +
+                              "ORDER BY quality_id ASC";
 
         try {
             ServletOutputStream  writer = response.getOutputStream();
@@ -154,37 +161,44 @@ public class ResultController {
             Integer currentQualityId;
 
             //Print out header
-            List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(qualitiesSql);
             for (Map row : rows) {
-                currentQualityId = (int)row.get("quality_id");
-                if (qualities.contains(currentQualityId)) {
-                    qualities = new ArrayList<Integer>();
-                    break;
-                }
-
                 headerRow.add(new String((byte[])row.get("quality_alias")));
                 qualities.add((Integer)row.get("quality_id"));
             }
 
             writer.print(activeParameter + "," + StringUtils.join(headerRow, ',') + "\n");
 
+            rows = jdbcTemplate.queryForList(sql);
+
             String currentValue = "";
+            String oldValue = "";
+            int qualityIndex = 0;
             for (Map row : rows) {
-                currentQualityId = (int)row.get("quality_id");
-                if (qualities.contains(currentQualityId)) {
+                if (currentValue.equals("")) {
                     currentValue = new String((byte[])row.get("value"));
-                    writer.print(currentValue + "," + StringUtils.join(rowToPrint, ',') + "\n");
-                    rowToPrint = new ArrayList<String>();
-                    qualities = new ArrayList<Integer>();
+                    oldValue = currentValue;
+                } else {
+                    currentValue = new String((byte[])row.get("value"));
                 }
 
+                //Check if we have reached a new value
+                if (!currentValue.equals(oldValue)) {
+                    //A new row should be written out at this point
+                    writer.print(oldValue + "," + StringUtils.join(rowToPrint, ',') + "\n");
+                    qualityIndex = 0;
+                    oldValue = currentValue;
+                    rowToPrint = new ArrayList<String>();
+                }
+
+                //If there are missing quality values, write out 0's
+                currentQualityId = (int)row.get("quality_id");
+                while (currentQualityId > qualities.get(qualityIndex)) {
+                    rowToPrint.add("0");
+                    qualityIndex++;
+                }
                 rowToPrint.add(Double.toString((double)row.get("quality")));
-                qualities.add((Integer)row.get("quality_id"));
-                /*System.err.println("Paramname: " + new String((byte[])row.get("paramname")));
-                System.err.println("Value: " + new String((byte[])row.get("value")));
-                System.err.println("Quality: " + row.get("clustering_quality_measure_id"));
-                System.err.println("Quality value: " + row.get("quality"));
-                System.err.println();*/
+                qualityIndex++;
             }
 
             writer.print(currentValue + "," + StringUtils.join(rowToPrint, ',') + "\n");
