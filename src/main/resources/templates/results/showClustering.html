@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<head>
+    <!-- Highcarts -->
+    <script src="/js/highcharts/highcharts.js"></script>
+    <script src="/js/highcharts/modules/data.js"></script>
+</head>
+<body>
+    <div layout:fragment="content">
+        <span th:text="${iteration}"></span>
+        <div class="cluster-scatter-plot" style="width: 500px; height: 500px;" th:attr="data-clusterfile=${clusterFile}, data-pcafile=${pcaFile}"></div>
+
+        <script>
+            $(document).ready(function() {
+                var clusterFile = $('.cluster-scatter-plot').data('clusterfile');
+                var pcaFile = $('.cluster-scatter-plot').data('pcafile');
+                $.get("/results/get-clustering?clusterFile=" + clusterFile + "&pcaFile=" + pcaFile, function(csv) {
+                    alert(csv);
+                    $('.cluster-scatter-plot').highcharts({
+                        chart: {
+                            type: 'scatter',
+                            zoomType: 'xy'
+                        },
+                        data: {
+                            csv: csv,
+                            itemDelimiter: ",",
+                            lineDelimiter: "\n"
+                        },
+                        title: {
+                            text: 'Qualities'
+                        },
+                        xAxis: {
+                            labels: {
+                                enabled: false
+                            }
+                        },
+                        yAxis: {
+                            labels: {
+                                enabled: false
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>

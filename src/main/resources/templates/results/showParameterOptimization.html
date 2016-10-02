@@ -23,7 +23,8 @@
                             <ul>
                                 <li th:each="quality : ${data.qualities}">
                                     <span th:text="${quality.name}"></span>: <span th:text="${quality.value}"></span> -
-                                    <em>Achieved with parameter set: <span th:text="${quality.parameterSet}"></span></em>
+                                    <em>Achieved with parameter set: <span th:text="${quality.parameterSet}"></span></em> -
+                                    <a th:href="@{/results/show-clustering(name=${runName}, program=${program.id}, data=${data.id}, param-set=${quality.parameterSet})}">Show clustering</a>
                                 </li>
                             </ul>
                             <div class="result-graphs">

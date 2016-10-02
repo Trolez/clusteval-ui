@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletOutputStream;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.FilenameUtils;
 
 @Controller
 public class ResultController {
@@ -66,6 +67,105 @@ public class ResultController {
         model.addAttribute("results", results);
 
         return "results/index";
+    }
+
+    @RequestMapping(value="/results/show-clustering")
+    public String showClustering(Model model,
+                                 @RequestParam(value="name", required=true) String name,
+                                 @RequestParam(value="program", required=true) String program,
+                                 @RequestParam(value="data", required=true) String data,
+                                 @RequestParam(value="param-set", required=true) String paramSet) {
+        //Get iteration number from database
+        String sql = "SELECT iteration FROM parameter_optimization_iterations WHERE unique_run_identifier = '" + name + "' " +
+                     "AND program_config_id = '" + program + "' " +
+                     "AND data_config_id = '" + data + "' ";
+
+        //Narrow down the selection to the parameter set
+        String[] parameters = StringUtils.split(paramSet, ',');
+        for (int i = 0; i < parameters.length; i++) {
+            String[] parts = StringUtils.split(parameters[i], '=');
+            sql += "AND (param_set_as_string LIKE '%" + parts[0] + "=" + parts[1] + "' OR param_set_as_string LIKE '%" + parts[0] + "=" + parts[1] + ",%') ";
+        }
+        sql += "LIMIT 1";
+
+        Map<String, Object> row = jdbcTemplate.queryForMap(sql);
+        int iteration = (int)row.get("iteration");
+
+        model.addAttribute("iteration", iteration);
+
+        //Get program config name from database
+        sql = "SELECT name FROM program_configs WHERE id = '" + program + "'";
+        row = jdbcTemplate.queryForMap(sql);
+        String programConfigName = new String((byte[])row.get("name"));
+
+        //Get data config name from database
+        sql = "SELECT name FROM data_configs WHERE id = '" + data + "'";
+        row = jdbcTemplate.queryForMap(sql);
+        String dataConfigName = new String((byte[])row.get("name"));
+
+        File clusterFile = new File(getPath() + "/results/" + name + "/clusters/" + programConfigName + "_" + dataConfigName + "." + iteration + ".results.conv");
+
+        File pcaDirectory = new File(getPath() + "/results/" + name + "/inputs/" + programConfigName + "_" + dataConfigName);
+
+        File pcaFile = findPca(pcaDirectory);
+
+        model.addAttribute("clusterFile", clusterFile.getPath());
+        model.addAttribute("pcaFile", pcaFile.getPath());
+
+        return "results/showClustering";
+    }
+
+    @RequestMapping(value="/results/get-clustering")
+    public void getClustering(HttpServletResponse response, @RequestParam(value="clusterFile", required=true) String clusterFile, @RequestParam(value="pcaFile", required=true) String pcaFile) {
+        //We want to generate a CSV file, so we set the header accordingly
+        response.setContentType("application/csv");
+        response.setHeader("content-disposition","attachment;filename =filename.csv");
+
+        String[] clusters;
+        String clusterString = "";
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(clusterFile));
+
+            int i = 1;
+            String currentLine;
+            while ((currentLine = br.readLine()) != null) {
+                if (i == 2) {
+                    clusterString = currentLine.split("\t")[1];
+                    break;
+                }
+                i++;
+            }
+
+            clusters = clusterString.split(";");
+
+            HashMap<String, String> coordinates = new HashMap<String, String>();
+
+            br = new BufferedReader(new FileReader(pcaFile));
+            while ((currentLine = br.readLine()) != null) {
+                String[] parts = currentLine.split("\t");
+
+                coordinates.put(parts[0], parts[1] + "," + parts[2]);
+                i++;
+            }
+
+            ServletOutputStream  writer = response.getOutputStream();
+
+            i = 1;
+            for (String cluster : clusters) {
+                writer.print("Cluster_" + i + "\n");
+
+                String[] clusterObjects = cluster.split(",");
+                for (String clusterObject : clusterObjects) {
+                    writer.print(clusterObject + "," + coordinates.get(clusterObject.split(":")[0]) + "\n");
+                }
+
+                i++;
+            }
+
+            writer.flush();
+            writer.close();
+        } catch (Exception e) {}
     }
 
     @RequestMapping(value="/results/get-parameter-sliders")
@@ -110,6 +210,7 @@ public class ResultController {
         Map<String, Object> row = jdbcTemplate.queryForMap(sql);
         String runType = new String((byte[])row.get("name"));
 
+        model.addAttribute("runName", name);
         model.addAttribute("runType", runType);
 
         if (runType.equals("Parameter Optimization")) {
@@ -121,10 +222,10 @@ public class ResultController {
 
     @RequestMapping(value="/results/get-parameter-graph")
     public void getParameterGraph(Model model, @RequestParam(value="active-parameter", required=true) String activeParameter,
-                                                 @RequestParam(value="parameters", required=true) String parameters,
-                                                 @RequestParam(value="name") String name,
-                                                 @RequestParam(value="program") String program,
-                                                 @RequestParam(value="data") String data, HttpServletResponse response) {
+                                  @RequestParam(value="parameters", required=true) String parameters,
+                                  @RequestParam(value="name") String name,
+                                  @RequestParam(value="program") String program,
+                                  @RequestParam(value="data") String data, HttpServletResponse response) {
         //We want to generate a CSV file, so we set the header accordingly
         response.setContentType("application/csv");
         response.setHeader("content-disposition","attachment;filename =filename.csv");
@@ -311,6 +412,22 @@ public class ResultController {
         }
 
         return path;
+    }
+
+    private File findPca(File directory) {
+        File pcaFile = new File("");
+        File[] files = directory.listFiles();
+        for (File file : files) {
+            if (file.isFile()) {
+                if (FilenameUtils.getExtension(file.getPath()).equals("PCA")) {
+                    pcaFile = file;
+                }
+            } else if (file.isDirectory()) {
+                pcaFile = findPca(file);
+            }
+        }
+
+        return pcaFile;
     }
 
     /*private List<String> sortArrayAsInt(List<String> list) {

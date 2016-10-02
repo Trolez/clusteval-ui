@@ -466,10 +466,18 @@ $(document).ready(function() {
         var graphContainer = $(this).closest('.parameter-sliders').find('.parameter-graph');
 
         $.get("/results/get-parameter-graph?active-parameter=" + activeParameter + "&parameters=" + parameters.join(',') + "&name=" + name + "&program=" + program + "&data=" + data, function(csv) {
+            var allTextLines = csv.split('\n');
+            var header = allTextLines[1].split(',');
+            var graphType = 'column';
+            if ($.isNumeric(header[0])) {
+                graphType = 'line';
+            }
+
             //alert(csv);
             graphContainer.highcharts({
                 chart: {
-                    type: 'line'
+                    type: graphType,
+                    zoomType: 'x'
                 },
                 plotOptions: {
                     series: {

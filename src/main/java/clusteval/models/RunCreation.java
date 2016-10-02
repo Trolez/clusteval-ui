@@ -206,7 +206,7 @@ public class RunCreation {
         setName(fileName);
 
         try {
-            BufferedReader br = new BufferedReader(new FileReader(path + "/runs/" + fileName + ".run"));;
+            BufferedReader br = new BufferedReader(new FileReader(path + "/runs/" + fileName + ".run"));
             String currentLine;
 
             while ((currentLine = br.readLine()) != null) {
@@ -313,10 +313,8 @@ public class RunCreation {
                     }
 
                     programParameter = program.getParameters().get(i);
-                    System.err.println("Looking at parameter: " + programParameter.getName());
 
-                    while ((currentLine = br.readLine()) != null && !(currentLine = br.readLine()).equals("")) {
-                        System.err.println("Testing: " + currentLine);
+                    while ((currentLine = br.readLine()) != null && !(currentLine.equals(""))) {
                         String line = currentLine.substring(currentLine.indexOf("=") + 1).trim();
                         if (currentLine.startsWith("minValue")) {
                             programParameter.setMinValue(line);
