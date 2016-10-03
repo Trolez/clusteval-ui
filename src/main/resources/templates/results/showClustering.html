@@ -6,43 +6,19 @@
     <script src="/js/highcharts/modules/data.js"></script>
 </head>
 <body>
-    <div layout:fragment="content">
-        <span th:text="${iteration}"></span>
-        <div class="cluster-scatter-plot" style="width: 500px; height: 500px;" th:attr="data-clusterfile=${clusterFile}, data-pcafile=${pcaFile}"></div>
-
-        <script>
-            $(document).ready(function() {
-                var clusterFile = $('.cluster-scatter-plot').data('clusterfile');
-                var pcaFile = $('.cluster-scatter-plot').data('pcafile');
-                $.get("/results/get-clustering?clusterFile=" + clusterFile + "&pcaFile=" + pcaFile, function(csv) {
-                    alert(csv);
-                    $('.cluster-scatter-plot').highcharts({
-                        chart: {
-                            type: 'scatter',
-                            zoomType: 'xy'
-                        },
-                        data: {
-                            csv: csv,
-                            itemDelimiter: ",",
-                            lineDelimiter: "\n"
-                        },
-                        title: {
-                            text: 'Qualities'
-                        },
-                        xAxis: {
-                            labels: {
-                                enabled: false
-                            }
-                        },
-                        yAxis: {
-                            labels: {
-                                enabled: false
-                            }
-                        }
-                    });
-                });
-            });
-        </script>
+    <div layout:fragment="content" id="clustering">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="cluster-parameter-sliders" th:attr="data-name=${name}, data-program=${program}, data-data=${data}">
+                    <!-- AJAX: Parameter sliders are loaded here -->
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div id="load-clustering" th:attr="data-name=${name}, data-program=${program}, data-data=${data}, data-paramset=${paramSet}">
+                    <!-- AJAX: Clustering graph is loaded here -->
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>

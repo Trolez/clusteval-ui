@@ -416,7 +416,7 @@ $(document).ready(function() {
     });
 
     //Show value of range input
-    $('.parameter-sliders').on('input change', '.range-container input[type=range]', function() {
+    $('.parameter-sliders, .cluster-parameter-sliders').on('input change', '.range-container input[type=range]', function() {
         if ($(this).hasClass('options')) {
             try {
                 var options = $(this).data('options').split(',');
@@ -522,7 +522,82 @@ $(document).ready(function() {
             success: function(data) {
                 container.html(data);
 
+                //Trigger a change, so the div containing the value is initialized
                 container.find('input[type=range]').trigger('change');
+            }
+        });
+    });
+
+    //Load in clustering
+    $('#load-clustering').each(function() {
+        var container = $(this);
+        var name = $(this).data('name');
+        var program = $(this).data('program');
+        var data = $(this).data('data');
+        var paramset = $(this).data('paramset');
+
+        $.ajax({
+            url: "/results/load-clustering?name=" + name + "&program=" + program + "&data=" + data + "&param-set=" + paramset,
+            type: 'get',
+            dataType: 'html',
+            success: function(data) {
+                container.html(data);
+            }
+        });
+    });
+
+    //Load in all sliders on clustering page
+    $('#clustering .cluster-parameter-sliders').each(function() {
+        var container = $(this);
+        var name = $(this).data('name');
+        var program = $(this).data('program');
+        var data = $(this).data('data');
+        $.ajax({
+            url: "/results/get-clustering-sliders?name=" + name + "&program=" + program + "&data=" + data,
+            type: 'get',
+            dataType: 'html',
+            success: function(data) {
+                container.html(data);
+            }
+        });
+    });
+
+    //Automatically submit graph form on change
+    $('.cluster-parameter-sliders').on('change', 'input', function (e) {
+        $(this).closest('form').find('.range-value').each(function() {
+            if ($(this).html() == '') {
+                return;
+            }
+        });
+        var form = $(this).closest('form');
+        $(this).closest('form').submit();
+    });
+
+    //Clustering graph form submit
+    $('.cluster-parameter-sliders').on('submit', '.parameter-cluster-form', function(e) {
+        e.preventDefault();
+
+        //Load in clustering
+        var container = $('#load-clustering');
+        var name = container.data('name');
+        var program = container.data('program');
+        var data = container.data('data');
+        var paramset = container.data('paramset');
+
+        var parameters = [];
+
+        $(this).find('.range-value').each(function(n) {
+            var parameterName = $(this).parent().find('input[type=hidden]').val();
+            var value = $(this).html();
+            parameters[n] = parameterName + "=" + value;
+        });
+
+        $.ajax({
+            url: "/results/load-clustering?name=" + name + "&program=" + program + "&data=" + data + "&param-set=" + parameters.join(','),
+            type: 'get',
+            dataType: 'html',
+            success: function(data) {
+                container.html(data);
             }
         });
     });

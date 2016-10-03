@@ -1,0 +1,59 @@
+<div style="height: 500px;" class="cluster-scatter-plot" th:attr="data-clusterfile=${clusterFile}, data-pcafile=${pcaFile}"></div>
+
+<script>
+    $(document).ready(function() {
+        var clusterFile = $('.cluster-scatter-plot').data('clusterfile');
+        var pcaFile = $('.cluster-scatter-plot').data('pcafile');
+        $.get("/results/get-clustering?clusterFile=" + clusterFile + "&pcaFile=" + pcaFile, function(csv) {
+            //alert(csv);
+            // Chart options
+            var options = {
+                chart: {
+                    type: 'scatter',
+                    zoomType: 'xy'
+                },
+                title: {
+                    text: 'Clustering'
+                },
+                xAxis: {
+                    categories: []
+                },
+                yAxis: {
+                    title: {
+                        text: 'Units'
+                    }
+                },
+                series: []
+            };
+
+            //Custom parsing of csv file
+            // Split the lines
+            var lines = csv.split('\n');
+
+            // Iterate over the lines and add categories or series
+            var currentSeries = {
+                data: []
+            }
+            $.each(lines, function(lineNo, line) {
+                var items = line.split(',');
+
+                // Lines with one element contains cluster name (or is last empty line)
+                if (items.length == 1) {
+                    if (lineNo > 0) {
+                        options.series.push(currentSeries)
+                    }
+
+                    currentSeries = {
+                        data: [],
+                        name: items[0]
+                    }
+                } else {
+                    currentSeries.data.push([parseFloat(items[1]), parseFloat(items[2])]);
+                }
+            });
+
+            // Create the chart
+            $('.cluster-scatter-plot').highcharts(options);
+        });
+    });
+</script>

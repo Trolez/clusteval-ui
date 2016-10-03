@@ -75,6 +75,20 @@ public class ResultController {
                                  @RequestParam(value="program", required=true) String program,
                                  @RequestParam(value="data", required=true) String data,
                                  @RequestParam(value="param-set", required=true) String paramSet) {
+        model.addAttribute("name", name);
+        model.addAttribute("program", program);
+        model.addAttribute("data", data);
+        model.addAttribute("paramSet", paramSet);
+
+        return "results/showClustering";
+    }
+
+    @RequestMapping(value="/results/load-clustering")
+    public String loadClustering(Model model,
+                                 @RequestParam(value="name", required=true) String name,
+                                 @RequestParam(value="program", required=true) String program,
+                                 @RequestParam(value="data", required=true) String data,
+                                 @RequestParam(value="param-set", required=true) String paramSet) {
         //Get iteration number from database
         String sql = "SELECT iteration FROM parameter_optimization_iterations WHERE unique_run_identifier = '" + name + "' " +
                      "AND program_config_id = '" + program + "' " +
@@ -111,8 +125,11 @@ public class ResultController {
 
         model.addAttribute("clusterFile", clusterFile.getPath());
         model.addAttribute("pcaFile", pcaFile.getPath());
+        model.addAttribute("name", name);
+        model.addAttribute("program", program);
+        model.addAttribute("data", data);
 
-        return "results/showClustering";
+        return "results/loadClustering";
     }
 
     @RequestMapping(value="/results/get-clustering")
@@ -168,8 +185,7 @@ public class ResultController {
         } catch (Exception e) {}
     }
 
-    @RequestMapping(value="/results/get-parameter-sliders")
-    public String showResults(Model model, @RequestParam(value="name", required=true) String name, @RequestParam(value="program", required=true) String program, @RequestParam(value="data", required=true) String data) {
+    public String showResults(Model model, @RequestParam(value="name", required=true) String name, @RequestParam(value="program", required=true) String program, @RequestParam(value="data", required=true) String data, boolean cluster) {
         String sql = "SELECT * FROM " +
                      "(SELECT DISTINCT value, paramname FROM parameter_optimization_iterations " +
                      "WHERE program_config_id = '" + program + "' AND data_config_id = '" + data + "') AS blabla " +
@@ -198,7 +214,21 @@ public class ResultController {
         model.addAttribute("program", program);
         model.addAttribute("data", data);
 
-        return "results/showParameterSlider";
+        if (!cluster) {
+            return "results/showParameterSlider";
+        } else {
+            return "results/showClusteringSlider";
+        }
+    }
+
+    @RequestMapping(value="/results/get-parameter-sliders")
+    public String showParameterSliders(Model model, @RequestParam(value="name", required=true) String name, @RequestParam(value="program", required=true) String program, @RequestParam(value="data", required=true) String data) {
+        return showResults(model, name, program, data, false);
+    }
+
+    @RequestMapping(value="/results/get-clustering-sliders")
+    public String showClusteringSliders(Model model, @RequestParam(value="name", required=true) String name, @RequestParam(value="program", required=true) String program, @RequestParam(value="data", required=true) String data) {
+        return showResults(model, name, program, data, true);
     }
 
     @RequestMapping(value="/results/show")
