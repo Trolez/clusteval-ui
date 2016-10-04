@@ -558,6 +558,20 @@ $(document).ready(function() {
             dataType: 'html',
             success: function(data) {
                 container.html(data);
+
+                //Set values of sliders to what is in the url
+                var urlValues = getParameterByName('param-set');
+                var parameters = urlValues.split(',');
+
+                for (var i = 0; i < parameters.length; i++) {
+                    var parts = parameters[i].split('=');
+                    $('input[value=' + parts[0] + ']').each(function() {
+                        var valueArray = $(this).parent().find('input[type=range]').data('options').split(',');
+                        var index = valueArray.indexOf(parts[1]);
+                        $('input[value=' + parts[0] + ']').parent().find('input[type=range]').val(index);
+                        $('input[value=' + parts[0] + ']').parent().find('.range-value').html(parts[1]);
+                    })
+                };
             }
         });
     });
@@ -601,4 +615,14 @@ $(document).ready(function() {
             }
         });
     });
+
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
 });
