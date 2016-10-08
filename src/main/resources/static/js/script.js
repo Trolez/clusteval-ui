@@ -501,6 +501,14 @@ $(document).ready(function() {
         });
     });
 
+    //See clustering - modal
+    $('.cluster-modal').click(function(event) {
+        event.preventDefault();
+        $.get(this.href, function(html) {
+            $(html).appendTo('body').modal();
+        });
+    });
+
     //Automatically submit graph form on change
     $('.parameter-sliders').on('change', 'input', function (e) {
         var form = $(this).closest('form');
@@ -529,15 +537,22 @@ $(document).ready(function() {
     });
 
     //Load in clustering
-    $('#load-clustering').each(function() {
+    $('#load-clustering, .load-clustering').each(function() {
         var container = $(this);
         var name = $(this).data('name');
         var program = $(this).data('program');
         var data = $(this).data('data');
         var paramset = $(this).data('paramset');
 
+        var clusterUrl = "";
+        if (paramset == null) {
+            clusterUrl = "/results/load-clustering-cluster?name=" + name + "&program=" + program + "&data=" + data;
+        } else {
+            clusterUrl = "/results/load-clustering?name=" + name + "&program=" + program + "&data=" + data + "&param-set=" + paramset;
+        }
+
         $.ajax({
-            url: "/results/load-clustering?name=" + name + "&program=" + program + "&data=" + data + "&param-set=" + paramset,
+            url: clusterUrl,
             type: 'get',
             dataType: 'html',
             success: function(data) {

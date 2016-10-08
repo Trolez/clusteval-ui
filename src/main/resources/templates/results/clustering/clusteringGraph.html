@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<head>
+    <!-- Highcarts -->
+    <script src="/js/highcharts/highcharts.js"></script>
+    <script src="/js/highcharts/modules/data.js"></script>
+</head>
+<body>
+    <div layout:fragment="content" id="clustering">
+        <div id="load-clustering" th:attr="data-name=${name}, data-program=${program}, data-data=${data}">
+            <!-- AJAX: Clustering graph is loaded here -->
+        </div>
+    </div>
+</body>
+</html>
