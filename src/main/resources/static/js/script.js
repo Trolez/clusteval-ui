@@ -502,10 +502,20 @@ $(document).ready(function() {
     });
 
     //See clustering - modal
-    $('.cluster-modal').click(function(event) {
+    /*$('.cluster-modal').click(function(event) {
         event.preventDefault();
         $.get(this.href, function(html) {
             $(html).appendTo('body').modal();
+        });
+    });*/
+
+    $('.cluster-modal').click(function(e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        $.get(url, function(data) {
+            $('#modal-container').html(data);
+            $('#modal-container').modal();
+            $('#modal-container > div').show();
         });
     });
 
@@ -560,7 +570,7 @@ $(document).ready(function() {
             }
         });
     });
-
+/*
     //Load in all sliders on clustering page
     $('#clustering .cluster-parameter-sliders').each(function() {
         var container = $(this);
@@ -590,7 +600,8 @@ $(document).ready(function() {
             }
         });
     });
-
+*/
+/*
     //Automatically submit graph form on change
     $('.cluster-parameter-sliders').on('change', 'input', function (e) {
         $(this).closest('form').find('.range-value').each(function() {
@@ -629,15 +640,5 @@ $(document).ready(function() {
                 container.html(data);
             }
         });
-    });
-
-    function getParameterByName(name, url) {
-        if (!url) url = window.location.href;
-        name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-            results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, " "));
-    }
+    });*/
 });

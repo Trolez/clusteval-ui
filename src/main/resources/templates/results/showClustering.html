@@ -1,24 +1,139 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
-<head>
-    <!-- Highcarts -->
-    <script src="/js/highcharts/highcharts.js"></script>
-    <script src="/js/highcharts/modules/data.js"></script>
-</head>
-<body>
-    <div layout:fragment="content" id="clustering">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="cluster-parameter-sliders" th:attr="data-name=${name}, data-program=${program}, data-data=${data}">
-                    <!-- AJAX: Parameter sliders are loaded here -->
-                </div>
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-clustering" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Clustering Graph</h4>
             </div>
-            <div class="col-md-8">
-                <div id="load-clustering" th:attr="data-name=${name}, data-program=${program}, data-data=${data}, data-paramset=${paramSet}">
-                    <!-- AJAX: Clustering graph is loaded here -->
+            <div id="clustering">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="cluster-parameter-sliders" th:attr="data-name=${name}, data-program=${program}, data-data=${data}">
+                                <!-- AJAX: Parameter sliders are loaded here -->
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div id="load-clustering" th:attr="data-name=${name}, data-program=${program}, data-data=${data}, data-paramset=${paramSet}">
+                                <!-- AJAX: Clustering graph is loaded here -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</body>
-</html>
+</div>
+
+<script>
+    $(document).ready(function() {
+        //Show value of range input
+        $('.parameter-sliders, .cluster-parameter-sliders').on('input change', '.range-container input[type=range]', function() {
+            if ($(this).hasClass('options')) {
+                try {
+                    var options = $(this).data('options').split(',');
+                    $(this).next('.range-value').html(options[$(this).val()]);
+                }
+                catch (err) {
+                    //Fix in case there is only one option
+                    var options = $(this).data('options');
+                    $(this).next('.range-value').html(options);
+                }
+            } else {
+                $(this).next('.range-value').html($(this).val());
+            }
+        });
+
+        //Load in clustering
+        $('#load-clustering, .load-clustering').each(function() {
+            var container = $(this);
+            var name = $(this).data('name');
+            var program = $(this).data('program');
+            var data = $(this).data('data');
+            var paramset = $(this).data('paramset');
+
+            var clusterUrl = "/results/load-clustering?name=" + name + "&program=" + program + "&data=" + data + "&param-set=" + paramset;
+
+            $.ajax({
+                url: clusterUrl,
+                type: 'get',
+                dataType: 'html',
+                success: function(data) {
+                    container.html(data);
+                }
+            });
+        });
+
+        //Load in all sliders on clustering page
+        $('#clustering .cluster-parameter-sliders').each(function() {
+            var container = $(this);
+            var name = $(this).data('name');
+            var program = $(this).data('program');
+            var data = $(this).data('data');
+            $.ajax({
+                url: "/results/get-clustering-sliders?name=" + name + "&program=" + program + "&data=" + data,
+                type: 'get',
+                dataType: 'html',
+                success: function(data) {
+                    container.html(data);
+
+                    //Set values of sliders to what is in the url
+                    var urlValues = $('#load-clustering').data('paramset');
+                    var parameters = urlValues.split(',');
+
+                    for (var i = 0; i < parameters.length; i++) {
+                        var parts = parameters[i].split('=');
+                        $('input[value=' + parts[0] + ']').each(function() {
+                            var valueArray = $(this).parent().find('input[type=range]').data('options').split(',');
+                            var index = valueArray.indexOf(parts[1]);
+                            $('input[value=' + parts[0] + ']').parent().find('input[type=range]').val(index);
+                            $('input[value=' + parts[0] + ']').parent().find('.range-value').html(parts[1]);
+                        })
+                    };
+                }
+            });
+        });
+
+        //Automatically submit graph form on change
+        $('.cluster-parameter-sliders').on('change', 'input', function (e) {
+            $(this).closest('form').find('.range-value').each(function() {
+                if ($(this).html() == '') {
+                    return;
+                }
+            });
+            var form = $(this).closest('form');
+            $(this).closest('form').submit();
+        });
+
+        //Clustering graph form submit
+        $('.cluster-parameter-sliders').on('submit', '.parameter-cluster-form', function(e) {
+            e.preventDefault();
+
+            //Load in clustering
+            var container = $('#load-clustering');
+            var name = container.data('name');
+            var program = container.data('program');
+            var data = container.data('data');
+            var paramset = container.data('paramset');
+
+            var parameters = [];
+
+            $(this).find('.range-value').each(function(n) {
+                var parameterName = $(this).parent().find('input[type=hidden]').val();
+                var value = $(this).html();
+                parameters[n] = parameterName + "=" + value;
+            });
+
+            $.ajax({
+                url: "/results/load-clustering?name=" + name + "&program=" + program + "&data=" + data + "&param-set=" + parameters.join(','),
+                type: 'get',
+                dataType: 'html',
+                success: function(data) {
+                    container.html(data);
+                }
+            });
+        });
+    });
+</script>

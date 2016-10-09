@@ -98,3 +98,6 @@ main form.run-creation .program .name { line-height: 25px; vertical-align: middl
 main form.run-creation .program .toggle { display: inline-block; float: right; width: 25px; height: 25px; background: #f0f0f0; text-align: center; line-height: 25px; vertical-align: middle; cursor: pointer; border-radius: 3px; border: 1px solid #ccc; }
 main form.run-creation .program .program-content { display: none; }
 main form.run-creation .program .program-content label { width: 100%; }
+
+/* Clustering modal window */
+.modal-clustering { width: 1140px; margin: 30px auto; }

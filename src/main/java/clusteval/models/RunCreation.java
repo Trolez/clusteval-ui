@@ -424,7 +424,7 @@ public class RunCreation {
                         run += "maxValue=" + programParameter.getMaxValue() + "\n";
                     }
                     if (programParameter.getValue() != null) {
-                        run += "defaultValue=" + programParameter.getValue() + "\n";
+                        run += "def=" + programParameter.getValue() + "\n";
                     }
                     if (programParameter.getOptions() != null) {
                         run += "options=" + programParameter.getOptions() + "\n";
