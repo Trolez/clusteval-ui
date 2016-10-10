@@ -253,6 +253,50 @@ public class ResultController {
 
     /* Display page for data analysis run results */
     public String showResultsDataAnalysis(Model model, String name) {
+        String sql = "SELECT result.data_config_id, statistic_id, statistics.name, data_configs.name AS data FROM run_result_data_analysis_data_configs_statistics AS result " +
+                     "INNER JOIN statistics ON (result.statistic_id = statistics.id) " +
+                     "INNER JOIN data_configs ON (data_configs.id = result.data_config_id) " +
+                     "WHERE unique_run_identifier = '" + name + "' " +
+                     "ORDER BY data, statistic_id";
+
+        DataAnalysisResult result = new DataAnalysisResult();
+        result.setName(name);
+
+        String currentDataConfig = "";
+        String dataConfig = "";
+        String currentDataStatistic = "";
+        String dataStatistic = "";
+
+        DataAnalysisResultData resultDataConfig = new DataAnalysisResultData();
+        DataAnalysisResultDataStatistic resultDataStatistic = new DataAnalysisResultDataStatistic();
+
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+        for (Map row : rows) {
+            dataConfig = new String((byte[])row.get("data"));
+            dataStatistic = new String((byte[])row.get("name"));
+
+            if (!dataConfig.equals(currentDataConfig)) {
+                currentDataConfig = dataConfig;
+                resultDataConfig = new DataAnalysisResultData();
+                resultDataConfig.setName(currentDataConfig);
+                result.addToDataConfigs(resultDataConfig);
+
+                currentDataStatistic = dataStatistic;
+                resultDataStatistic = new DataAnalysisResultDataStatistic();
+                resultDataStatistic.setName(currentDataStatistic);
+                resultDataConfig.addToDataStatistics(resultDataStatistic);
+            } else {
+                if (!dataStatistic.equals(currentDataStatistic)) {
+                    currentDataStatistic = dataStatistic;
+                    resultDataStatistic = new DataAnalysisResultDataStatistic();
+                    resultDataStatistic.setName(currentDataStatistic);
+                    resultDataConfig.addToDataStatistics(resultDataStatistic);
+                }
+            }
+        }
+
+        model.addAttribute("result", result);
+
         return "results/data_analysis/show";
     }
 

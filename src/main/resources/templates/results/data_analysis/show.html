@@ -1,1 +1,28 @@
-Hey mand
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<head>
+    <!-- Highcarts -->
+    <script src="/js/highcharts/highcharts.js"></script>
+    <script src="/js/highcharts/modules/data.js"></script>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div id="results">
+            <div class="summary">
+                Run type: <span th:text="${runType}"></span>
+            </div>
+            <div th:object="${result}" class="parameter-optimization">
+                <div class="program" th:each="dataConfig, dataConfigStat : *{dataConfigs}">
+                    <span class="name">Data configuration: <span th:text="${dataConfig.name}"></span></span>
+                    <div class="data-wrapper">
+                        <div class="data" th:each="dataStatistic, dataStatisticStat : ${dataConfig.dataStatistics}">
+                            <div class="dash"></div>
+                            <span class="name">Data statistic: <span th:text="${dataStatistic.name}"></span></span><br><br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
