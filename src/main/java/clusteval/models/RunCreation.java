@@ -16,6 +16,8 @@ import java.io.*;
 import org.apache.commons.lang3.StringUtils;
 
 public class RunCreation {
+    private String originalName;
+
     @Size(min = 1, message = "Please specify a name for the run")
     private String name;
 
@@ -65,6 +67,14 @@ public class RunCreation {
 
     @Valid
     private ArrayList<Program> programSettings = new ArrayList<Program>();
+
+    public String getOriginalName() {
+        return originalName;
+    }
+
+    public void setOriginalName(String originalName) {
+        this.originalName = originalName;
+    }
 
     public String getName() {
         return name;
@@ -204,6 +214,7 @@ public class RunCreation {
 
     public void parse(String path, String fileName) {
         setName(fileName);
+        setOriginalName(fileName);
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(path + "/runs/" + fileName + ".run"));
@@ -211,6 +222,9 @@ public class RunCreation {
 
             while ((currentLine = br.readLine()) != null) {
                 String line = currentLine.substring(currentLine.indexOf("=") + 1).trim();
+                if (currentLine.startsWith("#editOf")) {
+                    setOriginalName(line);
+                }
                 if (currentLine.startsWith("mode")) {
                     setMode(line);
                 }

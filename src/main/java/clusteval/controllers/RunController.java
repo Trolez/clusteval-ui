@@ -48,7 +48,8 @@ public class RunController {
 
     @RequestMapping("/runs")
     public String showRuns(Model model) {
-        ArrayList<String> runs = new ArrayList<String>();
+        ArrayList<Run> runs = new ArrayList<Run>();
+        ArrayList<String> runNames = new ArrayList<String>();
         ArrayList<String> runResumes = new ArrayList<String>();
         ArrayList<String> runningRuns;
         ArrayList<String> finishedRuns;
@@ -57,28 +58,46 @@ public class RunController {
         try {
             BackendClient backendClient = getBackendClient();
 
-            runs = new ArrayList<String>(backendClient.getRuns());
+            runNames = new ArrayList<String>(backendClient.getRuns());
+            for (String runName : runNames) {
+                runs.add(new Run(runName));
+            }
             //Collections.sort(runs, String.CASE_INSENSITIVE_ORDER);
-            Collections.sort(runs, new Comparator<String>() {
-                public int compare(String left, String right) {
-                    //Remove dates when sorting the runs
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-kk-mm-ss");
+            Collections.sort(runs, new Comparator<Run>() {
+                public int compare(Run left, Run right) {
+                    //Use the 'edit of' line to determine the proper order of runs
+                    String leftName = left.getName();
+                    String rightName = right.getName();
+
                     try {
-                        int index = left.lastIndexOf('_');
-                        if (index > -1) {
-                            if (dateFormat.parse(left, new ParsePosition(index+1)) != null) {
-                                left = left.substring(0, index+1);
+                        BufferedReader leftReader = new BufferedReader(new FileReader(getPath() + "/runs/" + left.getName() + ".run"));
+                        BufferedReader rightReader = new BufferedReader(new FileReader(getPath() + "/runs/" + right.getName() + ".run"));
+                        String currentLine;
+
+                        while ((currentLine = leftReader.readLine()) != null) {
+                            if (currentLine.startsWith("#editOf")) {
+                                leftName = currentLine.split("=")[1].trim();
+                                left.setEdited(true);
+                                break;
                             }
                         }
-                        index = right.lastIndexOf('_');
-                        if (index > -1) {
-                            if (dateFormat.parse(right, new ParsePosition(index+1)) != null) {
-                                right = right.substring(0, index+1);
+
+                        while ((currentLine = rightReader.readLine()) != null) {
+                            if (currentLine.startsWith("#editOf")) {
+                                rightName = currentLine.split("=")[1].trim();
+                                right.setEdited(true);
+                                break;
                             }
                         }
                     } catch (Exception e){}
 
-                    return left.compareToIgnoreCase(right);
+                    if (leftName.equals(rightName) && !left.getEdited()) {
+                        return -1;
+                    } else if (leftName.equals(rightName) && !right.getEdited()) {
+                        return 1;
+                    }
+
+                    return leftName.compareToIgnoreCase(rightName);
                 }
             });
 
@@ -87,9 +106,6 @@ public class RunController {
             runResumes = new ArrayList<String>(backendClient.getRunResumes());
             model.addAttribute("resumes", runResumes);
 
-            for (String runningRun : backendClient.getRunningRuns()) {
-                //runningRuns.put(runningRun, )
-            }
             runningRuns = new ArrayList<String>(backendClient.getRunningRuns());
             model.addAttribute("runningRuns", runningRuns);
 
@@ -342,6 +358,8 @@ public class RunController {
             return "runs/edit";
         }
 
+        String originalName = runCreation.getOriginalName();
+
         //Append date to run file to show when it was edited
         String dateAppend = new SimpleDateFormat("_yyyy-MM-dd-kk-mm-ss").format(new Date());
         runCreation.setName(runCreation.getName() + dateAppend);
@@ -355,7 +373,9 @@ public class RunController {
             }
 
             FileWriter writer = new FileWriter(file);
-            BufferedWriter bw = new BufferedWriter(writer);
+
+            writer.write("#editOf = " + originalName + "\n");
+
             writer.write(runCreation.toString(getPath()));
             writer.close();
 

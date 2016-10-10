@@ -60,13 +60,13 @@
             </th:block>
 
             <h1>Available runs</h1>
-            <div class="run" th:each="run : ${runs}">
-                <div><span class="name" th:text="${run}" /></div>
+            <div class="run" th:each="run : ${runs}" th:classappend="${run.edited} ? edited : ''">
+                <div><span class="name" th:text="${run.name}" /></div>
                 <form th:action="@{/runs}" method="post">
-                    <a class="btn btn-danger pull-right delete-run" th:href="@{/runs/delete(name=${run})}">Delete run</a>
-                    <input type="hidden" name="name" th:value="${run}">
+                    <a class="btn btn-danger pull-right delete-run" th:href="@{/runs/delete(name=${run.name})}">Delete run</a>
+                    <input type="hidden" name="name" th:value="${run.name}">
                     <input type="submit" name="send" value="Perform Run" class="btn btn-primary">
-                    <a class="btn btn-primary" th:href="@{/runs/edit(name=${run})}">Edit run</a>
+                    <a class="btn btn-primary" th:href="@{/runs/edit(name=${run.name})}">Edit run</a>
                 </form>
             </div>
         </div>

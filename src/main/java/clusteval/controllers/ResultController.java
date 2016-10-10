@@ -52,6 +52,7 @@ public class ResultController {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    /* Overview page with all run results */
     @RequestMapping(value="/results")
     public String showResults(Model model) {
         String sql = "SELECT * FROM run_results " +
@@ -69,6 +70,193 @@ public class ResultController {
         return "results/index";
     }
 
+    /* Display page for run results
+     * Calls a more specialized
+     * function based on run rype
+     */
+    @RequestMapping(value="/results/show")
+    public String showResults(Model model, @RequestParam(value="name", required=true) String name) {
+        String sql = "SELECT * FROM run_results " +
+                      "INNER JOIN run_types ON (run_results.run_type_id = run_types.id) " +
+                      "WHERE unique_run_identifier = '" + name + "'";
+
+        Map<String, Object> row = jdbcTemplate.queryForMap(sql);
+        String runType = new String((byte[])row.get("name"));
+
+        model.addAttribute("runName", name);
+        model.addAttribute("runType", runType);
+
+        if (runType.equals("Parameter Optimization")) {
+            return showResultsParameterOptimization(model, name);
+        } else if (runType.equals("Clustering")) {
+            return showResultsClustering(model, name);
+        } else if (runType.equals("Data Analysis")) {
+            return showResultsDataAnalysis(model, name);
+        }
+
+        return "results/show";
+    }
+
+    /* Display page for parameter optimization run results */
+    public String showResultsParameterOptimization(Model model, String name) {
+        String sql = "SELECT MAX(poi.quality) AS best_quality, poi.program_config_id, poi.data_config_id, clustering_quality_measures.alias AS quality_alias, program_configs.name AS program, data_configs.name AS data " +
+        "FROM parameter_optimization_iterations AS poi " +
+        "INNER JOIN clustering_quality_measures ON (poi.clustering_quality_measure_id = clustering_quality_measures.id) " +
+        "INNER JOIN program_configs ON (program_configs.id = poi.program_config_id) " +
+        "INNER JOIN data_configs ON (data_configs.id = poi.data_config_id) " +
+        "WHERE unique_run_identifier = '" + name + "' " +
+        "GROUP BY quality_alias, program, data, poi.program_config_id, poi.data_config_id " +
+        "ORDER BY program ASC, data ASC, quality_alias ASC";
+
+        ParameterOptimizationResult result = new ParameterOptimizationResult();
+        result.setName(name);
+
+        String currentProgram = "";
+        String program = "";
+        int programId;
+        String currentData = "";
+        String data = "";
+        int dataId;
+        String quality;
+        double qualityValue;
+
+        ParameterOptimizationResultProgram resultProgram = new ParameterOptimizationResultProgram();
+        ParameterOptimizationResultData resultData = new ParameterOptimizationResultData();
+        ParameterOptimizationResultQuality resultQuality;
+
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+        for (Map row : rows) {
+            program = new String((byte[])row.get("program"));
+            programId = (int)row.get("program_config_id");
+            data = new String((byte[])row.get("data"));
+            dataId = (int)row.get("data_config_id");
+            quality = new String((byte[])row.get("quality_alias"));
+            qualityValue = (double)row.get("best_quality");
+
+            if (!program.equals(currentProgram)) {
+                currentProgram = program;
+                resultProgram = new ParameterOptimizationResultProgram();
+                resultProgram.setName(currentProgram);
+                resultProgram.setId(programId);
+                result.addToPrograms(resultProgram);
+
+                currentData = data;
+                resultData = new ParameterOptimizationResultData();
+                resultData.setName(currentData);
+                resultData.setId(dataId);
+                resultProgram.addToData(resultData);
+            } else {
+                if (!data.equals(currentData)) {
+                    currentData = data;
+                    resultData = new ParameterOptimizationResultData();
+                    resultData.setName(currentData);
+                    resultData.setId(dataId);
+                    resultProgram.addToData(resultData);
+                }
+            }
+
+            resultQuality = new ParameterOptimizationResultQuality();
+            resultQuality.setName(quality);
+            resultQuality.setValue(qualityValue);
+            resultData.addToQualities(resultQuality);
+
+            String paramSql = "SELECT poi.quality, poi.param_set_as_string AS param_set " +
+                              "FROM parameter_optimization_iterations AS poi " +
+                              "INNER JOIN clustering_quality_measures ON (poi.clustering_quality_measure_id = clustering_quality_measures.id) " +
+                              "WHERE unique_run_identifier = '" + name + "' AND clustering_quality_measures.alias = '" + quality + "' " +
+                              "AND program_config_id = '" + programId + "' AND data_config_id = '" + dataId + "' " +
+                              "ORDER BY quality DESC LIMIT 1";
+
+            List<Map<String, Object>> paramSets = jdbcTemplate.queryForList(paramSql);
+
+            for (Map paramSet : paramSets) {
+                String paramSetAsString = new String((byte[])paramSet.get("param_set"));
+                resultQuality.setParameterSet(paramSetAsString);
+            }
+        }
+
+        model.addAttribute("result", result);
+
+        return "results/showParameterOptimization";
+    }
+
+    /* Display page for clustering run results */
+    public String showResultsClustering(Model model, String name) {
+        String sql = "SELECT quality, program_configs.program_config_id, data_configs.data_config_id, clustering_quality_measures.alias AS quality_alias, program_configs.name AS program, data_configs.name AS data FROM run_results " +
+                     "INNER JOIN run_results_executions ON (run_results.id = run_results_executions.run_result_id) " +
+                     "INNER JOIN run_results_clusterings ON (run_results_clusterings.run_results_execution_id = run_results_executions.id) " +
+                     "INNER JOIN run_results_clustering_qualities ON (run_results_clustering_qualities.run_results_clustering_id = run_results_clusterings.id) " +
+                     "INNER JOIN clustering_quality_measures ON (clustering_quality_measures.id = run_results_clustering_qualities.clustering_quality_measure_id) " +
+                     "INNER JOIN program_configs ON (program_configs.id = run_results_clustering_qualities.program_config_id) " +
+                     "INNER JOIN data_configs ON (data_configs.id = run_results_clustering_qualities.data_config_id) " +
+                     "WHERE unique_run_identifier = '" + name + "' " +
+                     "ORDER BY program ASC, data ASC, quality_alias ASC";
+
+        ParameterOptimizationResult result = new ParameterOptimizationResult();
+        result.setName(name);
+
+        String currentProgram = "";
+        String program = "";
+        int programId;
+        String currentData = "";
+        String data = "";
+        int dataId;
+        String quality;
+        double qualityValue;
+
+        ParameterOptimizationResultProgram resultProgram = new ParameterOptimizationResultProgram();
+        ParameterOptimizationResultData resultData = new ParameterOptimizationResultData();
+        ParameterOptimizationResultQuality resultQuality;
+
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+        for (Map row : rows) {
+            program = new String((byte[])row.get("program"));
+            programId = (int)row.get("program_config_id");
+            data = new String((byte[])row.get("data"));
+            dataId = (int)row.get("data_config_id");
+            quality = new String((byte[])row.get("quality_alias"));
+
+            qualityValue = Double.parseDouble(new String((byte[])row.get("quality")));
+
+            if (!program.equals(currentProgram)) {
+                currentProgram = program;
+                resultProgram = new ParameterOptimizationResultProgram();
+                resultProgram.setName(currentProgram);
+                resultProgram.setId(programId);
+                result.addToPrograms(resultProgram);
+
+                currentData = data;
+                resultData = new ParameterOptimizationResultData();
+                resultData.setName(currentData);
+                resultData.setId(dataId);
+                resultProgram.addToData(resultData);
+            } else {
+                if (!data.equals(currentData)) {
+                    currentData = data;
+                    resultData = new ParameterOptimizationResultData();
+                    resultData.setName(currentData);
+                    resultData.setId(dataId);
+                    resultProgram.addToData(resultData);
+                }
+            }
+
+            resultQuality = new ParameterOptimizationResultQuality();
+            resultQuality.setName(quality);
+            resultQuality.setValue(qualityValue);
+            resultData.addToQualities(resultQuality);
+        }
+
+        model.addAttribute("result", result);
+
+        return "results/clustering/show";
+    }
+
+    /* Display page for data analysis run results */
+    public String showResultsDataAnalysis(Model model, String name) {
+        return "results/data_analysis/show";
+    }
+
+    /* Display page for clustering graphs */
     @RequestMapping(value="/results/show-clustering")
     public String showClustering(Model model,
                                  @RequestParam(value="name", required=true) String name,
@@ -87,6 +275,9 @@ public class ResultController {
         }
     }
 
+    /* Find clustering for parameter optimization runs
+     * Figures out which files to fetch for the clustering graph
+     */
     @RequestMapping(value="/results/load-clustering")
     public String loadClustering(Model model,
                                  @RequestParam(value="name", required=true) String name,
@@ -136,6 +327,9 @@ public class ResultController {
         return "results/loadClustering";
     }
 
+    /* Find clustering for clustering runs
+     * Figures out which files to fetch for the clustering graph
+     */
     @RequestMapping(value="/results/load-clustering-cluster")
     public String loadClustering(Model model,
                                  @RequestParam(value="name", required=true) String name,
@@ -166,6 +360,9 @@ public class ResultController {
         return "results/loadClustering";
     }
 
+    /* Given a cluster file and a pca file
+     * Create a CSV file for Highcharts
+       To display */
     @RequestMapping(value="/results/get-clustering")
     public void getClustering(HttpServletResponse response, @RequestParam(value="clusterFile", required=true) String clusterFile, @RequestParam(value="pcaFile", required=true) String pcaFile) {
         //We want to generate a CSV file, so we set the header accordingly
@@ -353,184 +550,6 @@ public class ResultController {
             writer.close();
         } catch(IOException e) {
         }
-    }
-
-    @RequestMapping(value="/results/show")
-    public String showResults(Model model, @RequestParam(value="name", required=true) String name) {
-        String sql = "SELECT * FROM run_results " +
-                      "INNER JOIN run_types ON (run_results.run_type_id = run_types.id) " +
-                      "WHERE unique_run_identifier = '" + name + "'";
-
-        Map<String, Object> row = jdbcTemplate.queryForMap(sql);
-        String runType = new String((byte[])row.get("name"));
-
-        model.addAttribute("runName", name);
-        model.addAttribute("runType", runType);
-
-        if (runType.equals("Parameter Optimization")) {
-            return showResultsParameterOptimization(model, name);
-        } else if (runType.equals("Clustering")) {
-            return showResultsClustering(model, name);
-        }
-
-        return "results/show";
-    }
-
-    public String showResultsParameterOptimization(Model model, String name) {
-        String sql = "SELECT MAX(poi.quality) AS best_quality, poi.program_config_id, poi.data_config_id, clustering_quality_measures.alias AS quality_alias, program_configs.name AS program, data_configs.name AS data " +
-        "FROM parameter_optimization_iterations AS poi " +
-        "INNER JOIN clustering_quality_measures ON (poi.clustering_quality_measure_id = clustering_quality_measures.id) " +
-        "INNER JOIN program_configs ON (program_configs.id = poi.program_config_id) " +
-        "INNER JOIN data_configs ON (data_configs.id = poi.data_config_id) " +
-        "WHERE unique_run_identifier = '" + name + "' " +
-        "GROUP BY quality_alias, program, data, poi.program_config_id, poi.data_config_id " +
-        "ORDER BY program ASC, data ASC, quality_alias ASC";
-
-        ParameterOptimizationResult result = new ParameterOptimizationResult();
-        result.setName(name);
-
-        String currentProgram = "";
-        String program = "";
-        int programId;
-        String currentData = "";
-        String data = "";
-        int dataId;
-        String quality;
-        double qualityValue;
-
-        ParameterOptimizationResultProgram resultProgram = new ParameterOptimizationResultProgram();
-        ParameterOptimizationResultData resultData = new ParameterOptimizationResultData();
-        ParameterOptimizationResultQuality resultQuality;
-
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
-        for (Map row : rows) {
-            program = new String((byte[])row.get("program"));
-            programId = (int)row.get("program_config_id");
-            data = new String((byte[])row.get("data"));
-            dataId = (int)row.get("data_config_id");
-            quality = new String((byte[])row.get("quality_alias"));
-            qualityValue = (double)row.get("best_quality");
-
-            if (!program.equals(currentProgram)) {
-                currentProgram = program;
-                resultProgram = new ParameterOptimizationResultProgram();
-                resultProgram.setName(currentProgram);
-                resultProgram.setId(programId);
-                result.addToPrograms(resultProgram);
-
-                currentData = data;
-                resultData = new ParameterOptimizationResultData();
-                resultData.setName(currentData);
-                resultData.setId(dataId);
-                resultProgram.addToData(resultData);
-            } else {
-                if (!data.equals(currentData)) {
-                    currentData = data;
-                    resultData = new ParameterOptimizationResultData();
-                    resultData.setName(currentData);
-                    resultData.setId(dataId);
-                    resultProgram.addToData(resultData);
-                }
-            }
-
-            resultQuality = new ParameterOptimizationResultQuality();
-            resultQuality.setName(quality);
-            resultQuality.setValue(qualityValue);
-            resultData.addToQualities(resultQuality);
-
-            String paramSql = "SELECT poi.quality, poi.param_set_as_string AS param_set " +
-                              "FROM parameter_optimization_iterations AS poi " +
-                              "INNER JOIN clustering_quality_measures ON (poi.clustering_quality_measure_id = clustering_quality_measures.id) " +
-                              "WHERE unique_run_identifier = '" + name + "' AND clustering_quality_measures.alias = '" + quality + "' " +
-                              "AND program_config_id = '" + programId + "' AND data_config_id = '" + dataId + "' " +
-                              "ORDER BY quality DESC LIMIT 1";
-
-            List<Map<String, Object>> paramSets = jdbcTemplate.queryForList(paramSql);
-
-            for (Map paramSet : paramSets) {
-                String paramSetAsString = new String((byte[])paramSet.get("param_set"));
-                resultQuality.setParameterSet(paramSetAsString);
-            }
-        }
-
-        model.addAttribute("result", result);
-
-        return "results/showParameterOptimization";
-    }
-
-    public String showResultsClustering(Model model, String name) {
-        String sql = "SELECT quality, program_configs.program_config_id, data_configs.data_config_id, clustering_quality_measures.alias AS quality_alias, program_configs.name AS program, data_configs.name AS data FROM run_results " +
-                     "INNER JOIN run_results_executions ON (run_results.id = run_results_executions.run_result_id) " +
-                     "INNER JOIN run_results_clusterings ON (run_results_clusterings.run_results_execution_id = run_results_executions.id) " +
-                     "INNER JOIN run_results_clustering_qualities ON (run_results_clustering_qualities.run_results_clustering_id = run_results_clusterings.id) " +
-                     "INNER JOIN clustering_quality_measures ON (clustering_quality_measures.id = run_results_clustering_qualities.clustering_quality_measure_id) " +
-                     "INNER JOIN program_configs ON (program_configs.id = run_results_clustering_qualities.program_config_id) " +
-                     "INNER JOIN data_configs ON (data_configs.id = run_results_clustering_qualities.data_config_id) " +
-                     "WHERE unique_run_identifier = '" + name + "' " +
-                     "ORDER BY program ASC, data ASC, quality_alias ASC";
-
-        ParameterOptimizationResult result = new ParameterOptimizationResult();
-        result.setName(name);
-
-        String currentProgram = "";
-        String program = "";
-        int programId;
-        String currentData = "";
-        String data = "";
-        int dataId;
-        String quality;
-        double qualityValue;
-
-        ParameterOptimizationResultProgram resultProgram = new ParameterOptimizationResultProgram();
-        ParameterOptimizationResultData resultData = new ParameterOptimizationResultData();
-        ParameterOptimizationResultQuality resultQuality;
-
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
-        for (Map row : rows) {
-            program = new String((byte[])row.get("program"));
-            programId = (int)row.get("program_config_id");
-            data = new String((byte[])row.get("data"));
-            dataId = (int)row.get("data_config_id");
-            quality = new String((byte[])row.get("quality_alias"));
-            
-            qualityValue = Double.parseDouble(new String((byte[])row.get("quality")));
-
-            if (!program.equals(currentProgram)) {
-                currentProgram = program;
-                resultProgram = new ParameterOptimizationResultProgram();
-                resultProgram.setName(currentProgram);
-                resultProgram.setId(programId);
-                result.addToPrograms(resultProgram);
-
-                currentData = data;
-                resultData = new ParameterOptimizationResultData();
-                resultData.setName(currentData);
-                resultData.setId(dataId);
-                resultProgram.addToData(resultData);
-            } else {
-                if (!data.equals(currentData)) {
-                    currentData = data;
-                    resultData = new ParameterOptimizationResultData();
-                    resultData.setName(currentData);
-                    resultData.setId(dataId);
-                    resultProgram.addToData(resultData);
-                }
-            }
-
-            resultQuality = new ParameterOptimizationResultQuality();
-            resultQuality.setName(quality);
-            resultQuality.setValue(qualityValue);
-            resultData.addToQualities(resultQuality);
-        }
-
-        model.addAttribute("result", result);
-
-        return "results/clustering/show";
-    }
-
-    @RequestMapping(value="/results/graphs")
-    public String resultsTest(Model model) {
-        return "results/graphs";
     }
 
     private BackendClient getBackendClient() throws ConnectException, Exception {

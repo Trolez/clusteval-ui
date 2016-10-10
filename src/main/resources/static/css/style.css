@@ -78,6 +78,7 @@ header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transfo
 
 /* Main - Run list */
 main .run-list .run { padding: 10px; border: 2px solid #cfcfcf; background: #efefef; margin-bottom: 8px; overflow: hidden; }
+main .run-list .run.edited { margin-left: 50px; }
 main .run-list .run span.name { display: block; border-bottom: 2px solid #cfcfcf; margin: -10px -10px 10px -10px; padding: 10px; }
 main .run-list .run .btn { float: left; margin-right: 10px; }
 main .run-list .run .btn.pull-right { margin-right: 0px; }
