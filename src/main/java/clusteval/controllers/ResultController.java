@@ -253,7 +253,7 @@ public class ResultController {
 
     /* Display page for data analysis run results */
     public String showResultsDataAnalysis(Model model, String name) {
-        String sql = "SELECT result.data_config_id, statistic_id, statistics.name, data_configs.name AS data FROM run_result_data_analysis_data_configs_statistics AS result " +
+        String sql = "SELECT result.data_config_id, statistic_id, statistics.name, statistics.alias, data_configs.name AS data FROM run_result_data_analysis_data_configs_statistics AS result " +
                      "INNER JOIN statistics ON (result.statistic_id = statistics.id) " +
                      "INNER JOIN data_configs ON (data_configs.id = result.data_config_id) " +
                      "WHERE unique_run_identifier = '" + name + "' " +
@@ -266,6 +266,7 @@ public class ResultController {
         String dataConfig = "";
         String currentDataStatistic = "";
         String dataStatistic = "";
+        String dataStatisticAlias = "";
 
         DataAnalysisResultData resultDataConfig = new DataAnalysisResultData();
         DataAnalysisResultDataStatistic resultDataStatistic = new DataAnalysisResultDataStatistic();
@@ -274,6 +275,7 @@ public class ResultController {
         for (Map row : rows) {
             dataConfig = new String((byte[])row.get("data"));
             dataStatistic = new String((byte[])row.get("name"));
+            dataStatisticAlias = new String((byte[])row.get("alias"));
 
             if (!dataConfig.equals(currentDataConfig)) {
                 currentDataConfig = dataConfig;
@@ -284,15 +286,30 @@ public class ResultController {
                 currentDataStatistic = dataStatistic;
                 resultDataStatistic = new DataAnalysisResultDataStatistic();
                 resultDataStatistic.setName(currentDataStatistic);
+                resultDataStatistic.setAlias(dataStatisticAlias);
                 resultDataConfig.addToDataStatistics(resultDataStatistic);
             } else {
                 if (!dataStatistic.equals(currentDataStatistic)) {
                     currentDataStatistic = dataStatistic;
                     resultDataStatistic = new DataAnalysisResultDataStatistic();
                     resultDataStatistic.setName(currentDataStatistic);
+                    resultDataStatistic.setAlias(dataStatisticAlias);
                     resultDataConfig.addToDataStatistics(resultDataStatistic);
                 }
             }
+
+            //Read value from file
+            String statisticFile = getPath() + "/results/" + name + "/analyses/" + currentDataConfig + "_" + dataStatistic + ".txt";
+            resultDataStatistic.setFilePath(statisticFile);
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(statisticFile));
+                String currentLine;
+                while ((currentLine = br.readLine()) != null) {
+                    resultDataStatistic.setValue(currentLine);
+                }
+            } catch (FileNotFoundException e) {
+                resultDataStatistic.setValue("Error. File not found.");
+            } catch (Exception e) {}
         }
 
         model.addAttribute("result", result);
