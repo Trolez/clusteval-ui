@@ -317,6 +317,38 @@ $(document).ready(function() {
     /****************
     ****************/
 
+    //Wrap edited runs in container
+    var editedRuns = [];
+    var editedRunsCount = 0;
+    $('.run.edited').each(function() {
+        var nextRunEdited = $(this).next().hasClass('edited');
+
+        editedRuns.push($(this));
+        editedRunsCount++;
+
+        if (!nextRunEdited) {
+            var container = $('<div class="edited-runs-container">' + editedRunsCount + ' Edited runs<span class="toggle"><i class="fa fa-expand"></i></span></div>');
+            var innerContainer = $('<div class="edited-runs-inner-container"></div>');
+            innerContainer.appendTo(container);
+            container.insertBefore(editedRuns[0]);
+
+            for (i = 0; i < editedRuns.length; i++) {
+                editedRuns[i].appendTo(innerContainer);
+            }
+            editedRuns = [];
+            editedRunsCount = 0;
+        }
+    });
+
+    //Toggle edited runs display
+    $('.run-list').on('click', '.edited-runs-container .toggle', function() {
+        $(this).parent().parent().find('.edited-runs-inner-container').slideToggle();
+
+        $(this).find('.fa').toggleClass('fa-expand');
+        $(this).find('.fa').toggleClass('fa-compress');
+    });
+
+    //Delete run button click
     $('.run-list .delete-run').click(function() {
         return confirm("Delete this run?");
     });
