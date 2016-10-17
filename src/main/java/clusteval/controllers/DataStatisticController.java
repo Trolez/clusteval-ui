@@ -61,4 +61,83 @@ public class DataStatisticController {
             writer.close();
         } catch (Exception e) {}
     }
+
+    @RequestMapping(value="/data-statistics/getNodeDegreeDistributionFile")
+    public void getNodeDegreeDistributionFile(HttpServletResponse response, @RequestParam(value="file", required=true) String file) {
+        //We want to generate a CSV file, so we set the header accordingly
+        response.setContentType("application/csv");
+        response.setHeader("content-disposition","attachment;filename =filename.csv");
+
+        try {
+            ServletOutputStream  writer = response.getOutputStream();
+            BufferedReader br = new BufferedReader(new FileReader(file));
+
+            String currentLine;
+            while ((currentLine = br.readLine()) != null) {
+                writer.println(currentLine.replace('\t', ','));
+            }
+
+            writer.flush();
+            writer.close();
+        } catch (Exception e) {}
+    }
+
+    @RequestMapping(value="/data-statistics/getClassSizeDistributionFile")
+    public void getClassSizeDistributionFile(HttpServletResponse response, @RequestParam(value="file", required=true) String file) {
+        response.setContentType("application/csv");
+        response.setHeader("content-disposition","attachment;filename =filename.csv");
+
+        try {
+            int lineNumber = 1;
+            ArrayList<Double> classSizes = new ArrayList<Double>();
+            ArrayList<Double> classSizesHeader = new ArrayList<Double>();
+            ArrayList<Integer> classSizesCount = new ArrayList<Integer>();
+
+            BufferedReader br = new BufferedReader(new FileReader(file));
+
+            String currentLine;
+            while ((currentLine = br.readLine()) != null) {
+                if (lineNumber == 2) {
+                    String[] numberStrings = currentLine.split("\t");
+                    for (int i = 0; i < numberStrings.length; i++) {
+                        classSizes.add(Double.parseDouble(numberStrings[i]));
+                    }
+                }
+                lineNumber++;
+            }
+
+            Collections.sort(classSizes);
+
+            Double currentClassSize = classSizes.get(0);
+            int count = 0;
+            for (Double classSize : classSizes) {
+                if (!classSize.equals(currentClassSize)) {
+                    classSizesHeader.add(currentClassSize);
+                    classSizesCount.add(count);
+                    count = 1;
+                    currentClassSize = classSize;
+                } else {
+                    count++;
+                }
+            }
+
+            if (classSizesHeader.size() > 0) {
+                if (!currentClassSize.equals(classSizesHeader.get(classSizesHeader.size() - 1))) {
+                    classSizesHeader.add(currentClassSize);
+                    classSizesCount.add(count);
+                }
+            } else {
+                classSizesHeader.add(currentClassSize);
+                classSizesCount.add(count);
+            }
+
+            ServletOutputStream  writer = response.getOutputStream();
+
+            writer.println(StringUtils.join(classSizesHeader, ','));
+            writer.println(StringUtils.join(classSizesCount, ','));
+
+            writer.flush();
+            writer.close();
+        } catch (Exception e) {}
+    }
 }

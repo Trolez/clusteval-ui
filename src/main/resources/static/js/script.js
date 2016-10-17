@@ -342,7 +342,7 @@ $(document).ready(function() {
 
     //Toggle edited runs display
     $('.run-list').on('click', '.edited-runs-container .toggle', function() {
-        $(this).parent().parent().find('.edited-runs-inner-container').slideToggle();
+        $(this).parent().find('.edited-runs-inner-container').slideToggle();
 
         $(this).find('.fa').toggleClass('fa-expand');
         $(this).find('.fa').toggleClass('fa-compress');

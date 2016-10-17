@@ -15,12 +15,11 @@
                 <div class="program" th:each="dataConfig, dataConfigStat : *{dataConfigs}">
                     <span class="name">Data configuration: <span th:text="${dataConfig.name}"></span></span>
                     <div class="data-wrapper">
-                        <div class="data" th:each="dataStatistic, dataStatisticStat : ${dataConfig.dataStatistics}">
-                            <div class="dash"></div>
-                            <div th:switch="${dataStatistic.name}">
-                                <div th:case="IntraInterDistributionDataStatistic">
-                                    <span class="name"><span th:text="${dataStatistic.alias}"></span></span></span>
-                                    <div style="height: 500px;" th:class="${'intraInterSimilarityDistribution_' + dataConfig.name}" th:attr="data-statisticfile=${dataStatistic.filePath}"></div>
+                        <div class="row">
+                            <div th:class="${dataConfig.similarityDistribution == null} ? col-md-12 : col-md-6">
+                                <div th:if="${dataConfig.intraInterSimilarityDistribution != null}" class="data">
+                                    <span class="name"><span th:text="${dataConfig.intraInterSimilarityDistribution.alias}"></span></span></span>
+                                    <div style="height: 500px;" th:class="${'intraInterSimilarityDistribution_' + dataConfig.name}" th:attr="data-statisticfile=${dataConfig.intraInterSimilarityDistribution.filePath}"></div>
 
                                     <script th:inline="javascript">
                                         $(document).ready(function() {
@@ -86,9 +85,11 @@
                                         });
                                     </script>
                                 </div>
-                                <div th:case="SimilarityDistributionDataStatistic">
-                                    <span class="name"><span th:text="${dataStatistic.alias}"></span></span></span>
-                                    <div style="height: 500px;" th:class="${'similarityDistributionDataStatistic_' + dataConfig.name}" th:attr="data-statisticfile=${dataStatistic.filePath}"></div>
+                            </div>
+                            <div th:class="${dataConfig.intraInterSimilarityDistribution == null} ? col-md-12 : col-md-6">
+                                <div th:if="${dataConfig.similarityDistribution != null}" class="data">
+                                    <span class="name"><span th:text="${dataConfig.similarityDistribution.alias}"></span></span></span>
+                                    <div style="height: 500px;" th:class="${'similarityDistributionDataStatistic_' + dataConfig.name}" th:attr="data-statisticfile=${dataConfig.similarityDistribution.filePath}"></div>
 
                                     <script th:inline="javascript">
                                         $(document).ready(function() {
@@ -149,56 +150,153 @@
                                         });
                                     </script>
                                 </div>
-                                <div th:case="ClassSizeDistributionDataStatistic">
-                                    <span class="name"><span th:text="${dataStatistic.alias}"></span></span></span>
-                                    <div style="height: 500px;" th:class="${'classSizeDistributionDataStatistic_' + dataConfig.name}" th:attr="data-value=${dataStatistic.value}"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div th:class="${dataConfig.nodeDegreeDistribution == null} ? col-md-12 : col-md-6">
+                                <div th:if="${dataConfig.classSizeDistribution != null}" class="data">
+                                    <span class="name"><span th:text="${dataConfig.classSizeDistribution.alias}"></span></span></span>
+                                    <div style="height: 500px;" th:class="${'classSizeDistributionDataStatistic_' + dataConfig.name}" th:attr="data-statisticfile=${dataConfig.classSizeDistribution.filePath}"></div>
 
                                     <script th:inline="javascript">
                                         $(document).ready(function() {
+                                            var statisticFile = $('.classSizeDistributionDataStatistic_' + [[${dataConfig.name}]]).data('statisticfile');
                                             var statisticValue = $('.classSizeDistributionDataStatistic_' + [[${dataConfig.name}]]).data('value');
-                                            // Chart options
-                                            var options = {
-                                                chart: {
-                                                    type: 'column',
-                                                    zoomType: 'x'
-                                                },
-                                                title: {
-                                                    text: 'Class'
-                                                },
-                                                xAxis: {
-                                                    categories: []
-                                                },
-                                                yAxis: {
+                                            $.get("/data-statistics/getClassSizeDistributionFile?file=" + statisticFile, function(csv) {
+                                                // Chart options
+                                                var options = {
+                                                    plotOptions: {
+                                                        series: {
+                                                            showInLegend: false
+                                                        }
+                                                    },
+                                                    chart: {
+                                                        type: 'column',
+                                                        zoomType: 'x'
+                                                    },
                                                     title: {
-                                                        text: 'Size'
-                                                    }
-                                                },
-                                                series: []
-                                            };
+                                                        text: 'Class Size Distribution'
+                                                    },
+                                                    xAxis: {
+                                                        categories: [],
+                                                        title: {
+                                                            text: 'Class Size'
+                                                        }
+                                                    },
+                                                    yAxis: {
+                                                        title: {
+                                                            text: '# Classes'
+                                                        }
+                                                    },
+                                                    tooltip: {
+                                                        formatter: function() {
+                                                            return 'Number of classes with size <b>' + this.key + '</b>: <b>' + this.y + '</b>';
+                                                        }
+                                                    },
+                                                    series: []
+                                                };
 
-                                            // Iterate over the lines and add categories or series
-                                            var currentSeries = {
-                                                data: []
-                                            }
-                                            var items = statisticValue.split('\t');
-                                            $.each(items, function(itemNo, item) {
-                                                currentSeries.data.push(parseFloat(item));
-                                                options.series.push(currentSeries);
+                                                //Custom parsing of csv file
+                                                // Split the lines
+                                                var lines = csv.split('\n');
 
-                                                currentSeries = {
-                                                    data: []
+                                                var header = lines[0].split(',');
+
+                                                // Iterate over the lines and add categories or series
+                                                var currentSeries = {
+                                                    data: [],
+                                                    name: "Class size"
                                                 }
-                                            });
+                                                $.each(lines, function(lineNo, line) {
+                                                    if (lineNo == 1) {
+                                                        if (line != "") {
+                                                            var items = line.split(',');
 
-                                            // Create the chart
-                                            $('.classSizeDistributionDataStatistic_' + [[${dataConfig.name}]]).highcharts(options);
+                                                            $.each(items, function(itemNo, item) {
+                                                                currentSeries.data.push(['' + header[itemNo], parseFloat(items[itemNo])]);
+                                                            });
+
+                                                            options.series.push(currentSeries);
+                                                        }
+                                                    }
+                                                });
+
+                                                // Create the chart
+                                                $('.classSizeDistributionDataStatistic_' + [[${dataConfig.name}]]).highcharts(options);
+                                            });
                                         });
                                     </script>
                                 </div>
-                                <div th:case="*">
-                                    <span class="name"><span th:text="${dataStatistic.alias}"></span></span>: <span th:text="${dataStatistic.value}"></span>
+                            </div>
+                            <div th:class="${dataConfig.classSizeDistribution == null} ? col-md-12 : col-md-6">
+                                <div th:if="${dataConfig.nodeDegreeDistribution != null}" class="data">
+                                    <span class="name"><span th:text="${dataConfig.nodeDegreeDistribution.alias}"></span></span></span>
+                                    <div style="height: 500px;" th:class="${'nodeDegreeDistributionDataStatistic_' + dataConfig.name}" th:attr="data-statisticfile=${dataConfig.nodeDegreeDistribution.filePath}"></div>
+
+                                    <script th:inline="javascript">
+                                        $(document).ready(function() {
+                                            var statisticFile = $('.nodeDegreeDistributionDataStatistic_' + [[${dataConfig.name}]]).data('statisticfile');
+                                            $.get("/data-statistics/getNodeDegreeDistributionFile?file=" + statisticFile, function(csv) {
+                                                // Chart options
+                                                var options = {
+                                                    chart: {
+                                                        type: 'area',
+                                                        zoomType: 'x'
+                                                    },
+                                                    title: {
+                                                        text: 'Node Degree Distribution'
+                                                    },
+                                                    xAxis: {
+                                                        categories: []
+                                                    },
+                                                    yAxis: {
+                                                        title: {
+                                                            text: 'Frequency'
+                                                        }
+                                                    },
+                                                    series: []
+                                                };
+
+
+                                                //Custom parsing of csv file
+                                                // Split the lines
+                                                var lines = csv.split('\n');
+                                                var firstLine = "";
+                                                var firstLineItems = [];
+
+                                                // Iterate over the lines and add categories or series
+                                                var currentSeries = {
+                                                    data: [],
+                                                    name: "Node Degree Distribution"
+                                                }
+                                                $.each(lines, function(lineNo, line) {
+                                                    if (lineNo == 0) {
+                                                        firstLine = lines[0];
+                                                        firstLineItems = firstLine.split(',');
+                                                    } else {
+                                                        if (line != "") {
+                                                            var items = line.split(',');
+
+                                                            $.each(items, function(itemNo, item) {
+                                                                currentSeries.data.push([parseFloat(firstLineItems[itemNo]), parseFloat(items[itemNo])]);
+                                                            });
+
+                                                            options.series.push(currentSeries);
+                                                        }
+                                                    }
+                                                });
+
+                                                // Create the chart
+                                                $('.nodeDegreeDistributionDataStatistic_' + [[${dataConfig.name}]]).highcharts(options);
+                                            });
+                                        });
+                                    </script>
                                 </div>
                             </div>
+                        </div>
+                        <div class="data" th:each="dataStatistic, dataStatisticStat : ${dataConfig.dataStatistics}">
+                            <div class="dash"></div>
+                            <span class="name"><span th:text="${dataStatistic.alias}"></span></span>: <span th:text="${dataStatistic.value}"></span>
                         </div>
                     </div>
                 </div>

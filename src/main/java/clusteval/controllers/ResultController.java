@@ -287,14 +287,35 @@ public class ResultController {
                 resultDataStatistic = new DataAnalysisResultDataStatistic();
                 resultDataStatistic.setName(currentDataStatistic);
                 resultDataStatistic.setAlias(dataStatisticAlias);
-                resultDataConfig.addToDataStatistics(resultDataStatistic);
+
+                if (currentDataStatistic.equals("ClassSizeDistributionDataStatistic")) {
+                    resultDataConfig.setClassSizeDistribution(resultDataStatistic);
+                } else if (currentDataStatistic.equals("NodeDegreeDistributionDataStatistic")) {
+                    resultDataConfig.setNodeDegreeDistribution(resultDataStatistic);
+                } else if (currentDataStatistic.equals("IntraInterDistributionDataStatistic")) {
+                    resultDataConfig.setIntraInterSimilarityDistribution(resultDataStatistic);
+                } else if (currentDataStatistic.equals("SimilarityDistributionDataStatistic")) {
+                    resultDataConfig.setSimilarityDistribution(resultDataStatistic);
+                } else {
+                    resultDataConfig.addToDataStatistics(resultDataStatistic);
+                }
             } else {
                 if (!dataStatistic.equals(currentDataStatistic)) {
                     currentDataStatistic = dataStatistic;
                     resultDataStatistic = new DataAnalysisResultDataStatistic();
                     resultDataStatistic.setName(currentDataStatistic);
                     resultDataStatistic.setAlias(dataStatisticAlias);
-                    resultDataConfig.addToDataStatistics(resultDataStatistic);
+                    if (currentDataStatistic.equals("ClassSizeDistributionDataStatistic")) {
+                        resultDataConfig.setClassSizeDistribution(resultDataStatistic);
+                    } else if (currentDataStatistic.equals("NodeDegreeDistributionDataStatistic")) {
+                        resultDataConfig.setNodeDegreeDistribution(resultDataStatistic);
+                    } else if (currentDataStatistic.equals("IntraInterDistributionDataStatistic")) {
+                        resultDataConfig.setIntraInterSimilarityDistribution(resultDataStatistic);
+                    } else if (currentDataStatistic.equals("SimilarityDistributionDataStatistic")) {
+                        resultDataConfig.setSimilarityDistribution(resultDataStatistic);
+                    } else {
+                        resultDataConfig.addToDataStatistics(resultDataStatistic);
+                    }
                 }
             }
 
@@ -310,6 +331,10 @@ public class ResultController {
             } catch (FileNotFoundException e) {
                 resultDataStatistic.setValue("Error. File not found.");
             } catch (Exception e) {}
+        }
+
+        for (DataAnalysisResultData dataAnalysisResultData : result.getDataConfigs()) {
+            Collections.sort(dataAnalysisResultData.getDataStatistics());
         }
 
         model.addAttribute("result", result);

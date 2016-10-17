@@ -7,6 +7,14 @@ public class DataAnalysisResultData {
 
     private ArrayList<DataAnalysisResultDataStatistic> dataStatistics = new ArrayList<DataAnalysisResultDataStatistic>();
 
+    private DataAnalysisResultDataStatistic classSizeDistribution;
+
+    private DataAnalysisResultDataStatistic nodeDegreeDistribution;
+
+    private DataAnalysisResultDataStatistic intraInterSimilarityDistribution;
+
+    private DataAnalysisResultDataStatistic similarityDistribution;
+
     public String getName() {
         return name;
     }
@@ -25,5 +33,37 @@ public class DataAnalysisResultData {
 
     public void addToDataStatistics(DataAnalysisResultDataStatistic dataStatistic) {
         dataStatistics.add(dataStatistic);
+    }
+
+    public DataAnalysisResultDataStatistic getClassSizeDistribution() {
+        return classSizeDistribution;
+    }
+
+    public void setClassSizeDistribution(DataAnalysisResultDataStatistic classSizeDistribution) {
+        this.classSizeDistribution = classSizeDistribution;
+    }
+
+    public DataAnalysisResultDataStatistic getNodeDegreeDistribution() {
+        return nodeDegreeDistribution;
+    }
+
+    public void setNodeDegreeDistribution(DataAnalysisResultDataStatistic nodeDegreeDistribution) {
+        this.nodeDegreeDistribution = nodeDegreeDistribution;
+    }
+
+    public DataAnalysisResultDataStatistic getIntraInterSimilarityDistribution() {
+        return intraInterSimilarityDistribution;
+    }
+
+    public void setIntraInterSimilarityDistribution(DataAnalysisResultDataStatistic intraInterSimilarityDistribution) {
+        this.intraInterSimilarityDistribution = intraInterSimilarityDistribution;
+    }
+
+    public DataAnalysisResultDataStatistic getSimilarityDistribution() {
+        return similarityDistribution;
+    }
+
+    public void setSimilarityDistribution(DataAnalysisResultDataStatistic similarityDistribution) {
+        this.similarityDistribution = similarityDistribution;
     }
 }

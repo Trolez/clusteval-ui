@@ -1,6 +1,6 @@
 package clusteval;
 
-public class DataAnalysisResultDataStatistic {
+public class DataAnalysisResultDataStatistic implements Comparable<DataAnalysisResultDataStatistic> {
     private String name;
     private String alias;
     private String value;
@@ -36,5 +36,9 @@ public class DataAnalysisResultDataStatistic {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public int compareTo(DataAnalysisResultDataStatistic other) {
+        return this.getAlias().compareTo(other.getAlias());
     }
 }
