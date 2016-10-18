@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<body>
+    <div layout:fragment="content">
+        <form class="run-creation" th:action="@{/data/upload}" method="post" th:object="${dataCreation}" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>
+                    Name of dataset
+                    <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                </label>
+                <input type="text" name="name" th:field="*{name}" class="form-control" th:errorclass="has-error"><br>
+            </div>
+            <div class="form-group">
+                <label>
+                    Dataset file
+                    <span class="error" th:if="${#fields.hasErrors('datasetFile')}" th:errors="*{datasetFile}">
+                </label>
+                <input type="file" name="datasetFile">
+            </div>
+            <input type="submit" value="Upload">
+        </form>
+    </div>
+</body>
+</html>
