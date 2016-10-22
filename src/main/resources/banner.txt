@@ -6,4 +6,4 @@ ${AnsiColor.BRIGHT_GREEN}
     / /___/ / /_/ (__  ) /_/ /___ | |/ / /_/ / /
     \____/_/\__,_/____/\__/_____/ |___/\__,_/_/
 
-${AnsiColor.BRIGHT_BLUE} ClustEval User Interface - Running on Spring Boot ${spring-boot.version}
+${AnsiColor.BRIGHT_BLUE} ClustEval User Interface - Powered by Spring Boot ${spring-boot.version}
