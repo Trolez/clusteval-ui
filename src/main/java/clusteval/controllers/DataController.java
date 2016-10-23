@@ -151,7 +151,7 @@ public class DataController {
                 extension = dataCreation.getDataSetFile().getOriginalFilename().split("\\.")[1];
             } catch (Exception e) {}
 
-            dataSetFileName = dataCreation.getName() + extension;
+            dataSetFileName = dataCreation.getName() + "." + extension;
 
             File dataConfigFile = new File(getPath() + "/data/datasets/" + dataCreation.getName() + "/" + dataSetFileName);
             FileWriter writer = new FileWriter(dataConfigFile);
@@ -210,7 +210,7 @@ public class DataController {
                     extension = dataCreation.getDataSetFile().getOriginalFilename().split("\\.")[1];
                 } catch (Exception e) {}
 
-                goldstandardFileName = dataCreation.getName() + extension;
+                goldstandardFileName = dataCreation.getName() + "." + extension;
 
                 Files.copy(dataCreation.getDataSetFile().getInputStream(), path.resolve(dataSetFileName));
                 redirectAttributes.addFlashAttribute("success", "Goldstandard file uploaded successfully");
