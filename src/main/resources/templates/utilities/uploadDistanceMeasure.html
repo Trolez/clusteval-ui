@@ -4,23 +4,6 @@
     <div layout:fragment="content">
         <form class="run-creation" th:action="@{/utilities/upload-distance-measure}" method="post" th:object="${utility}" enctype="multipart/form-data" th:include="utilities/form :: utility-form">
         </form>
-        <!--<form class="run-creation" th:action="@{/utilities/uploadDistanceMeasure}" method="post" th:object="${utility}" enctype="multipart/form-data">
-            <div class="form-group">
-                <label>
-                    Name of distance measure
-                    <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
-                </label>
-                <input type="text" name="name" th:field="*{name}" class="form-control" th:errorclass="has-error"><br>
-            </div>
-            <div class="form-group">
-                <label>
-                    Distance measure file
-                    <span class="error" th:if="${#fields.hasErrors('file')}" th:errors="*{file}">
-                </label>
-                <input type="file" name="file">
-            </div>
-            <input type="submit" value="Upload">
-        </form>-->
     </div>
 </body>
 </html>
