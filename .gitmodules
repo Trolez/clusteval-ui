@@ -1,3 +1,6 @@
 [submodule "clusteval-starter-kit"]
 	path = clusteval-starter-kit
 	url = https://www.github.com/Trolez/clusteval-starter-kit
+[submodule "clusteval"]
+	path = clusteval
+	url = https://github.com/wiwie/clusteval
