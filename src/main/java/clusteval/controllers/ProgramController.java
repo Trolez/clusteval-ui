@@ -1,11 +1,16 @@
 package clusteval;
 
+import javax.validation.Valid;
+
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.beans.factory.annotation.*;
 
 import de.clusteval.serverclient.BackendClient;
@@ -133,6 +138,21 @@ public class ProgramController {
         }
 
         return program;
+    }
+
+    @RequestMapping(value="/programs/upload")
+    public String uploadProgram(ProgramCreation programCreation, Model model) {
+        return "programs/upload";
+    }
+
+    @RequestMapping(value="/programs/upload", method=RequestMethod.POST)
+    public String uploadProgram(@Valid ProgramCreation programCreation, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        //Return to form if there were validation errors
+        if (bindingResult.hasErrors()) {
+            return "programs/upload";
+        }
+
+        return "redirect:/programs/upload";
     }
 
     private BackendClient getBackendClient() throws ConnectException, Exception {

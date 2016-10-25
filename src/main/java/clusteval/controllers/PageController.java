@@ -24,11 +24,13 @@ public class PageController {
         boolean connectedToServer = true;
         String absRepoPath = "";
         int numberOfRuns = 0;
+        int numberOfDataConfigs = 0;
 
         try {
             BackendClient backendClient = getBackendClient();
             absRepoPath = getPath();
             numberOfRuns = backendClient.getRuns().size();
+            numberOfDataConfigs = backendClient.getDataConfigurations().size();
         } catch (ConnectException e) {
             connectedToServer = false;
         } catch (Exception e) {}
@@ -36,6 +38,7 @@ public class PageController {
         model.addAttribute("connected", connectedToServer);
         model.addAttribute("absRepoPath", absRepoPath);
         model.addAttribute("numberOfRuns", numberOfRuns);
+        model.addAttribute("numberOfDataConfigs", numberOfDataConfigs);
         model.addAttribute("port", port);
 
         return "pages/home";
