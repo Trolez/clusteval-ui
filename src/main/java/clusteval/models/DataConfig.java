@@ -11,6 +11,12 @@ public class DataConfig {
 
     private String dataSetFile;
 
+    private Integer numberOfSamples;
+
+    private Integer dimensionality;
+
+    private boolean hasGoldstandard;
+
     public String getName() {
         return name;
     }
@@ -49,5 +55,29 @@ public class DataConfig {
 
     public void setDataSetFile(String dataSetFile) {
         this.dataSetFile = dataSetFile;
+    }
+
+    public Integer getNumberOfSamples() {
+        return numberOfSamples;
+    }
+
+    public void setNumberOfSamples(Integer numberOfSamples) {
+        this.numberOfSamples = numberOfSamples;
+    }
+
+    public Integer getDimensionality() {
+        return dimensionality;
+    }
+
+    public void setDimensionality(Integer dimensionality) {
+        this.dimensionality = dimensionality;
+    }
+
+    public boolean getHasGoldstandard() {
+        return hasGoldstandard;
+    }
+
+    public void setHasGoldstandard(boolean hasGoldstandard) {
+        this.hasGoldstandard = hasGoldstandard;
     }
 }

@@ -253,9 +253,11 @@ public class ResultController {
 
     /* Display page for data analysis run results */
     public String showResultsDataAnalysis(Model model, String name) {
-        String sql = "SELECT result.data_config_id, statistic_id, statistics.name, statistics.alias, data_configs.name AS data FROM run_result_data_analysis_data_configs_statistics AS result " +
+        String sql = "SELECT result.data_config_id, statistic_id, statistics.name, statistics.alias, data_configs.name AS data, data_configs.abs_path AS data_file, datasets.abs_path AS dataset_file FROM run_result_data_analysis_data_configs_statistics AS result " +
                      "INNER JOIN statistics ON (result.statistic_id = statistics.id) " +
                      "INNER JOIN data_configs ON (data_configs.id = result.data_config_id) " +
+                     "INNER JOIN dataset_configs ON (dataset_configs.id = data_configs.dataset_config_id) " +
+                     "INNER JOIN datasets ON (datasets.id = dataset_configs.dataset_id) " +
                      "WHERE unique_run_identifier = '" + name + "' " +
                      "ORDER BY data, statistic_id";
 
@@ -281,6 +283,39 @@ public class ResultController {
                 currentDataConfig = dataConfig;
                 resultDataConfig = new DataAnalysisResultData();
                 resultDataConfig.setName(currentDataConfig);
+
+                //Read dataset file to determine number of samples and dimensionality
+                Integer dimensionality = null;
+                Integer numberOfSamples = 0;
+                String datasetFile = new String((byte[])row.get("dataset_file"));
+                try {
+                    BufferedReader br = new BufferedReader(new FileReader(datasetFile));
+
+                    String currentLine;
+                    while ((currentLine = br.readLine()) != null) {
+                        if (!currentLine.startsWith("//")) {
+                            numberOfSamples++;
+                            if (dimensionality == null) {
+                                dimensionality = currentLine.split("\t").length - 1;
+                            }
+                        }
+                    }
+                } catch (Exception e) {}
+                resultDataConfig.setNumberOfSamples(numberOfSamples);
+                resultDataConfig.setDimensionality(dimensionality);
+
+                boolean hasGoldstandard = false;
+                String dataFile = new String((byte[])row.get("data_file"));
+                try {
+                    BufferedReader br = new BufferedReader(new FileReader(dataFile));
+
+                    String currentLine;
+                    while ((currentLine = br.readLine()) != null) {
+                        hasGoldstandard = currentLine.startsWith("goldstandardConfig");
+                    }
+                } catch (Exception e) {}
+                resultDataConfig.setHasGoldstandard(hasGoldstandard);
+
                 result.addToDataConfigs(resultDataConfig);
 
                 currentDataStatistic = dataStatistic;

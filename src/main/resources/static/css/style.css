@@ -56,18 +56,25 @@ header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transfo
 
 /* Data */
 #data .data-container .data-information { display: none; margin-top: 5px; padding: 5px; }
+#data .data-container .data-information .data-basic-stat { border: 2px solid #cfcfcf; background: #f5f5f5; text-align: center; color: #333; margin-bottom: 5px; }
+#data .data-container .data-information .data-basic-stat .stat-count { font-size: 50px; font-weight: bold; margin-top: 20px; }
+#data .data-container .data-information .data-basic-stat .stat-name { font-size: 18px; margin-bottom: 20px; }
 
 /* Programs */
 #programs .program-container .program-information { display: none; margin-top: 5px; padding: 5px; }
 
 /* Results */
-#results .parameter-optimization .name { font-size: 18px; font-weight: bold; }
+#results .parameter-optimization .name { font-size: 25px; font-weight: bold; display: inline-block; margin: 5px 0px; }
 #results .parameter-optimization .program { margin-top: 10px; }
 #results .parameter-optimization .program .data-wrapper { padding-left: 30px; border-left: 2px solid #cfcfcf; }
 #results .parameter-optimization .program .data { border: 2px solid #cfcfcf; background: #efefef; padding: 7px; margin-top: 7px; position: relative; }
+#results .parameter-optimization .program .data .name { font-size: 18px; margin: 0px; }
 #results .parameter-optimization .program .data .dash { position: absolute; left: -32px; top: 50%; transform: translateY(-50%); width: 30px; height: 2px; background: #cfcfcf; }
 #results .parameter-optimization .program .data ul { padding-left: 20px; }
 #results .parameter-optimization .toggle-result-graphs { display: inline-block; width: 25px; height: 25px; background: #f9f9f9; text-align: center; line-height: 25px; vertical-align: middle; cursor: pointer; border-radius: 3px; border: 1px solid #ccc; }
+#results .data-wrapper .data-basic-stat { border: 2px solid #cfcfcf; background: #efefef; text-align: center; color: #333; }
+#results .data-wrapper .data-basic-stat .stat-count { font-size: 50px; font-weight: bold; margin-top: 20px; }
+#results .data-wrapper .data-basic-stat .stat-name { font-size: 18px; margin-bottom: 20px; }
 
 /* Accordion */
 .myAccordion { list-style: none; overflow: hidden; position: relative; width: 100%; display: flex; flex-wrap: wrap; margin-bottom: 0px; height: calc(100vh - 130px); }

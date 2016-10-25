@@ -72,6 +72,7 @@ public class DataController {
                     dataConfig.setDataSetConfig(line);
                 } else if (currentLine.startsWith("goldstandardConfig")) {
                     dataConfig.setGoldStandardConfig(line);
+                    dataConfig.setHasGoldstandard(true);
                 }
             }
 
@@ -87,6 +88,26 @@ public class DataController {
             }
         } catch (Exception e) {
         }
+
+        //Read dataset file to determine number of samples and dimensionality
+        Integer dimensionality = null;
+        Integer numberOfSamples = 0;
+        String datasetFile = new String(getPath() + "/data/datasets/" + dataConfig.getDataSetName() + "/" + dataConfig.getDataSetFile());
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(datasetFile));
+
+            String currentLine;
+            while ((currentLine = br.readLine()) != null) {
+                if (!currentLine.startsWith("//")) {
+                    numberOfSamples++;
+                    if (dimensionality == null) {
+                        dimensionality = currentLine.split("\t").length - 1;
+                    }
+                }
+            }
+        } catch (Exception e) {}
+        dataConfig.setNumberOfSamples(numberOfSamples);
+        dataConfig.setDimensionality(dimensionality);
 
         return "data/show";
     }

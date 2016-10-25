@@ -1,4 +1,24 @@
 <div th:object="${dataConfig}">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="data-basic-stat">
+                <div class="stat-count" th:text="*{numberOfSamples}"></div>
+                <div class="stat-name">Number of samples</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="data-basic-stat">
+                <div class="stat-count" th:text="*{dimensionality}"></div>
+                <div class="stat-name">Dimensionality</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="data-basic-stat">
+                <div class="stat-count"><i class="fa" th:classappend="*{hasGoldstandard} ? fa-check : fa-times"></i></div>
+                <div class="stat-name">Has goldstandard</div>
+            </div>
+        </div>
+    </div>
     Dataset config: <span th:text="*{dataSetConfig}"></span><br>
     Gold standard config: <span th:text="*{goldStandardConfig}"></span><br>
     Dataset name: <span th:text="*{dataSetName}"></span><br>

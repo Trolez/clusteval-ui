@@ -16,6 +16,26 @@
                     <span class="name">Data configuration: <span th:text="${dataConfig.name}"></span></span>
                     <div class="data-wrapper">
                         <div class="row">
+                            <div class="col-md-4">
+                                <div class="data-basic-stat">
+                                    <div class="stat-count" th:text="${dataConfig.numberOfSamples}"></div>
+                                    <div class="stat-name">Number of samples</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="data-basic-stat">
+                                    <div class="stat-count" th:text="${dataConfig.dimensionality}"></div>
+                                    <div class="stat-name">Dimensionality</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="data-basic-stat">
+                                    <div class="stat-count"><i class="fa" th:classappend="${dataConfig.hasGoldstandard} ? fa-check : fa-times"></i></div>
+                                    <div class="stat-name">Has goldstandard</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div th:class="${dataConfig.similarityDistribution == null} ? col-md-12 : col-md-6">
                                 <div th:if="${dataConfig.intraInterSimilarityDistribution != null}" class="data">
                                     <span class="name"><span th:text="${dataConfig.intraInterSimilarityDistribution.alias}"></span></span></span>
