@@ -104,16 +104,15 @@ public class UtilityController {
                     //The class in the jar is valid
                 } else {
                     //The class in the jar is invalid
-                    System.err.println("Shit is fucked up!");
                     FileUtils.deleteQuietly(new File(path.resolve(file.getOriginalFilename()).toString()));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            //Delete temporarily copied file
-            FileUtils.deleteQuietly(temporaryFile);
         }
+
+        //Delete temporarily copied file
+        FileUtils.deleteQuietly(temporaryFile);
     }
 
     private File convertToFile(MultipartFile file) throws IOException {

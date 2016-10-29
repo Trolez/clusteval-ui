@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.beans.factory.annotation.*;
 
 import de.clusteval.serverclient.BackendClient;
+import de.clusteval.program.r.RProgram;
 
 import java.rmi.ConnectException;
 
@@ -24,8 +25,17 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.HashMap;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Enumeration;
+import java.util.jar.*;
+import java.net.URLClassLoader;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.FileUtils;
 
 @Controller
 public class ProgramController {
@@ -152,7 +162,145 @@ public class ProgramController {
             return "programs/upload";
         }
 
+        boolean isRProgram = false;
+
+        File temporaryFile = null;
+
+        try {
+            temporaryFile = convertToFile(programCreation.getExecutableFile());
+            JarFile jarFile = new JarFile(temporaryFile);
+            Enumeration<JarEntry> entries = jarFile.entries();
+
+            URL[] urls = { new URL("jar:file:" + temporaryFile.getAbsolutePath() + "!/") };
+            URLClassLoader cl = URLClassLoader.newInstance(urls);
+
+            while (entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                if(entry.isDirectory() || !entry.getName().endsWith(".class")){
+                    continue;
+                }
+
+                // -6 because of .class
+                String className = entry.getName().substring(0, entry.getName().length() - 6);
+                className = className.replace('/', '.');
+                try {
+                    Class c = cl.loadClass(className);
+
+                    if (RProgram.class.isAssignableFrom(c)) {
+                        isRProgram = true;
+                    } else {
+                        isRProgram = false;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (MalformedURLException e) {
+        } catch (IOException e) {}
+
+        //Delete temporarily copied file
+        FileUtils.deleteQuietly(temporaryFile);
+
+        if (isRProgram) {
+            System.err.println("This is an R program");
+        } else {
+            System.err.println("This is NOT an R program");
+        }
+
+        String programFileName = "";
+
+        try {
+            //Copy program file to repository
+            if (programCreation.getExecutableFile().isEmpty()) {
+                redirectAttributes.addFlashAttribute("failure", "Failed to store empty file");
+            }
+
+            ArrayList<String> parameters = new ArrayList<String>();
+            ArrayList<String> optimizableParameters = new ArrayList<String>();
+            if (programCreation.getParameters() != null) {
+                for (ProgramCreationParameter parameter : programCreation.getParameters()) {
+                    parameters.add(parameter.getName());
+                    if (parameter.getOptimizable()) {
+                        optimizableParameters.add(parameter.getName());
+                    }
+                }
+            }
+
+            FileWriter writer = null;
+
+            if (isRProgram) {
+                Path path = Paths.get(getPath() + "/programsTest");
+
+                Files.copy(programCreation.getExecutableFile().getInputStream(), path.resolve(programCreation.getExecutableFile().getOriginalFilename()));
+
+                File programConfigFile = new File(getPath() + "/programsTest/configs/" + programCreation.getName() + ".config");
+                writer = new FileWriter(programConfigFile);
+
+                String typeName = "";
+                try {
+                    typeName = programCreation.getExecutableFile().getOriginalFilename().split("\\.")[0];
+                } catch (Exception e) {}
+
+                //Write basic program configuration
+                writer.write("type = " + typeName + "\n");
+                writer.write("parameters = " + StringUtils.join(parameters, ',') + "\n");
+                writer.write("optimizationParameters = " + StringUtils.join(optimizableParameters, ',') + "\n");
+                writer.write("alias = " + programCreation.getAlias() + "\n\n");
+            } else {
+                Path path = Paths.get(getPath() + "/programsTest/" + programCreation.getName());
+                File filePath = new File(getPath() + "/programsTest/" + programCreation.getName());
+
+                if (!filePath.exists()) {
+                    filePath.mkdir();
+                }
+
+                Files.copy(programCreation.getExecutableFile().getInputStream(), path.resolve(programCreation.getExecutableFile().getOriginalFilename()));
+
+                File programConfigFile = new File(getPath() + "/programsTest/configs/" + programCreation.getName() + ".config");
+                writer = new FileWriter(programConfigFile);
+
+                //Write basic program configuration
+                writer.write("program = " + programCreation.getName() + "/" + programCreation.getExecutableFile().getOriginalFilename() + "\n");
+                writer.write("parameters = " + StringUtils.join(parameters, ',') + "\n");
+                writer.write("optimizationParameters = " + StringUtils.join(optimizableParameters, ',') + "\n");
+                //writer.write("compatibleDataSetFormats = ");
+                //writer.write("outputFormat = ");
+                writer.write("alias = " + programCreation.getAlias() + "\n\n");
+                writer.write("[invocationFormat]\n");
+                writer.write("invocationFormat = " + programCreation.getInvocationFormat());
+            }
+
+            //Write out program parameter configurations
+            if (programCreation.getParameters() != null) {
+                for (ProgramCreationParameter parameter : programCreation.getParameters()) {
+                    writer.write("\n\n");
+                    writer.write("[" + parameter.getName() + "]\n");
+                    writer.write("desc = " + parameter.getDescription() + "\n");
+                    writer.write("type = " + parameter.getType() + "\n");
+                    writer.write("def = " + parameter.getDefaultValue() + "\n");
+                    writer.write("minValue = " + parameter.getMinValue() + "\n");
+                    writer.write("maxValue = " + parameter.getMaxValue());
+                }
+            }
+
+            writer.close();
+
+            redirectAttributes.addFlashAttribute("success", "Program uploaded successfully");
+        } catch (IOException e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("failure", "Failed to upload program");
+        }
+
         return "redirect:/programs/upload";
+    }
+
+    private File convertToFile(MultipartFile file) throws IOException {
+        File convertedFile = new File(file.getOriginalFilename());
+        convertedFile.createNewFile();
+        FileOutputStream fos = new FileOutputStream(convertedFile);
+        fos.write(file.getBytes());
+        fos.close();
+        return convertedFile;
     }
 
     private BackendClient getBackendClient() throws ConnectException, Exception {

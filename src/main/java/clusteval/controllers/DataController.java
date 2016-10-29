@@ -190,6 +190,8 @@ public class DataController {
                 }
             }
 
+            writer.close();
+
             redirectAttributes.addFlashAttribute("success", "Data set file uploaded successfully");
         } catch (IOException e) {
             redirectAttributes.addFlashAttribute("failure", "Failed to upload file");

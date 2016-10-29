@@ -31,7 +31,64 @@
                 </label>
                 <input type="file" name="executableFile">
             </div>
-            <input type="submit" value="Upload">
+            <div id="program-parameters">
+                <div class="box" th:each="parameter, parameterStat : *{parameters}">
+                    <div class="form-group">
+                        <label>
+                            Parameter name
+                            <span class="error" th:if="${#fields.hasErrors('parameters[__${parameterStat.index}__].name')}" th:errors="*{parameters[__${parameterStat.index}__].name}"></span>
+                        </label>
+                        <input type="text" class="form-control" name="name" th:field="*{parameters[__${parameterStat.index}__].name}" th:errorclass="has-error">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            Parameter description
+                            <span class="error" th:if="${#fields.hasErrors('parameters[__${parameterStat.index}__].description')}" th:errors="*{parameters[__${parameterStat.index}__].description}"></span>
+                        </label>
+                        <input type="text" class="form-control" name="description" th:field="*{parameters[__${parameterStat.index}__].description}" th:errorclass="has-error">
+                    </div>
+                    <div class="form-group">
+                        <label>Parameter type</label>
+                        <select name="type" th:field="*{parameters[__${parameterStat.index}__].type}" th:errorclass="has-error">
+                            <option value="1">Integer</option>
+                            <option value="2">Float</option>
+                            <option value="0">String</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            Default value
+                            <span class="error" th:if="${#fields.hasErrors('parameters[__${parameterStat.index}__].defaultValue')}" th:errors="*{parameters[__${parameterStat.index}__].defaultValue}"></span>
+                        </label>
+                        <input type="text" class="form-control" name="defaultValue" th:field="*{parameters[__${parameterStat.index}__].defaultValue}" th:errorclass="has-error">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            Minimum value
+                            <span class="error" th:if="${#fields.hasErrors('parameters[__${parameterStat.index}__].minValue')}" th:errors="*{parameters[__${parameterStat.index}__].minValue}"></span>
+                        </label>
+                        <input type="text" class="form-control" name="minValue" th:field="*{parameters[__${parameterStat.index}__].minValue}" th:errorclass="has-error">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            Maximum value
+                            <span class="error" th:if="${#fields.hasErrors('parameters[__${parameterStat.index}__].maxValue')}" th:errors="*{parameters[__${parameterStat.index}__].maxValue}"></span>
+                        </label>
+                        <input type="text" class="form-control" name="maxValue" th:field="*{parameters[__${parameterStat.index}__].maxValue}" th:errorclass="has-error">
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input class="checkbox-optimize" type="checkbox" checked th:field="*{parameters[__${parameterStat.index}__].optimizable}" th:errorclass="has-error">Optimizable
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a class="add-program-parameter">Add program parameter</a>
+            <div class="form-group">
+                <input type="submit" value="Upload">
+            </div>
         </form>
     </div>
 </body>

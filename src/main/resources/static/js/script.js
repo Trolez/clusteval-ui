@@ -534,13 +534,6 @@ $(document).ready(function() {
     });
 
     //See clustering - modal
-    /*$('.cluster-modal').click(function(event) {
-        event.preventDefault();
-        $.get(this.href, function(html) {
-            $(html).appendTo('body').modal();
-        });
-    });*/
-
     $('.cluster-modal').click(function(e) {
         e.preventDefault();
         var url = $(this).attr('href');
@@ -602,75 +595,48 @@ $(document).ready(function() {
             }
         });
     });
-/*
-    //Load in all sliders on clustering page
-    $('#clustering .cluster-parameter-sliders').each(function() {
-        var container = $(this);
-        var name = $(this).data('name');
-        var program = $(this).data('program');
-        var data = $(this).data('data');
-        $.ajax({
-            url: "/results/get-clustering-sliders?name=" + name + "&program=" + program + "&data=" + data,
-            type: 'get',
-            dataType: 'html',
-            success: function(data) {
-                container.html(data);
 
-                //Set values of sliders to what is in the url
-                var urlValues = getParameterByName('param-set');
-                var parameters = urlValues.split(',');
+    $('.add-program-parameter').click(function() {
+        var index = $('#program-parameters > div').length;
 
-                for (var i = 0; i < parameters.length; i++) {
-                    var parts = parameters[i].split('=');
-                    $('input[value=' + parts[0] + ']').each(function() {
-                        var valueArray = $(this).parent().find('input[type=range]').data('options').split(',');
-                        var index = valueArray.indexOf(parts[1]);
-                        $('input[value=' + parts[0] + ']').parent().find('input[type=range]').val(index);
-                        $('input[value=' + parts[0] + ']').parent().find('.range-value').html(parts[1]);
-                    })
-                };
-            }
-        });
+        var returnValue = '<div class="box">';
+            returnValue += '<div class="form-group">';
+                returnValue += '<label>Parameter name</label>';
+                returnValue += '<input class="form-control" type="text" id="parameters' + index + '.name" name="parameters[' + index + '].name">';
+            returnValue += '</div>';
+            returnValue += '<div class="form-group">';
+                returnValue += '<label>Parameter description</label>';
+                returnValue += '<input class="form-control" type="text" id="parameters' + index + '.description" name="parameters[' + index + '].description">';
+            returnValue += '</div>';
+            returnValue += '<div class="form-group">';
+                returnValue += '<label>Parameter type</label>';
+                returnValue += '<select id="parameters' + index + '.type" name="parameters[' + index + '].type">';
+                    returnValue += '<option value="1">Integer</option>';
+                    returnValue += '<option value="2">Float</option>';
+                    returnValue += '<option value="0">String</option>';
+                returnValue += '</select>';
+            returnValue += '</div>';
+            returnValue += '<div class="form-group">';
+                returnValue += '<label>Default value</label>';
+                returnValue += '<input class="form-control" type="text" id="parameters' + index + '.defaultValue" name="parameters[' + index + '].defaultValue">';
+            returnValue += '</div>';
+            returnValue += '<div class="form-group">';
+                returnValue += '<label>Minimum value</label>';
+                returnValue += '<input class="form-control" type="text" id="parameters' + index + '.minValue" name="parameters[' + index + '].minValue">';
+            returnValue += '</div>';
+            returnValue += '<div class="form-group">';
+                returnValue += '<label>Maximum value</label>';
+                returnValue += '<input class="form-control" type="text" id="parameters' + index + '.maxValue" name="parameters[' + index + '].maxValue">';
+            returnValue += '</div>';
+            returnValue += '<div class="form-group">';
+                returnValue += '<div class="checkbox">';
+                    returnValue += '<label>';
+                        returnValue += '<input class="checkbox-optimize" type="checkbox" checked value="true" id="parameters' + index + '.optimizable" name="parameters[' + index + '].optimizable">Optimizable';
+                    returnValue += '</label>';
+                returnValue += '</div>';
+            returnValue += '</div>';
+        returnValue += '</div>';
+
+        $("#program-parameters").append(returnValue);
     });
-*/
-/*
-    //Automatically submit graph form on change
-    $('.cluster-parameter-sliders').on('change', 'input', function (e) {
-        $(this).closest('form').find('.range-value').each(function() {
-            if ($(this).html() == '') {
-                return;
-            }
-        });
-        var form = $(this).closest('form');
-        $(this).closest('form').submit();
-    });
-
-    //Clustering graph form submit
-    $('.cluster-parameter-sliders').on('submit', '.parameter-cluster-form', function(e) {
-        e.preventDefault();
-
-        //Load in clustering
-        var container = $('#load-clustering');
-        var name = container.data('name');
-        var program = container.data('program');
-        var data = container.data('data');
-        var paramset = container.data('paramset');
-
-        var parameters = [];
-
-        $(this).find('.range-value').each(function(n) {
-            var parameterName = $(this).parent().find('input[type=hidden]').val();
-            var value = $(this).html();
-            parameters[n] = parameterName + "=" + value;
-        });
-
-        $.ajax({
-            url: "/results/load-clustering?name=" + name + "&program=" + program + "&data=" + data + "&param-set=" + parameters.join(','),
-            type: 'get',
-            dataType: 'html',
-            success: function(data) {
-                container.html(data);
-            }
-        });
-    });*/
 });
