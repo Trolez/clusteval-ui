@@ -24,6 +24,9 @@ public class ProgramCreationParameter {
     @Size(min = 1, message = "Please specify a maximum value for the program parameter")
     private String maxValue;
 
+    @Size(min = 1, message = "Please specify at least one option for the program parameter")
+    private String options;
+
     private boolean optimizable;
 
     public String getName() {
@@ -72,6 +75,14 @@ public class ProgramCreationParameter {
 
     public void setMaxValue(String maxValue) {
         this.maxValue = maxValue;
+    }
+
+    public String getOptions() {
+        return options;
+    }
+
+    public void setOptions(String options) {
+        this.options = options;
     }
 
     public boolean getOptimizable() {

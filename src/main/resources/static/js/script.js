@@ -596,6 +596,7 @@ $(document).ready(function() {
         });
     });
 
+    //Program upload - Add parameter
     $('.add-program-parameter').click(function() {
         var index = $('#program-parameters > div').length;
 
@@ -610,7 +611,7 @@ $(document).ready(function() {
             returnValue += '</div>';
             returnValue += '<div class="form-group">';
                 returnValue += '<label>Parameter type</label>';
-                returnValue += '<select id="parameters' + index + '.type" name="parameters[' + index + '].type">';
+                returnValue += '<select class="parameter-type" id="parameters' + index + '.type" name="parameters[' + index + '].type">';
                     returnValue += '<option value="1">Integer</option>';
                     returnValue += '<option value="2">Float</option>';
                     returnValue += '<option value="0">String</option>';
@@ -620,13 +621,21 @@ $(document).ready(function() {
                 returnValue += '<label>Default value</label>';
                 returnValue += '<input class="form-control" type="text" id="parameters' + index + '.defaultValue" name="parameters[' + index + '].defaultValue">';
             returnValue += '</div>';
-            returnValue += '<div class="form-group">';
-                returnValue += '<label>Minimum value</label>';
-                returnValue += '<input class="form-control" type="text" id="parameters' + index + '.minValue" name="parameters[' + index + '].minValue">';
+            returnValue += '<div class="parameter-non-string">'
+                returnValue += '<div class="form-group">';
+                    returnValue += '<label>Minimum value</label>';
+                    returnValue += '<input class="form-control" type="text" id="parameters' + index + '.minValue" name="parameters[' + index + '].minValue">';
+                returnValue += '</div>';
+                returnValue += '<div class="form-group">';
+                    returnValue += '<label>Maximum value</label>';
+                    returnValue += '<input class="form-control" type="text" id="parameters' + index + '.maxValue" name="parameters[' + index + '].maxValue">';
+                returnValue += '</div>';
             returnValue += '</div>';
-            returnValue += '<div class="form-group">';
-                returnValue += '<label>Maximum value</label>';
-                returnValue += '<input class="form-control" type="text" id="parameters' + index + '.maxValue" name="parameters[' + index + '].maxValue">';
+            returnValue += '<div class="parameter-string" style="display: none;">'
+                returnValue += '<div class="form-group">';
+                    returnValue += '<label>Options</label>';
+                    returnValue += '<input class="form-control" type="text" id="parameters' + index + '.options" name="parameters[' + index + '].options" disabled>';
+                returnValue += '</div>';
             returnValue += '</div>';
             returnValue += '<div class="form-group">';
                 returnValue += '<div class="checkbox">';
@@ -639,4 +648,25 @@ $(document).ready(function() {
 
         $("#program-parameters").append(returnValue);
     });
+
+    //Show/hide form elements based on choice of parameter type
+    $('#program-parameters').on('change', '.parameter-type', function() {
+        var value = $(this).val();
+        if (value == 0) {
+            $(this).closest('.box').find('.parameter-non-string').hide();
+            $(this).closest('.box').find('.parameter-non-string input').prop('disabled', true);
+
+            $(this).closest('.box').find('.parameter-string').show();
+            $(this).closest('.box').find('.parameter-string input').prop('disabled', false);
+        } else {
+            $(this).closest('.box').find('.parameter-non-string').show();
+            $(this).closest('.box').find('.parameter-non-string input').prop('disabled', false);
+
+            $(this).closest('.box').find('.parameter-string input').prop('disabled', true);
+            $(this).closest('.box').find('.parameter-string').hide();
+        }
+    });
+
+    //On page load, trigger change on parameter type selects
+    $('#program-parameters .parameter-type').trigger('change');
 });

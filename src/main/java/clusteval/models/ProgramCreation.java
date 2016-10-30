@@ -16,7 +16,6 @@ public class ProgramCreation {
     @Size(min = 1, message = "Please specify an alias for the program parameter")
     private String alias;
 
-    @Size(min = 1, message = "Please specify an invocation format for the program")
     private String invocationFormat;
 
     @HasOneFile(message = "Please provide a executable file containing the program")
@@ -24,6 +23,10 @@ public class ProgramCreation {
 
     @Valid
     private ArrayList<ProgramCreationParameter> parameters;
+
+    private ArrayList<String> compatibleDataSetFormats = new ArrayList<String>();
+
+    private String outputFormat = "";
 
     public String getName() {
         return name;
@@ -63,5 +66,21 @@ public class ProgramCreation {
 
     public void setParameters(ArrayList<ProgramCreationParameter> parameters) {
         this.parameters = parameters;
+    }
+
+    public ArrayList<String> getCompatibleDataSetFormats() {
+        return compatibleDataSetFormats;
+    }
+
+    public void setCompatibleDataSetFormats(ArrayList<String> compatibleDataSetFormats) {
+        this.compatibleDataSetFormats = compatibleDataSetFormats;
+    }
+
+    public String getOutputFormat() {
+        return outputFormat;
+    }
+
+    public void setOutputFormat(String outputFormat) {
+        this.outputFormat = outputFormat;
     }
 }

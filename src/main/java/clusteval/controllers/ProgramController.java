@@ -152,6 +152,11 @@ public class ProgramController {
 
     @RequestMapping(value="/programs/upload")
     public String uploadProgram(ProgramCreation programCreation, Model model) {
+        try {
+            populateModel(model);
+        } catch (ConnectException e) {
+            return "runs/notRunning";
+        }
         return "programs/upload";
     }
 
@@ -159,6 +164,11 @@ public class ProgramController {
     public String uploadProgram(@Valid ProgramCreation programCreation, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         //Return to form if there were validation errors
         if (bindingResult.hasErrors()) {
+            try {
+                populateModel(model);
+            } catch (ConnectException e) {
+                return "runs/notRunning";
+            }
             return "programs/upload";
         }
 
@@ -201,10 +211,17 @@ public class ProgramController {
         //Delete temporarily copied file
         FileUtils.deleteQuietly(temporaryFile);
 
-        if (isRProgram) {
-            System.err.println("This is an R program");
-        } else {
-            System.err.println("This is NOT an R program");
+        if (!isRProgram) {
+            //Invocation format is required for this type of program
+            if (programCreation.getInvocationFormat().isEmpty()) {
+                try {
+                    populateModel(model);
+                } catch (ConnectException e) {
+                    return "runs/notRunning";
+                }
+                bindingResult.rejectValue("invocationFormat", "invocationFormat", "Invocation format is required for this type of program");
+                return "programs/upload";
+            }
         }
 
         String programFileName = "";
@@ -229,11 +246,11 @@ public class ProgramController {
             FileWriter writer = null;
 
             if (isRProgram) {
-                Path path = Paths.get(getPath() + "/programsTest");
+                Path path = Paths.get(getPath() + "/programs");
 
                 Files.copy(programCreation.getExecutableFile().getInputStream(), path.resolve(programCreation.getExecutableFile().getOriginalFilename()));
 
-                File programConfigFile = new File(getPath() + "/programsTest/configs/" + programCreation.getName() + ".config");
+                File programConfigFile = new File(getPath() + "/programs/configs/" + programCreation.getName() + ".config");
                 writer = new FileWriter(programConfigFile);
 
                 String typeName = "";
@@ -247,8 +264,8 @@ public class ProgramController {
                 writer.write("optimizationParameters = " + StringUtils.join(optimizableParameters, ',') + "\n");
                 writer.write("alias = " + programCreation.getAlias() + "\n\n");
             } else {
-                Path path = Paths.get(getPath() + "/programsTest/" + programCreation.getName());
-                File filePath = new File(getPath() + "/programsTest/" + programCreation.getName());
+                Path path = Paths.get(getPath() + "/programs/" + programCreation.getName());
+                File filePath = new File(getPath() + "/programs/" + programCreation.getName());
 
                 if (!filePath.exists()) {
                     filePath.mkdir();
@@ -256,15 +273,15 @@ public class ProgramController {
 
                 Files.copy(programCreation.getExecutableFile().getInputStream(), path.resolve(programCreation.getExecutableFile().getOriginalFilename()));
 
-                File programConfigFile = new File(getPath() + "/programsTest/configs/" + programCreation.getName() + ".config");
+                File programConfigFile = new File(getPath() + "/programs/configs/" + programCreation.getName() + ".config");
                 writer = new FileWriter(programConfigFile);
 
                 //Write basic program configuration
                 writer.write("program = " + programCreation.getName() + "/" + programCreation.getExecutableFile().getOriginalFilename() + "\n");
                 writer.write("parameters = " + StringUtils.join(parameters, ',') + "\n");
                 writer.write("optimizationParameters = " + StringUtils.join(optimizableParameters, ',') + "\n");
-                //writer.write("compatibleDataSetFormats = ");
-                //writer.write("outputFormat = ");
+                writer.write("compatibleDataSetFormats = " + StringUtils.join(programCreation.getCompatibleDataSetFormats(), ',') + "\n");
+                writer.write("outputFormat = " + programCreation.getOutputFormat() + "\n");
                 writer.write("alias = " + programCreation.getAlias() + "\n\n");
                 writer.write("[invocationFormat]\n");
                 writer.write("invocationFormat = " + programCreation.getInvocationFormat());
@@ -278,8 +295,12 @@ public class ProgramController {
                     writer.write("desc = " + parameter.getDescription() + "\n");
                     writer.write("type = " + parameter.getType() + "\n");
                     writer.write("def = " + parameter.getDefaultValue() + "\n");
-                    writer.write("minValue = " + parameter.getMinValue() + "\n");
-                    writer.write("maxValue = " + parameter.getMaxValue());
+                    if (parameter.getType() == 0) {
+                        writer.write("options = " + parameter.getOptions());
+                    } else {
+                        writer.write("minValue = " + parameter.getMinValue() + "\n");
+                        writer.write("maxValue = " + parameter.getMaxValue());
+                    }
                 }
             }
 
@@ -301,6 +322,24 @@ public class ProgramController {
         fos.write(file.getBytes());
         fos.close();
         return convertedFile;
+    }
+
+    private void populateModel(Model model) throws ConnectException {
+        try {
+            BackendClient backendClient = getBackendClient();
+
+            ArrayList<String> compatibleDataSetFormats = new ArrayList<String>(backendClient.getDataSetFormats());
+            ArrayList<String> outputFormats = new ArrayList<String>(backendClient.getRunResultFormats());
+
+            Collections.sort(compatibleDataSetFormats, String.CASE_INSENSITIVE_ORDER);
+            Collections.sort(outputFormats, String.CASE_INSENSITIVE_ORDER);
+
+            model.addAttribute("compatibleDataSetFormats", compatibleDataSetFormats);
+            model.addAttribute("outputFormats", outputFormats);
+        } catch (ConnectException e) {
+            throw(e);
+        } catch (Exception e) {
+        }
     }
 
     private BackendClient getBackendClient() throws ConnectException, Exception {
