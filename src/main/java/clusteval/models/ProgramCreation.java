@@ -4,6 +4,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 
 public class ProgramCreation {
     @Size(min = 1, message = "Please specify a name for the program")
+    @Pattern(regexp="([0-9|a-z|A-Z|\\_])+", message = "Please only include letters a-z, numbers 0-9 and underscores (_) in the name")
     private String name;
 
     @Size(min = 1, message = "Please specify an alias for the program parameter")

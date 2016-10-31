@@ -3,8 +3,11 @@
 <body>
     <div layout:fragment="content">
         <h1>Results</h1>
-        <div class="box" th:each="result : ${results}">
-            <a th:href="@{/results/show(name=${result})}" th:text="${result}"></a>
+        <div th:each="result : ${results}">
+            <a class="gray-button full-width" th:href="@{/results/show(name=${result.name})}">
+                <span class="pull-right" th:text="${result.runType}"></span>
+                <i class="fa fa-bar-chart"></i> <span th:text="${result.name}"></span>
+            </a>
         </div>
     </div>
 </body>

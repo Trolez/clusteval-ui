@@ -37,8 +37,6 @@ public class RunCreation {
     @NotBlankOrNull(message = "Please select one or more programs for the run")
     private ArrayList<String> programs = new ArrayList<String>();
 
-    private ArrayList<HashMap<String,String>> programParameters = new ArrayList<HashMap<String,String>>();
-
     @NotBlankOrNull(message = "Please select one or more data sets for the run")
     private ArrayList<String> dataSets = new ArrayList<String>();
 

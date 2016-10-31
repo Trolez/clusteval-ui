@@ -300,6 +300,16 @@ public class RunController {
 
             if (!file.exists()) {
                 file.createNewFile();
+            } else {
+                //Prevent existing runs from being overwritten, show user error
+                bindingResult.rejectValue("name", "name", "A run with this name already exists");
+                try {
+                    populateModel(model);
+                } catch (ConnectException e) {
+                    return "runs/notRunning";
+                } catch (Exception e) {
+                }
+                return "runs/create";
             }
 
             FileWriter writer = new FileWriter(file);

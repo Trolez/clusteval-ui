@@ -58,11 +58,14 @@ public class ResultController {
         String sql = "SELECT * FROM run_results " +
                       "INNER JOIN run_types ON (run_results.run_type_id = run_types.id)";
 
-        ArrayList<String> results = new ArrayList<String>();
+        ArrayList<Result> results = new ArrayList<Result>();
 
     	List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
     	for (Map row : rows) {
-    		results.add(new String((byte[])row.get("unique_run_identifier")));
+            Result result = new Result();
+            result.setName(new String((byte[])row.get("unique_run_identifier")));
+            result.setRunType(new String((byte[])row.get("name")));
+    		results.add(result);
     	}
 
         model.addAttribute("results", results);
