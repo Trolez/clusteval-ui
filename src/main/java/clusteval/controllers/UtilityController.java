@@ -15,8 +15,12 @@ import org.springframework.beans.factory.annotation.*;
 
 import de.clusteval.serverclient.BackendClient;
 
+//Utility classes
 import de.clusteval.data.distance.DistanceMeasure;
 import de.clusteval.data.dataset.format.DataSetFormat;
+import de.clusteval.data.dataset.format.DataSetFormatParser;
+import de.clusteval.run.result.format.RunResultFormat;
+import de.clusteval.run.result.format.RunResultFormatParser;
 
 import java.rmi.ConnectException;
 
@@ -48,7 +52,7 @@ public class UtilityController {
 
     @RequestMapping(value="/utilities/upload-distance-measure")
     public String uploadDistanceMeasure(Utility utility, Model model) {
-        utility.setTypeName("distance measure");
+        utility.setTypeName("Distance measure");
         return "utilities/uploadDistanceMeasure";
     }
 
@@ -63,13 +67,16 @@ public class UtilityController {
             if (utility.getFile().isEmpty()) {
                 redirectAttributes.addFlashAttribute("failure", "Failed to store empty file");
             }
-            Path path = Paths.get(getPath() + "/suppTest/distanceMeasures/");
+            Path path = Paths.get(getPath() + "/supp/distanceMeasures/");
 
-            uploadUtility(utility.getFile(), path, utility.getName(), DistanceMeasure.class);
-
-            redirectAttributes.addFlashAttribute("success", "Distance measure uploaded successfully");
+            if (uploadUtility(utility.getFile(), path, new Class[] { DistanceMeasure.class })) {
+                redirectAttributes.addFlashAttribute("success", "Distance measure uploaded successfully");
+            } else {
+                redirectAttributes.addFlashAttribute("failure", "The jar file contained invalid classes");
+            }
         } catch (IOException e) {
             redirectAttributes.addFlashAttribute("failure", "Failed to upload distance measure");
+            e.printStackTrace();
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("failure", "Failed to upload distance measure");
         }
@@ -77,7 +84,74 @@ public class UtilityController {
         return "redirect:/utilities/upload-distance-measure";
     }
 
-    private void uploadUtility(MultipartFile file, Path path, String name, Class utilityClass) throws IOException {
+    @RequestMapping(value="/utilities/upload-data-set-format")
+    public String uploadDataSetFormat(Utility utility, Model model) {
+        utility.setTypeName("Data set format");
+        return "utilities/uploadDataSetFormat";
+    }
+
+    @RequestMapping(value="/utilities/upload-data-set-format", method=RequestMethod.POST)
+    public String uploadDataSetFormat(@Valid Utility utility, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "utilities/uploadDataSetFormat";
+        }
+
+        try {
+            //Copy data set format file to repository
+            if (utility.getFile().isEmpty()) {
+                redirectAttributes.addFlashAttribute("failure", "Failed to store empty file");
+            }
+            Path path = Paths.get(getPath() + "/supp/formats/dataset");
+
+            if (uploadUtility(utility.getFile(), path, new Class[] { DataSetFormat.class, DataSetFormatParser.class })) {
+                redirectAttributes.addFlashAttribute("success", "Data set format uploaded successfully");
+            } else {
+                redirectAttributes.addFlashAttribute("failure", "The jar file contained invalid classes");
+            }
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("failure", "Failed to upload data set format");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("failure", "Failed to upload data set format");
+        }
+
+        return "redirect:/utilities/upload-data-set-format";
+    }
+
+    @RequestMapping(value="/utilities/upload-run-result-format")
+    public String uploadRunResultFormat(Utility utility, Model model) {
+        utility.setTypeName("Run result format");
+        return "utilities/uploadRunResultFormat";
+    }
+
+    @RequestMapping(value="/utilities/upload-run-result-format", method=RequestMethod.POST)
+    public String uploadRunResultFormat(@Valid Utility utility, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "utilities/uploadRunResultFormat";
+        }
+
+        try {
+            //Copy run result format file to repository
+            if (utility.getFile().isEmpty()) {
+                redirectAttributes.addFlashAttribute("failure", "Failed to store empty file");
+            }
+            Path path = Paths.get(getPath() + "/supp/formats/runresult");
+
+            if (uploadUtility(utility.getFile(), path, new Class[] { RunResultFormat.class, RunResultFormatParser.class })) {
+                redirectAttributes.addFlashAttribute("success", "Run result format uploaded successfully");
+            } else {
+                redirectAttributes.addFlashAttribute("failure", "The jar file contained invalid classes");
+            }
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("failure", "Failed to upload run result format");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("failure", "Failed to upload run result format");
+        }
+
+        return "redirect:/utilities/upload-run-result-format";
+    }
+
+    private boolean uploadUtility(MultipartFile file, Path path, Class[] utilityClasses) throws IOException {
+        boolean valid = false;
         Files.copy(file.getInputStream(), path.resolve(file.getOriginalFilename()));
 
         File temporaryFile = convertToFile(file);
@@ -88,31 +162,45 @@ public class UtilityController {
         URL[] urls = { new URL("jar:file:" + convertToFile(file).getAbsolutePath() + "!/") };
         URLClassLoader cl = URLClassLoader.newInstance(urls);
 
-        while (entries.hasMoreElements()) {
-            JarEntry entry = entries.nextElement();
-            if(entry.isDirectory() || !entry.getName().endsWith(".class")){
-                continue;
-            }
-
-            // -6 because of .class
-            String className = entry.getName().substring(0, entry.getName().length() - 6);
-            className = className.replace('/', '.');
-            try {
-                Class c = cl.loadClass(className);
-
-                if (utilityClass.isAssignableFrom(c)) {
-                    //The class in the jar is valid
-                } else {
-                    //The class in the jar is invalid
-                    FileUtils.deleteQuietly(new File(path.resolve(file.getOriginalFilename()).toString()));
+        for (int i = 0; i < utilityClasses.length; i++){
+            Class utilityClass = utilityClasses[i];
+            while (entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                if(entry.isDirectory() || !entry.getName().endsWith(".class")){
+                    continue;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+
+                // -6 because of .class
+                String className = entry.getName().substring(0, entry.getName().length() - 6);
+                className = className.replace('/', '.');
+                try {
+                    Class c = cl.loadClass(className);
+
+                    if (utilityClass.isAssignableFrom(c)) {
+                        //The class in the jar is valid
+                        valid = true;
+                        break;
+                    } else {
+                        //The class in the jar is invalid
+                        valid = false;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (!valid) {
+                //Delete temporarily copied files
+                FileUtils.deleteQuietly(temporaryFile);
+                FileUtils.deleteQuietly(new File(path.resolve(file.getOriginalFilename()).toString()));
+
+                return false;
             }
         }
 
         //Delete temporarily copied file
         FileUtils.deleteQuietly(temporaryFile);
+
+        return valid;
     }
 
     private File convertToFile(MultipartFile file) throws IOException {

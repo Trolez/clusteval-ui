@@ -1,0 +1,9 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<body>
+    <div layout:fragment="content">
+        <form class="run-creation" th:action="@{/utilities/upload-run-result-format}" method="post" th:object="${utility}" enctype="multipart/form-data" th:include="utilities/form :: utility-form">
+        </form>
+    </div>
+</body>
+</html>

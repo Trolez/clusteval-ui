@@ -10,9 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class Utility {
     private String typeName;
 
-    @Size(min = 1, message = "Please specify a name")
-    private String name;
-
     @ContentTypeJar(message = "Please provide a .jar file")
     private MultipartFile file;
 
@@ -22,14 +19,6 @@ public class Utility {
 
     public void setTypeName(String typeName) {
         this.typeName = typeName;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public MultipartFile getFile() {
