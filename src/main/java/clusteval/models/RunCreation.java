@@ -271,7 +271,7 @@ public class RunCreation {
         //Randomizers
         ArrayList<Randomizer> randomizers = new ArrayList<Randomizer>();
         try {
-            BufferedReader br = new BufferedReader(new FileReader(path + "/runs/" + fileName + ".run"));;
+            BufferedReader br = new BufferedReader(new FileReader(path + "/runs/" + fileName + ".run"));
             String currentLine;
 
             while ((currentLine = br.readLine()) != null) {
@@ -334,20 +334,17 @@ public class RunCreation {
                         if (currentLine.startsWith("maxValue")) {
                             programParameter.setMaxValue(line);
                         }
-                        if (currentLine.startsWith("defaultValue")) {
+                        if (currentLine.startsWith("def")) {
                             programParameter.setValue(line);
                         }
                         if (currentLine.startsWith("options")) {
                             programParameter.setOptions(line);
                         }
                     }
-                    System.err.println();
                 }
             }
         } catch (Exception e) {
         }
-
-        setProgramSettings(programs);
     }
 
     public String toString(String path) {

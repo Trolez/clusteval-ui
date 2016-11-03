@@ -634,7 +634,7 @@ $(document).ready(function() {
             returnValue += '<div class="parameter-string" style="display: none;">'
                 returnValue += '<div class="form-group">';
                     returnValue += '<label>Options</label>';
-                    returnValue += '<input class="form-control" type="text" id="parameters' + index + '.options" name="parameters[' + index + '].options" disabled>';
+                    returnValue += '<select disabled multiple class="tags form-control" id="parameters' + index + '.options" name="parameters[' + index + '].options" style="display:block; width:100%;"></select>';
                 returnValue += '</div>';
             returnValue += '</div>';
             returnValue += '<div class="form-group">';
@@ -647,6 +647,11 @@ $(document).ready(function() {
         returnValue += '</div>';
 
         $("#program-parameters").append(returnValue);
+
+        $('.tags').select2({
+            tags: true,
+            tokenSeparators: [',', ' ']
+        });
     });
 
     //Show/hide form elements based on choice of parameter type
@@ -658,15 +663,30 @@ $(document).ready(function() {
 
             $(this).closest('.box').find('.parameter-string').show();
             $(this).closest('.box').find('.parameter-string input').prop('disabled', false);
+            $(this).closest('.box').find('.parameter-string select').prop('disabled', false);
         } else {
             $(this).closest('.box').find('.parameter-non-string').show();
             $(this).closest('.box').find('.parameter-non-string input').prop('disabled', false);
 
-            $(this).closest('.box').find('.parameter-string input').prop('disabled', true);
             $(this).closest('.box').find('.parameter-string').hide();
+            $(this).closest('.box').find('.parameter-string input').prop('disabled', true);
+            $(this).closest('.box').find('.parameter-string select').prop('disabled', true);
         }
     });
 
     //On page load, trigger change on parameter type selects
     $('#program-parameters .parameter-type').trigger('change');
+
+    $('.tags').select2({
+        tags: true,
+        tokenSeparators: [',', ' ']
+    });
+
+    //Delete program button click
+    $('#programs .delete-program').click(function() {
+        if (confirm("Delete this program?")) {
+            $.get('/programs/delete?name=' + $(this).data('name'));
+            $(this).parent().fadeOut();
+        }
+    });
 });

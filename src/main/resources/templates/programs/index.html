@@ -15,6 +15,12 @@
             Collapse all
         </a>
         <div class="box program-container" th:each="program: ${programs}">
+            <span class="delete-button delete-program" th:attr="data-name=${program}">
+                <i class="fa fa-trash"></i>
+            </span>
+            <a class="edit-button" th:href="@{/programs/edit(name=${program})}">
+                <i class="fa fa-edit"></i>
+            </a>
             <span class="toggle">
                 <i class="fa fa-expand"></i>
             </span>

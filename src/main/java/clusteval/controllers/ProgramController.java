@@ -315,6 +315,63 @@ public class ProgramController {
         return "redirect:/programs/upload";
     }
 
+    @RequestMapping(value="/programs/edit")
+    public String editProgram(ProgramCreation programCreation, Model model, @RequestParam(value="name", required=true) String name) {
+        try {
+            populateModel(model);
+        } catch (ConnectException e) {
+            return "runs/notRunning";
+        }
+
+        programCreation.parse(getPath(), name);
+
+        return "programs/edit";
+    }
+
+    @RequestMapping(value="/programs/edit", method=RequestMethod.POST)
+    public String editProgram(@Valid ProgramCreation programCreation, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        //Return to form if there were validation errors
+        if (bindingResult.hasErrors()) {
+            try {
+                populateModel(model);
+            } catch (ConnectException e) {
+                return "runs/notRunning";
+            }
+            return "programs/upload";
+        }
+
+        return "redirect:/programs/edit";
+    }
+
+    @RequestMapping(value="/programs/delete")
+    public String deleteProgram(@RequestParam(value="name", required=true) String name) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(getPath() + "/programs/configs/" + name + ".config"));;
+            String currentLine;
+
+            while ((currentLine = br.readLine()) != null) {
+                if (currentLine.startsWith("type")) {
+                    //Delete program jar file
+                    File jarFile = new File(getPath() + "/programs/" + currentLine.split("=")[1].trim() + ".jar");
+
+                    jarFile.delete();
+                }
+                if (currentLine.startsWith("program")) {
+                    //Delete program folder
+                    String directoryName = currentLine.split("=")[1].split("/")[0].trim();
+                    File directory = new File(getPath() + "/programs/" + directoryName);
+                    FileUtils.deleteDirectory(directory);
+                }
+            }
+
+            //Delete program configuration file
+            File configurationFile = new File(getPath() + "/programs/configs/" + name + ".config");
+            configurationFile.delete();
+        } catch (Exception e) {}
+
+        return "programs/index";
+    }
+
     private File convertToFile(MultipartFile file) throws IOException {
         File convertedFile = new File(file.getOriginalFilename());
         convertedFile.createNewFile();

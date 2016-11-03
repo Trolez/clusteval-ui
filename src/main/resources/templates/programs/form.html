@@ -1,0 +1,116 @@
+<div th:fragment="program-form">
+    <div class="form-group">
+        <label>
+            Name of program
+            <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+        </label>
+        <input type="text" name="name" th:field="*{name}" class="form-control" th:errorclass="has-error"><br>
+    </div>
+    <div class="form-group">
+        <label>
+            Alias of program
+            <span class="error" th:if="${#fields.hasErrors('alias')}" th:errors="*{alias}">
+        </label>
+        <input type="text" name="alias" th:field="*{alias}" class="form-control" th:errorclass="has-error"><br>
+    </div>
+    <div class="form-group">
+        <label>
+            Invocation format
+            <span class="error" th:if="${#fields.hasErrors('invocationFormat')}" th:errors="*{invocationFormat}">
+        </label>
+        <input type="text" name="invocationFormat" th:field="*{invocationFormat}" class="form-control" th:errorclass="has-error"><br>
+    </div>
+    <div class="form-group">
+        <label>
+            Program executable file
+            <span class="error" th:if="${#fields.hasErrors('executableFile')}" th:errors="*{executableFile}">
+        </label>
+        <input type="file" name="executableFile">
+    </div>
+    <div class="form-group">
+        <label>
+            Compatible data set formats
+        </label>
+        <select class="select2-multiple" multiple="multiple" name="compatibleDataSetFormats">
+            <option th:each="format : ${compatibleDataSetFormats}" th:value="${format}" th:text="${format}" th:selected="${#lists.contains(programCreation.compatibleDataSetFormats, format)}">
+        </select>
+    </div>
+    <div class="form-group">
+        <label>
+            Output format
+        </label>
+        <select class="select2-multiple" name="outputFormat">
+            <option th:each="outputFormat : ${outputFormats}" th:value="${outputFormat}" th:text="${outputFormat}" th:selected="${outputFormat} eq ${programCreation.outputFormat}">
+        </select>
+    </div>
+    <div id="program-parameters">
+        <div class="box" th:each="parameter, parameterStat : *{parameters}">
+            <div class="form-group">
+                <label>
+                    Parameter name
+                    <span class="error" th:if="${#fields.hasErrors('parameters[__${parameterStat.index}__].name')}" th:errors="*{parameters[__${parameterStat.index}__].name}"></span>
+                </label>
+                <input type="text" class="form-control" name="name" th:field="*{parameters[__${parameterStat.index}__].name}" th:errorclass="has-error">
+            </div>
+            <div class="form-group">
+                <label>
+                    Parameter description
+                    <span class="error" th:if="${#fields.hasErrors('parameters[__${parameterStat.index}__].description')}" th:errors="*{parameters[__${parameterStat.index}__].description}"></span>
+                </label>
+                <input type="text" class="form-control" name="description" th:field="*{parameters[__${parameterStat.index}__].description}" th:errorclass="has-error">
+            </div>
+            <div class="form-group">
+                <label>Parameter type</label>
+                <select class="parameter-type" name="type" th:field="*{parameters[__${parameterStat.index}__].type}" th:errorclass="has-error">
+                    <option value="1">Integer</option>
+                    <option value="2">Float</option>
+                    <option value="0">String</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>
+                    Default value
+                    <span class="error" th:if="${#fields.hasErrors('parameters[__${parameterStat.index}__].defaultValue')}" th:errors="*{parameters[__${parameterStat.index}__].defaultValue}"></span>
+                </label>
+                <input type="text" class="form-control" name="defaultValue" th:field="*{parameters[__${parameterStat.index}__].defaultValue}" th:errorclass="has-error">
+            </div>
+            <div class="parameter-non-string">
+                <div class="form-group">
+                    <label>
+                        Minimum value
+                        <span class="error" th:if="${#fields.hasErrors('parameters[__${parameterStat.index}__].minValue')}" th:errors="*{parameters[__${parameterStat.index}__].minValue}"></span>
+                    </label>
+                    <input type="text" class="form-control" name="minValue" th:field="*{parameters[__${parameterStat.index}__].minValue}" th:errorclass="has-error">
+                </div>
+                <div class="form-group">
+                    <label>
+                        Maximum value
+                        <span class="error" th:if="${#fields.hasErrors('parameters[__${parameterStat.index}__].maxValue')}" th:errors="*{parameters[__${parameterStat.index}__].maxValue}"></span>
+                    </label>
+                    <input type="text" class="form-control" name="maxValue" th:field="*{parameters[__${parameterStat.index}__].maxValue}" th:errorclass="has-error">
+                </div>
+            </div>
+            <div class="parameter-string">
+                <div class="form-group">
+                    <label>
+                        Options
+                        <span class="error" th:if="${#fields.hasErrors('parameters[__${parameterStat.index}__].options')}" th:errors="*{parameters[__${parameterStat.index}__].options}"></span>
+                    </label>
+                    <!--<input type="text" class="form-control" name="options" th:field="*{parameters[__${parameterStat.index}__].options}" th:errorclass="has-error">-->
+                    <select multiple class="tags" name="options" th:field="*{parameters[__${parameterStat.index}__].options}" th:errorclass="has-error"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input class="checkbox-optimize" type="checkbox" checked th:field="*{parameters[__${parameterStat.index}__].optimizable}" th:errorclass="has-error">Optimizable
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a class="add-program-parameter gray-button"><i class="fa fa-plus"></i> Add program parameter</a>
+    <div class="form-group">
+        <input type="submit" value="Upload">
+    </div>
+</div>
