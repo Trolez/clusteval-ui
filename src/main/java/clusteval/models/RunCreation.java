@@ -345,6 +345,8 @@ public class RunCreation {
             }
         } catch (Exception e) {
         }
+
+        setProgramSettings(programs);
     }
 
     public String toString(String path) {

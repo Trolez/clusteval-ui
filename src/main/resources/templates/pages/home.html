@@ -21,31 +21,46 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-6">
-                <div class="box">
-                    <div class="pull-right">
-                        <a href="/runs" class="btn btn-default">See all runs</a>
-                        <a href="/runs/create" class="btn btn-success">Create new run</a>
+            <div class="col-md-4">
+                <div class="basic-stat">
+                    <div class="stat-count" th:text="${numberOfRuns}"></div>
+                    <div class="stat-name">Runs available</div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a href="/runs" class="btn btn-default">See all runs</a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="/runs/create" class="btn btn-success">Create new run</a>
+                        </div>
                     </div>
-                    There are currently <span th:text="${numberOfRuns}"></span> runs available.
                 </div>
             </div>
-            <div class="col-sm-6">
-                <div class="box">
-                    <div class="pull-right">
-                        <a href="/programs" class="btn btn-default">See all programs</a>
-                        <a href="/programs/upload" class="btn btn-success">Upload program</a>
+            <div class="col-md-4">
+                <div class="basic-stat">
+                    <div class="stat-count" th:text="${numberOfProgramConfigs}"></div>
+                    <div class="stat-name">Program configuration available</div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a href="/programs" class="btn btn-default">See all programs</a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="/programs/upload" class="btn btn-success">Upload program</a>
+                        </div>
                     </div>
-                    There are currently <span th:text="${numberOfProgramConfigs}"></span> program configurations available.
                 </div>
             </div>
-            <div class="col-sm-6">
-                <div class="box">
-                    <div class="pull-right">
-                        <a href="/data" class="btn btn-default">See all data</a>
-                        <a href="/data/upload" class="btn btn-success">Upload data</a>
+            <div class="col-md-4">
+                <div class="basic-stat">
+                    <div class="stat-count" th:text="${numberOfProgramConfigs}"></div>
+                    <div class="stat-name">Data configurations available</div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a href="/data" class="btn btn-default">See all data</a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="/data/upload" class="btn btn-success">Upload data</a>
+                        </div>
                     </div>
-                    There are currently <span th:text="${numberOfDataConfigs}"></span> data configurations available.
                 </div>
             </div>
         </div>
