@@ -21,6 +21,9 @@ import de.clusteval.data.dataset.format.DataSetFormat;
 import de.clusteval.data.dataset.format.DataSetFormatParser;
 import de.clusteval.run.result.format.RunResultFormat;
 import de.clusteval.run.result.format.RunResultFormatParser;
+import de.clusteval.data.dataset.type.DataSetType;
+import de.clusteval.data.statistics.DataStatistic;
+import de.clusteval.data.statistics.DataStatisticCalculator;
 
 import java.rmi.ConnectException;
 
@@ -29,6 +32,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.Enumeration;
 import java.util.jar.*;
 import java.net.URLClassLoader;
@@ -74,9 +78,10 @@ public class UtilityController {
             } else {
                 redirectAttributes.addFlashAttribute("failure", "The jar file contained invalid classes");
             }
+        } catch (FileAlreadyExistsException e) {
+            redirectAttributes.addFlashAttribute("failure", "Failed to upload distance measure. File already exists");
         } catch (IOException e) {
             redirectAttributes.addFlashAttribute("failure", "Failed to upload distance measure");
-            e.printStackTrace();
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("failure", "Failed to upload distance measure");
         }
@@ -108,6 +113,8 @@ public class UtilityController {
             } else {
                 redirectAttributes.addFlashAttribute("failure", "The jar file contained invalid classes");
             }
+        } catch (FileAlreadyExistsException e) {
+            redirectAttributes.addFlashAttribute("failure", "Failed to upload data set format. File already exists");
         } catch (IOException e) {
             redirectAttributes.addFlashAttribute("failure", "Failed to upload data set format");
         } catch (Exception e) {
@@ -141,6 +148,8 @@ public class UtilityController {
             } else {
                 redirectAttributes.addFlashAttribute("failure", "The jar file contained invalid classes");
             }
+        } catch (FileAlreadyExistsException e) {
+            redirectAttributes.addFlashAttribute("failure", "Failed to upload run result format. File already exists");
         } catch (IOException e) {
             redirectAttributes.addFlashAttribute("failure", "Failed to upload run result format");
         } catch (Exception e) {
@@ -148,6 +157,76 @@ public class UtilityController {
         }
 
         return "redirect:/utilities/upload-run-result-format";
+    }
+
+    @RequestMapping(value="/utilities/upload-data-set-type")
+    public String uploadDataSetType(Utility utility, Model model) {
+        utility.setTypeName("Data set type");
+        return "utilities/uploadDataSetType";
+    }
+
+    @RequestMapping(value="/utilities/upload-data-set-type", method=RequestMethod.POST)
+    public String uploadDataSetType(@Valid Utility utility, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "utilities/uploadDataSetType";
+        }
+
+        try {
+            //Copy data set type file to repository
+            if (utility.getFile().isEmpty()) {
+                redirectAttributes.addFlashAttribute("failure", "Failed to store empty file");
+            }
+            Path path = Paths.get(getPath() + "/supp/types/dataset");
+
+            if (uploadUtility(utility.getFile(), path, new Class[] { DataSetType.class })) {
+                redirectAttributes.addFlashAttribute("success", "Data set type uploaded successfully");
+            } else {
+                redirectAttributes.addFlashAttribute("failure", "The jar file contained invalid classes");
+            }
+        } catch (FileAlreadyExistsException e) {
+            redirectAttributes.addFlashAttribute("failure", "Failed to upload data set type. File already exists");
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("failure", "Failed to upload data set type");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("failure", "Failed to upload data set type");
+        }
+
+        return "redirect:/utilities/upload-data-set-type";
+    }
+
+    @RequestMapping(value="/utilities/upload-data-statistic")
+    public String uploadDataStatisitc(Utility utility, Model model) {
+        utility.setTypeName("Data statistic");
+        return "utilities/uploadDataStatistic";
+    }
+
+    @RequestMapping(value="/utilities/upload-data-statistic", method=RequestMethod.POST)
+    public String uploadDataStatistic(@Valid Utility utility, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "utilities/uploadDataStatistic";
+        }
+
+        try {
+            //Copy data statistic file to repository
+            if (utility.getFile().isEmpty()) {
+                redirectAttributes.addFlashAttribute("failure", "Failed to store empty file");
+            }
+            Path path = Paths.get(getPath() + "/supp/statistics/data");
+
+            if (uploadUtility(utility.getFile(), path, new Class[] { DataStatistic.class, DataStatisticCalculator.class })) {
+                redirectAttributes.addFlashAttribute("success", "Data statistic uploaded successfully");
+            } else {
+                redirectAttributes.addFlashAttribute("failure", "The jar file contained invalid classes");
+            }
+        } catch (FileAlreadyExistsException e) {
+            redirectAttributes.addFlashAttribute("failure", "Failed to upload data statistic. File already exists");
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("failure", "Failed to upload data statistic");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("failure", "Failed to upload data statistic");
+        }
+
+        return "redirect:/utilities/upload-data-statistic";
     }
 
     private boolean uploadUtility(MultipartFile file, Path path, Class[] utilityClasses) throws IOException {

@@ -12,6 +12,7 @@
 
 body { background-color: #c0c0c0; height: 100%; overflow-x: hidden; }
 a { cursor: pointer; }
+a:focus, a:hover { color: rgb(67, 80, 109); }
 .box { margin-top: 14px; padding: 7px; background: #efefef; border: 2px solid #c9c9c9; font-size: 16px; overflow: hidden; }
 .box .toggle,
 .edited-runs-container .toggle { display: inline-block; float: right; width: 25px; height: 25px; background: #f9f9f9; text-align: center; line-height: 25px; vertical-align: middle; cursor: pointer; border-radius: 3px; border: 1px solid #ccc; }
@@ -22,7 +23,7 @@ a { cursor: pointer; }
 .range-container .icon > div { position: relative; top: 50%; transform: translateY(-50%); }
 .range-container .range-input-locked { display: none; }
 .gray-button { text-decoration: none; display: inline-block; height: 35px; background: #f9f9f9; padding: 0px 10px; line-height: 35px; vertical-align: middle; cursor: pointer; border-radius: 3px; border: 1px solid #ccc; color: #333; margin: 5px 0px; }
-.gray-button:hover { color: #333; }
+.gray-button:focus { outline: none; border: 1px dashed #ccc; }
 .gray-button.full-width { display: block; }
 
 /* Header */
@@ -37,13 +38,15 @@ header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transfo
 #side-menu ul li a .icon { display: block; float: left; font-size: 24px; width: 100px; height: 75px; text-align: center; line-height: 100px; vertical-align: middle; color: #dedede; background: #0E1221; margin-right: 5px; }
 #side-menu ul li a .icon i { opacity: 0.25; display: block; position: relative; top: 50%; transform: translateY(-50%); }
 #side-menu ul li a span { position: absolute; bottom: 0px; left: 0px; width: 100%; text-align: center; opacity: 0; }
+#side-menu ul li a:hover span { color: #1b7cdb; text-shadow: 0px 0px 2px #266a6c; }
+#side-menu ul li a:hover .icon i { text-shadow: 0px 0px 1px #fff; }
 #side-menu .version { transition : all 0.4s ease-in-out; }
 #side-menu .version { position: absolute; bottom: 0px; width: 100%; text-align: center; color: rgba(255, 255, 255, 0.25); padding: 7px 0px; background-color: rgba(255, 255, 255, 0.05); border-top: 1px solid rgba(255, 255, 255, 0.1); }
 #side-menu .version:hover { background-color: rgba(255, 255, 255, 0.1); border-top: 1px solid rgba(255, 255, 255, 0.2); }
 
 /* Side menu hover effect */
-#side-menu ul li a .icon i { -webkit-transition: opacity 0.4s ease-in-out; -moz-transition: opacity 0.4s ease-in-out; -o-transition: opacity 0.4s ease-in-out; -ms-transition: opacity 0.4s ease-in-out; transition : opacity 0.4s ease-in-out; }
-#side-menu ul li a span { -webkit-transition: opacity 0.4s ease-in-out; -moz-transition: opacity 0.4s ease-in-out; -o-transition: opacity 0.4s ease-in-out; -ms-transition: opacity 0.4s ease-in-out; transition : opacity 0.4s ease-in-out; }
+#side-menu ul li a .icon i { -webkit-transition: all 0.4s ease-in-out; -moz-transition: all 0.4s ease-in-out; -o-transition: all 0.4s ease-in-out; -ms-transition: all 0.4s ease-in-out; transition : all 0.4s ease-in-out; }
+#side-menu ul li a span { -webkit-transition: all 0.4s ease-in-out; -moz-transition: all 0.4s ease-in-out; -o-transition: all 0.4s ease-in-out; -ms-transition: all 0.4s ease-in-out; transition : all 0.4s ease-in-out; }
 #side-menu:hover ul li a span { opacity: 1; }
 #side-menu:hover ul li a .icon i { opacity: 1; }
 
@@ -106,7 +109,6 @@ main form.run-creation .radio { background: #f7f7f7; border: 1px dashed #ccc; pa
 main form.run-creation .radio input[type=radio] { margin-top: 1px; }
 main form.run-creation span.info { font-size: 12px; color: #999; font-style: italic; }
 main form.run-creation span.error { font-size: 12px; color: #cf3a3a; font-style: italic; }
-main form.run-creation .add-item { height: 60px; width: 60px; background: rgb(221, 221, 221) none repeat scroll 0% 0%; text-align: center; border-radius: 30px; font-size: 40px; padding-top: -5px; box-shadow: inset 0px 0px 3px #999; cursor: pointer; }
 main form.run-creation .randomizer,
 main form.run-creation .program { padding: 10px; border: 1px solid #ccc; margin-bottom: 10px; background: #fcfcfc; }
 main form.run-creation .program hr { border-color: #ccc; margin-top: 10px; margin-bottom: 10px; }
