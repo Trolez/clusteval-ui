@@ -346,7 +346,7 @@ public class ProgramController {
     @RequestMapping(value="/programs/delete")
     public String deleteProgram(@RequestParam(value="name", required=true) String name) {
         try {
-            BufferedReader br = new BufferedReader(new FileReader(getPath() + "/programs/configs/" + name + ".config"));;
+            BufferedReader br = new BufferedReader(new FileReader(getPath() + "/programs/configs/" + name + ".config"));
             String currentLine;
 
             while ((currentLine = br.readLine()) != null) {

@@ -408,6 +408,14 @@ $(document).ready(function() {
         $('.data-container .toggle.open').trigger('click');
     });
 
+    //Delete data configuration/dataset
+    $('#data .delete-data').click(function() {
+        if (confirm("Delete this data?")) {
+            $.get('/data/delete?name=' + $(this).data('name'));
+            $(this).parent().fadeOut();
+        }
+    });
+
     //Fetch information about program config file on click
     $('.program-container .toggle').click(function() {
         var name = $(this).parent().find('.fetch-program').html();

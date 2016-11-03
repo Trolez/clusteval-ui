@@ -30,6 +30,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.FileUtils;
 
 @Controller
 public class DataController {
@@ -260,6 +261,55 @@ public class DataController {
         }
 
         return "redirect:/data/upload";
+    }
+
+    @RequestMapping(value="/data/delete")
+    public String deleteData(@RequestParam(value="name", required=true) String name) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(getPath() + "/data/configs/" + name + ".dataconfig"));
+            String currentLine;
+
+            while ((currentLine = br.readLine()) != null) {
+                if (currentLine.startsWith("datasetConfig")) {
+                    BufferedReader br2 = new BufferedReader(new FileReader(getPath() + "/data/datasets/configs/" + currentLine.split("=")[1].trim() + ".dsconfig"));
+                    String currentLine2;
+                    while ((currentLine2 = br.readLine()) != null) {
+                        if (currentLine2.startsWith("datasetName")) {
+                            //Delete dataset folder
+                            String directoryName = currentLine2.split("=")[1].trim();
+                            File directory = new File(getPath() + "/data/datasets/" + directoryName);
+                            FileUtils.deleteDirectory(directory);
+                        }
+                    }
+
+                    //Delete dataset configuration file
+                    File configurationFile = new File(getPath() + "/data/datasets/configs/" + currentLine.split("=")[1].trim() + ".dsconfig");
+                    configurationFile.delete();
+                }
+                if (currentLine.startsWith("goldstandardConfig")) {
+                    BufferedReader br2 = new BufferedReader(new FileReader(getPath() + "/data/goldstandards/configs/" + currentLine.split("=")[1].trim() + ".gsconfig"));
+                    String currentLine2;
+                    while ((currentLine2 = br.readLine()) != null) {
+                        if (currentLine2.startsWith("goldstandardName")) {
+                            //Delete goldstandard folder
+                            String directoryName = currentLine2.split("=")[1].trim();
+                            File directory = new File(getPath() + "/data/goldstandards/" + directoryName);
+                            FileUtils.deleteDirectory(directory);
+                        }
+                    }
+
+                    //Delete goldstandard configuration file
+                    File configurationFile = new File(getPath() + "/data/goldstandards/configs/" + currentLine.split("=")[1].trim() + ".gsconfig");
+                    configurationFile.delete();
+                }
+            }
+
+            //Delete data configuration file
+            File configurationFile = new File(getPath() + "/data/configs/" + name + ".dataconfig");
+            configurationFile.delete();
+        } catch (Exception e) {}
+
+        return "data/index";
     }
 
     private void populateModel(Model model) throws ConnectException {

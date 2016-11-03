@@ -15,6 +15,12 @@
             Collapse all
         </a>
         <div class="box data-container" th:each="data: ${datas}">
+            <span class="delete-button delete-data" th:attr="data-name=${data}">
+                <i class="fa fa-trash"></i>
+            </span>
+            <a class="edit-button" th:href="@{/data/edit(name=${data})}">
+                <i class="fa fa-edit"></i>
+            </a>
             <span class="toggle">
                 <i class="fa fa-expand"></i>
             </span>
