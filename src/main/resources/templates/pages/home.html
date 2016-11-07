@@ -7,7 +7,7 @@
                 <i class="fa fa-check-square-o"></i>
             </div>
             <div>
-                <a class="connect-button" href="/disconnect"><i class="fa fa-power-off"></i></a>
+                <a class="connect-button" href="/disconnect" title="Shutdown ClustEval server"><i class="fa fa-power-off"></i></a>
                 Successfully connected to the ClustEval server.<br>
                 Listening on port: <span th:text="${port}"></span>.<br>
                 Absolute repository path: <span th:text="${absRepoPath}"></span>.
@@ -18,7 +18,7 @@
                 <i class="fa fa-warning"></i>
             </div>
             <div>
-                <a class="connect-button" href="/connect"><i class="fa fa-power-off"></i></a>
+                <a class="connect-button" href="/connect" title="Connect to ClustEval server"><i class="fa fa-power-off"></i></a>
                 A connection to the ClustEval server could not be established.
             </div>
         </div>

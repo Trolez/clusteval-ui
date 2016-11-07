@@ -56,7 +56,7 @@ header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transfo
 #content-wrapper { margin-left: 105px; min-height: calc(100vh - 100px); background: #fafbff; padding: 14px 0px; }
 
 /* Home */
-#home .connection { background-color: #9be196; padding: 7px; border: 2px solid #91cf8d; position: relative; color: #357831; font-size: 18px; overflow: hidden; }
+#home .connection { background-color: #9be196; padding: 7px; border: 2px solid #91cf8d; position: relative; color: #357831; font-size: 18px; overflow: hidden; padding-right: 64px; }
 #home .no-connection { background-color: #fcb231; border: 2px solid #d58f14; color: #a76f0e; }
 #home .connection > div { display: inline-block; }
 #home .connection .icon { color: #fff; font-size: 50px; float: left; margin-right: 15px; }

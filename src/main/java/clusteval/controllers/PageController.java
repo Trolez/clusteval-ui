@@ -17,6 +17,9 @@ import java.io.*;
 
 @Controller
 public class PageController {
+    @Autowired
+    ClustEvalConnectionService connectionService;
+
     @Value("${port}")
     private int port;
 
@@ -58,8 +61,7 @@ public class PageController {
 
     @RequestMapping("/connect")
     public String connectToServer(Model model, RedirectAttributes redirectAttributes) {
-        ClustEvalConnectionService service = new ClustEvalConnectionService();
-        service.connectToServer();
+        connectionService.connectToServer();
         redirectAttributes.addFlashAttribute("success", "The ClustEval server is starting up");
 
         return "redirect:/";

@@ -16,7 +16,7 @@ public class Application extends AsyncConfigurerSupport {
         SpringApplication.run(Application.class, args);
     }
 
-    /*@Override
+    @Override
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(2);
@@ -25,5 +25,5 @@ public class Application extends AsyncConfigurerSupport {
         executor.setThreadNamePrefix("ClustEvalConnection-");
         executor.initialize();
         return executor;
-    }*/
+    }
 }
