@@ -8,6 +8,8 @@ import javax.validation.constraints.Pattern;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
+
 public class DataCreation {
     @Size(min = 1, message = "Please specify a name for the data")
     @Pattern(regexp="([0-9|a-z|A-Z|\\_])+", message = "Please only include letters a-z, numbers 0-9 and underscores (_) in the name")
@@ -62,5 +64,51 @@ public class DataCreation {
 
     public void setGoldstandardFile(MultipartFile goldstandardFile) {
         this.goldstandardFile = goldstandardFile;
+    }
+
+    public void parse(String path, String fileName) {
+        setName(fileName);
+
+        BufferedReader datasetConfigReader = null;
+        BufferedReader datasetFileReader = null;
+
+        String datasetName = null;
+        String datasetFile = null;
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(path + "/data/configs/" + fileName + ".dataconfig"));
+            String currentLine;
+            String line;
+
+            while ((currentLine = br.readLine()) != null) {
+                line = currentLine.substring(currentLine.indexOf("=") + 1).trim();
+                if (currentLine.startsWith("datasetConfig")) {
+                    datasetConfigReader = new BufferedReader(new FileReader(path + "/data/datasets/configs/" + line + ".dsconfig"));
+                }
+            }
+
+            if (datasetConfigReader != null) {
+                while ((currentLine = datasetConfigReader.readLine()) != null) {
+                    line = currentLine.substring(currentLine.indexOf("=") + 1).trim();
+                    if (currentLine.startsWith("datasetName")) {
+                        datasetName = line;
+                    } else if (currentLine.startsWith("datasetFile")) {
+                        datasetFile = line;
+                    }
+                }
+            }
+
+            if (datasetName != null && datasetFile != null) {
+                datasetFileReader = new BufferedReader(new FileReader(path + "/data/datasets/" + datasetName + "/" + datasetFile));
+                while ((currentLine = datasetFileReader.readLine()) != null) {
+                    line = currentLine.substring(currentLine.indexOf("=") + 1).trim();
+                    if (currentLine.startsWith("// dataSetFormat") && !currentLine.startsWith("// dataSetFormatVersion")) {
+                        setDataSetFormat(line);
+                    } else if (currentLine.startsWith("// dataSetType")) {
+                        setDataSetType(line);
+                    }
+                }
+            }
+        } catch (Exception e) {}
     }
 }

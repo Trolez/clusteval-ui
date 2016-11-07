@@ -1,0 +1,9 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<body>
+    <div layout:fragment="content">
+        <form class="run-creation" th:action="@{/data/edit}" method="post" th:object="${dataCreation}" th:include="data/form :: data-form" enctype="multipart/form-data">
+        </form>
+    </div>
+</body>
+</html>

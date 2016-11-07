@@ -263,6 +263,34 @@ public class DataController {
         return "redirect:/data/upload";
     }
 
+    @RequestMapping(value="/data/edit")
+    public String editData(DataCreation dataCreation, Model model, @RequestParam(value="name", required=true) String name) {
+        try {
+            populateModel(model);
+        } catch (ConnectException e) {
+            return "runs/notRunning";
+        }
+
+        dataCreation.parse(getPath(), name);
+
+        return "data/edit";
+    }
+
+    @RequestMapping(value="/data/edit", method=RequestMethod.POST)
+    public String editData(@Valid DataCreation dataCreation, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        //Return to form if there were validation errors
+        if (bindingResult.hasErrors()) {
+            try {
+                populateModel(model);
+            } catch (ConnectException e) {
+                return "runs/notRunning";
+            }
+            return "data/edit";
+        }
+
+        return "redirect:/data/edit";
+    }
+
     @RequestMapping(value="/data/delete")
     public String deleteData(@RequestParam(value="name", required=true) String name) {
         try {

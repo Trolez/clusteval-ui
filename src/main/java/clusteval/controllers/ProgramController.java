@@ -337,7 +337,7 @@ public class ProgramController {
             } catch (ConnectException e) {
                 return "runs/notRunning";
             }
-            return "programs/upload";
+            return "programs/edit";
         }
 
         return "redirect:/programs/edit";

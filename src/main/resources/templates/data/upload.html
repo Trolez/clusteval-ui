@@ -2,46 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
 <body>
     <div layout:fragment="content">
-        <form class="run-creation" th:action="@{/data/upload}" method="post" th:object="${dataCreation}" enctype="multipart/form-data">
-            <div class="form-group">
-                <label>
-                    Name of data set
-                    <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
-                </label>
-                <input type="text" name="name" th:field="*{name}" class="form-control" th:errorclass="has-error"><br>
-            </div>
-            <div class="form-group">
-                <label>
-                    Data set type
-                    <span class="error" th:if="${#fields.hasErrors('dataSetType')}" th:errors="*{dataSetType}">
-                </label>
-                <select class="select2-multiple" name="dataSetType">
-                    <option th:each="dataSetType : ${dataSetTypes}" th:value="${dataSetType}" th:text="${dataSetType}" th:selected="${dataSetType} eq ${dataCreation.dataSetType}">
-                </select>
-            </div>
-            <div class="form-group">
-                <label>
-                    Data set format
-                    <span class="error" th:if="${#fields.hasErrors('dataSetFormat')}" th:errors="*{dataSetFormat}">
-                </label>
-                <select class="select2-multiple" name="dataSetFormat">
-                    <option th:each="dataSetFormat : ${dataSetFormats}" th:value="${dataSetFormat}" th:text="${dataSetFormat}" th:selected="${dataSetFormat} eq ${dataCreation.dataSetFormat}">
-                </select>
-            </div>
-            <div class="form-group">
-                <label>
-                    Data set file
-                    <span class="error" th:if="${#fields.hasErrors('dataSetFile')}" th:errors="*{dataSetFile}">
-                </label>
-                <input type="file" name="dataSetFile">
-            </div>
-            <div class="form-group">
-                <label>
-                    Goldstandard file
-                </label>
-                <input type="file" name="goldstandardFile">
-            </div>
-            <input type="submit" value="Upload">
+        <form class="run-creation" th:action="@{/data/upload}" method="post" th:object="${dataCreation}" th:include="data/form :: data-form" enctype="multipart/form-data">
         </form>
     </div>
 </body>
