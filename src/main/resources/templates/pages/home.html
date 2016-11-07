@@ -7,6 +7,7 @@
                 <i class="fa fa-check-square-o"></i>
             </div>
             <div>
+                <a class="connect-button" href="/disconnect"><i class="fa fa-power-off"></i></a>
                 Successfully connected to the ClustEval server.<br>
                 Listening on port: <span th:text="${port}"></span>.<br>
                 Absolute repository path: <span th:text="${absRepoPath}"></span>.
@@ -17,6 +18,7 @@
                 <i class="fa fa-warning"></i>
             </div>
             <div>
+                <a class="connect-button" href="/connect"><i class="fa fa-power-off"></i></a>
                 A connection to the ClustEval server could not be established.
             </div>
         </div>
@@ -27,10 +29,10 @@
                     <div class="stat-name">Runs available</div>
                     <div class="row">
                         <div class="col-md-6">
-                            <a href="/runs" class="btn btn-default">See all runs</a>
+                            <a href="/runs" class="btn btn-default"><i class="fa fa-list-ul"></i> See all runs</a>
                         </div>
                         <div class="col-md-6">
-                            <a href="/runs/create" class="btn btn-success">Create new run</a>
+                            <a href="/runs/create" class="btn btn-success"><i class="fa fa-plus"></i> Create new run</a>
                         </div>
                     </div>
                 </div>
@@ -41,10 +43,10 @@
                     <div class="stat-name">Program configuration available</div>
                     <div class="row">
                         <div class="col-md-6">
-                            <a href="/programs" class="btn btn-default">See all programs</a>
+                            <a href="/programs" class="btn btn-default"><i class="fa fa-list-ul"></i> See all programs</a>
                         </div>
                         <div class="col-md-6">
-                            <a href="/programs/upload" class="btn btn-success">Upload program</a>
+                            <a href="/programs/upload" class="btn btn-success"><i class="fa fa-plus"></i> Upload program</a>
                         </div>
                     </div>
                 </div>
@@ -55,10 +57,10 @@
                     <div class="stat-name">Data configurations available</div>
                     <div class="row">
                         <div class="col-md-6">
-                            <a href="/data" class="btn btn-default">See all data</a>
+                            <a href="/data" class="btn btn-default"><i class="fa fa-list-ul"></i> See all data</a>
                         </div>
                         <div class="col-md-6">
-                            <a href="/data/upload" class="btn btn-success">Upload data</a>
+                            <a href="/data/upload" class="btn btn-success"><i class="fa fa-plus"></i> Upload data</a>
                         </div>
                     </div>
                 </div>

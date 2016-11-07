@@ -60,6 +60,8 @@ header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transfo
 #home .no-connection { background-color: #fcb231; border: 2px solid #d58f14; color: #a76f0e; }
 #home .connection > div { display: inline-block; }
 #home .connection .icon { color: #fff; font-size: 50px; float: left; margin-right: 15px; }
+#home .connection .connect-button { position: absolute; right: 0px; top: 3px; bottom: 3px; padding: 0px 15px; }
+#home .connection .connect-button i { font-size: 40px; color: #333; position: relative; top: 50%; transform: translateY(-50%); }
 #home .box { margin-top: 14px; padding: 7px; background: #efefef; border: 2px solid #c9c9c9; font-size: 16px; line-height: 34px; overflow: hidden; }
 #home .basic-stat { border: 2px solid #cfcfcf; background: #efefef; text-align: center; color: #333; margin-top: 14px; padding: 15px; }
 #home .basic-stat .stat-count { font-size: 50px; font-weight: bold; }
