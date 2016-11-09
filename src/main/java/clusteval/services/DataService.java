@@ -13,6 +13,9 @@ import java.rmi.ConnectException;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 public class DataService {
@@ -23,6 +26,110 @@ public class DataService {
     private int clientId;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    public void createData(DataCreation dataCreation) throws IOException {
+        try {
+            //Create dataconfig file
+            File dataConfigFile = new File(getPath() + "/data/configs/" + dataCreation.getName() + ".dataconfig");
+
+            if (!dataConfigFile.exists()) {
+                dataConfigFile.createNewFile();
+            }
+
+            FileWriter writer = new FileWriter(dataConfigFile);
+
+            writer.write("datasetConfig = " + dataCreation.getName() + "\n");
+
+            if (dataCreation.getGoldstandardFile().getSize() > 0) {
+                writer.write("goldstandardConfig = " + dataCreation.getName());
+            }
+            writer.close();
+
+            String dataSetFileName = "";
+
+            //Copy data set file to repository
+            Path path = Paths.get(getPath() + "/data/datasets/" + dataCreation.getName());
+            File filePath = new File(getPath() + "/data/datasets/" + dataCreation.getName());
+
+            if (!filePath.exists()) {
+                filePath.mkdir();
+            }
+
+            String extension = "";
+            try {
+                dataSetFileName = dataCreation.getDataSetFile().getOriginalFilename();
+            } catch (Exception e) {}
+
+            File dataSetFile = new File(getPath() + "/data/datasets/" + dataCreation.getName() + "/" + dataSetFileName);
+            writer = new FileWriter(dataSetFile);
+            writer.write("// dataSetFormat = " + dataCreation.getDataSetFormat() + "\n");
+            writer.write("// dataSetType = " + dataCreation.getDataSetType() + "\n");
+            writer.write("// dataSetFormatVersion = 1\n");
+            writer.write("// alias = " + dataCreation.getName() + "\n");
+            writer.write("// websiteVisibility = show_always\n");
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(dataCreation.getDataSetFile().getInputStream()));
+            String currentLine = "";
+            while((currentLine = br.readLine()) != null) {
+                if (!currentLine.startsWith("//")) {
+                    writer.write(currentLine + "\n");
+                }
+            }
+
+            writer.close();
+
+            //Create dsconfig file
+            File dataSetConfigFile = new File(getPath() + "/data/datasets/configs/" + dataCreation.getName() + ".dsconfig");
+
+            if (!dataSetConfigFile.exists()) {
+                dataSetConfigFile.createNewFile();
+            }
+
+            writer = new FileWriter(dataSetConfigFile);
+
+            writer.write("datasetName = " + dataCreation.getName() + "\n");
+            writer.write("datasetFile = " + dataSetFileName);
+
+            writer.close();
+        } catch (IOException e) {
+            throw(e);
+        }
+
+        if (dataCreation.getGoldstandardFile().getSize() > 0) {
+            String goldstandardFileName = "";
+            try {
+                //Copy goldstandard file to repository
+                Path path = Paths.get(getPath() + "/data/goldstandards/" + dataCreation.getName());
+                File filePath = new File(getPath() + "/data/goldstandards/" + dataCreation.getName());
+
+                if (!filePath.exists()) {
+                    filePath.mkdir();
+                }
+
+                try {
+                    goldstandardFileName = dataCreation.getGoldstandardFile().getOriginalFilename();
+                } catch (Exception e) {}
+
+                Files.copy(dataCreation.getGoldstandardFile().getInputStream(), path.resolve(goldstandardFileName));
+
+                //Create gsconfig file
+                File goldstandardConfigFile = new File(getPath() + "/data/goldstandards/configs/" + dataCreation.getName() + ".gsconfig");
+
+                if (!goldstandardConfigFile.exists()) {
+                    goldstandardConfigFile.createNewFile();
+                }
+
+                FileWriter writer = new FileWriter(goldstandardConfigFile);
+
+                writer.write("goldstandardName = " + dataCreation.getName() + "\n");
+                writer.write("goldstandardFile = " + goldstandardFileName);
+
+                writer.close();
+            } catch (IOException e) {
+                throw(e);
+            }
+        }
+    }
 
     public void deleteData(String name) {
         try {
