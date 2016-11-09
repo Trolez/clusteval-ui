@@ -19,16 +19,10 @@ import de.clusteval.program.r.RProgram;
 
 import java.rmi.ConnectException;
 
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
-import java.util.HashMap;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.io.FileUtils;
@@ -84,69 +78,7 @@ public class ProgramController {
 
     @RequestMapping(value="/getProgram", method=RequestMethod.GET)
     public @ResponseBody Program getProgram(@RequestParam(value="name", required=true) String name) {
-        Program program = new Program();
-        program.setName(name);
-
-        //Get array of parameter eligible for parameter optimization
-        ArrayList<String> optimizationParameters = new ArrayList<String>();
-        try {
-            BufferedReader br;
-            String currentLine;
-            br = new BufferedReader(new FileReader(getPath() + "/programs/configs/" + program.getName() + ".config"));
-
-            while ((currentLine = br.readLine()) != null) {
-                if (currentLine.startsWith("optimizationParameters")) {
-                    optimizationParameters = new ArrayList<String>(Arrays.asList(StringUtils.split(currentLine.substring(currentLine.indexOf("=") + 1).trim(), ',')));
-                    break;
-                }
-            }
-        } catch (Exception e) {
-        }
-
-        try {
-            BackendClient backendClient = getBackendClient();
-
-            Map<String, Map<String, String>> parameters = backendClient.getParametersForProgramConfiguration(name);
-
-            ArrayList<ProgramParameter> programParameters = new ArrayList<ProgramParameter>();
-            for (Map.Entry<String, Map<String, String>> entry : parameters.entrySet())
-            {
-                ProgramParameter programParameter = new ProgramParameter();
-                programParameter.setName(entry.getKey());
-
-                if (optimizationParameters.contains(programParameter.getName())) {
-                    programParameter.setOptimizable(true);
-                }
-
-                ArrayList<ProgramParameterOption> programParameterOptions = new ArrayList<ProgramParameterOption>();
-                for (Map.Entry<String, String> subEntry : entry.getValue().entrySet()) {
-                    ProgramParameterOption programParameterOption = new ProgramParameterOption();
-                    programParameterOption.setName(subEntry.getKey());
-                    programParameterOption.setValue(subEntry.getValue());
-
-                    programParameterOptions.add(programParameterOption);
-
-                    if (subEntry.getKey().equals("minValue")) {
-                        programParameter.setMinValue(subEntry.getValue());
-                    } else if (subEntry.getKey().equals("maxValue")) {
-                        programParameter.setMaxValue(subEntry.getValue());
-                    } else if (subEntry.getKey().equals("defaultValue")) {
-                        programParameter.setValue(subEntry.getValue());
-                    } else if (subEntry.getKey().equals("options")) {
-                        programParameter.setOptions(subEntry.getValue());
-                    }
-                }
-
-                programParameter.setDefaultOptions(programParameterOptions);
-                programParameters.add(programParameter);
-            }
-
-            program.setParameters(programParameters);
-        } catch (ConnectException e) {
-        } catch (Exception e) {
-        }
-
-        return program;
+        return programService.getProgram(name);
     }
 
     @RequestMapping(value="/programs/upload")

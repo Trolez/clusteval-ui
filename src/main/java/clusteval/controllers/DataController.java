@@ -34,6 +34,9 @@ import org.apache.commons.io.FileUtils;
 
 @Controller
 public class DataController {
+    @Autowired
+    DataService dataService;
+
     @Value("${port}")
     private int port;
 
@@ -170,10 +173,8 @@ public class DataController {
 
             String extension = "";
             try {
-                extension = dataCreation.getDataSetFile().getOriginalFilename().split("\\.")[1];
+                dataSetFileName = dataCreation.getDataSetFile().getOriginalFilename();
             } catch (Exception e) {}
-
-            dataSetFileName = dataCreation.getName() + "." + extension;
 
             File dataConfigFile = new File(getPath() + "/data/datasets/" + dataCreation.getName() + "/" + dataSetFileName);
             FileWriter writer = new FileWriter(dataConfigFile);
@@ -229,14 +230,11 @@ public class DataController {
                     filePath.mkdir();
                 }
 
-                String extension = "";
                 try {
-                    extension = dataCreation.getDataSetFile().getOriginalFilename().split("\\.")[1];
+                    goldstandardFileName = dataCreation.getGoldstandardFile().getOriginalFilename();
                 } catch (Exception e) {}
 
-                goldstandardFileName = dataCreation.getName() + "." + extension;
-
-                Files.copy(dataCreation.getDataSetFile().getInputStream(), path.resolve(dataSetFileName));
+                Files.copy(dataCreation.getGoldstandardFile().getInputStream(), path.resolve(goldstandardFileName));
                 redirectAttributes.addFlashAttribute("success", "Goldstandard file uploaded successfully");
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("failure", "Failed to upload file");
@@ -293,49 +291,8 @@ public class DataController {
 
     @RequestMapping(value="/data/delete")
     public String deleteData(@RequestParam(value="name", required=true) String name) {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(getPath() + "/data/configs/" + name + ".dataconfig"));
-            String currentLine;
+        dataService.deleteData(name);
 
-            while ((currentLine = br.readLine()) != null) {
-                if (currentLine.startsWith("datasetConfig")) {
-                    BufferedReader br2 = new BufferedReader(new FileReader(getPath() + "/data/datasets/configs/" + currentLine.split("=")[1].trim() + ".dsconfig"));
-                    String currentLine2;
-                    while ((currentLine2 = br.readLine()) != null) {
-                        if (currentLine2.startsWith("datasetName")) {
-                            //Delete dataset folder
-                            String directoryName = currentLine2.split("=")[1].trim();
-                            File directory = new File(getPath() + "/data/datasets/" + directoryName);
-                            FileUtils.deleteDirectory(directory);
-                        }
-                    }
-
-                    //Delete dataset configuration file
-                    File configurationFile = new File(getPath() + "/data/datasets/configs/" + currentLine.split("=")[1].trim() + ".dsconfig");
-                    configurationFile.delete();
-                }
-                if (currentLine.startsWith("goldstandardConfig")) {
-                    BufferedReader br2 = new BufferedReader(new FileReader(getPath() + "/data/goldstandards/configs/" + currentLine.split("=")[1].trim() + ".gsconfig"));
-                    String currentLine2;
-                    while ((currentLine2 = br.readLine()) != null) {
-                        if (currentLine2.startsWith("goldstandardName")) {
-                            //Delete goldstandard folder
-                            String directoryName = currentLine2.split("=")[1].trim();
-                            File directory = new File(getPath() + "/data/goldstandards/" + directoryName);
-                            FileUtils.deleteDirectory(directory);
-                        }
-                    }
-
-                    //Delete goldstandard configuration file
-                    File configurationFile = new File(getPath() + "/data/goldstandards/configs/" + currentLine.split("=")[1].trim() + ".gsconfig");
-                    configurationFile.delete();
-                }
-            }
-
-            //Delete data configuration file
-            File configurationFile = new File(getPath() + "/data/configs/" + name + ".dataconfig");
-            configurationFile.delete();
-        } catch (Exception e) {}
 
         return "data/index";
     }

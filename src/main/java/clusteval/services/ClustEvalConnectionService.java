@@ -11,18 +11,21 @@ import java.io.*;
 
 @Service
 public class ClustEvalConnectionService {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     @Value("${absClustEvalPath}")
     private String absClustEvalPath;
 
     @Value("${absRepoPath}")
     private String absRepoPath;
 
+    @Value("${absWorkingPath}")
+    private String absWorkingPath;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Async
     public void connectToServer() {
         ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", absClustEvalPath, "-absRepoPath", absRepoPath, "-noDatabase");
-        processBuilder.directory(new File("/home/troels/clusteval"));
+        processBuilder.directory(new File(absWorkingPath));
 
         try {
             Process process = processBuilder.start();
