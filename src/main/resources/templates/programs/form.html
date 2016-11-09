@@ -6,6 +6,7 @@
         </label>
         <input type="text" name="name" th:field="*{name}" class="form-control" th:errorclass="has-error"><br>
     </div>
+    <input type="hidden" name="originalName" th:field="*{originalName}">
     <div class="form-group">
         <label>
             Alias of program
@@ -96,8 +97,9 @@
                         Options
                         <span class="error" th:if="${#fields.hasErrors('parameters[__${parameterStat.index}__].options')}" th:errors="*{parameters[__${parameterStat.index}__].options}"></span>
                     </label>
-                    <!--<input type="text" class="form-control" name="options" th:field="*{parameters[__${parameterStat.index}__].options}" th:errorclass="has-error">-->
-                    <select multiple class="tags" name="options" th:field="*{parameters[__${parameterStat.index}__].options}" th:errorclass="has-error"></select>
+                    <select multiple class="tags" name="options" th:field="*{parameters[__${parameterStat.index}__].options}" th:errorclass="has-error">
+                        <option th:each="option : *{parameters[__${parameterStat.index}__].options}" th:value="${option}" th:text="${option}" selected>
+                    </select>
                 </div>
             </div>
             <div class="form-group">

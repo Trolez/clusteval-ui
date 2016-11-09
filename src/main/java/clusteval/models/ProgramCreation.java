@@ -19,6 +19,8 @@ public class ProgramCreation {
     @javax.validation.constraints.Pattern(regexp="([0-9|a-z|A-Z|\\_])+", message = "Please only include letters a-z, numbers 0-9 and underscores (_) in the name")
     private String name;
 
+    private String originalName;
+
     @Size(min = 1, message = "Please specify an alias for the program")
     private String alias;
 
@@ -40,6 +42,14 @@ public class ProgramCreation {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getOriginalName() {
+        return originalName;
+    }
+
+    public void setOriginalName(String originalName) {
+        this.originalName = originalName;
     }
 
     public String getAlias() {
@@ -92,6 +102,7 @@ public class ProgramCreation {
 
     public void parse(String path, String fileName) {
         setName(fileName);
+        setOriginalName(fileName);
 
         ArrayList<String> optimizableParameters = new ArrayList<String>();
 
@@ -129,7 +140,7 @@ public class ProgramCreation {
             Matcher matcher;
             ProgramCreationParameter parameter = new ProgramCreationParameter();
 
-            parameters.add(parameter);
+            //parameters.add(parameter);
 
             while ((currentLine = br.readLine()) != null) {
                 matcher = pattern.matcher(currentLine);
@@ -154,7 +165,7 @@ public class ProgramCreation {
                             parameter.setDefaultValue(line);
                         }
                         if (currentLine.startsWith("options")) {
-                            parameter.setOptions(line);
+                            parameter.setOptions(Arrays.asList(line.split("\\s*,\\s*")));
                         }
                         if (currentLine.startsWith("desc")) {
                             parameter.setDescription(line);
@@ -162,6 +173,10 @@ public class ProgramCreation {
                         if (currentLine.startsWith("type")) {
                             parameter.setType(Integer.parseInt(line));
                         }
+                    }
+                    if (parameter.getDefaultValue() != null) {
+                        parameters.add(parameter);
+                        parameter = new ProgramCreationParameter();
                     }
                 }
             }

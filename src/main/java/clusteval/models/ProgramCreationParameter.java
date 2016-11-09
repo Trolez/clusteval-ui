@@ -5,6 +5,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class ProgramCreationParameter {
     @Size(min = 1, message = "Please specify a name for the program parameter")
     private String name;
@@ -25,7 +28,7 @@ public class ProgramCreationParameter {
     private String maxValue;
 
     @Size(min = 1, message = "Please specify at least one option for the program parameter")
-    private String options;
+    private ArrayList<String> options;
 
     private boolean optimizable;
 
@@ -77,12 +80,12 @@ public class ProgramCreationParameter {
         this.maxValue = maxValue;
     }
 
-    public String getOptions() {
+    public ArrayList<String> getOptions() {
         return options;
     }
 
-    public void setOptions(String options) {
-        this.options = options;
+    public void setOptions(Collection options) {
+        this.options = new ArrayList<String>(options);
     }
 
     public boolean getOptimizable() {
