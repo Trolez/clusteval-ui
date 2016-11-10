@@ -10,7 +10,7 @@
 
 * { margin: 0px; padding: 0px; }
 
-body { background-color: #c0c0c0; height: 100%; overflow-x: hidden; }
+body { background-color: rgb(67, 80, 109); height: 100%; overflow-x: hidden; }
 a { cursor: pointer; }
 a:focus, a:hover { color: rgb(67, 80, 109); }
 .box { margin-top: 14px; padding: 7px; background: #efefef; border: 2px solid #c9c9c9; font-size: 16px; overflow: hidden; }
@@ -22,15 +22,15 @@ a:focus, a:hover { color: rgb(67, 80, 109); }
 .range-container .icon { position: absolute; left: 0px; top: 0px; bottom: 0px; width: 35px; text-align: center; font-size: 20px; color: #999; }
 .range-container .icon > div { position: relative; top: 50%; transform: translateY(-50%); }
 .range-container .range-input-locked { display: none; }
-.gray-button { text-decoration: none; display: inline-block; height: 35px; background: #f9f9f9; padding: 0px 10px; line-height: 35px; vertical-align: middle; cursor: pointer; border-radius: 3px; border: 1px solid #ccc; color: #333; margin: 5px 0px; }
+.gray-button { font-size: 16px; text-decoration: none; display: inline-block; height: 38px; background: #f9f9f9; padding: 0px 10px; line-height: 38px; vertical-align: middle; cursor: pointer; border-radius: 3px; border: 1px solid #ccc; color: #333; margin: 5px 0px; }
 .gray-button:focus { outline: none; border: 1px dashed #ccc; }
 .gray-button.full-width { display: block; }
 .delete-button { display: inline-block; float: right; width: 25px; height: 25px; background: #d85252; text-align: center; line-height: 25px; vertical-align: middle; cursor: pointer; border-radius: 3px; border: 1px solid #530000; margin-left: 3px; color: #451515; }
 .edit-button { display: inline-block; float: right; width: 25px; height: 25px; background: #f9f9f9; text-align: center; line-height: 25px; vertical-align: middle; cursor: pointer; border-radius: 3px; border: 1px solid #ccc; margin-left: 3px; color: #333; }
 
 /* Header */
-header { height: 100px; background: rgb(67, 80, 109); padding-left: 115px; }
-header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transform: translateY(-50%); z-index: 2; text-shadow: 1px 1px 2px #0E1221; }
+header { height: 100px; background: rgb(67, 80, 109); padding-left: 120px; }
+header h1 { color: white; margin-top: 0px; margin-bottom: 0px; position: relative; top: 50%; transform: translateY(-50%); z-index: 2; text-shadow: -3px -2px 0px #0000004D; font-size: 45px; font-style: italic; }
 
 /* Side menu */
 #side-menu { position: fixed; top: 0px; bottom: 0px; width: 105px; background: #0E1221; border-right: 5px solid rgb(67, 80, 109); padding-top: 100px; z-index: 1; }
@@ -53,7 +53,7 @@ header h1 { color: white; margin-top: 0px; position: relative; top: 50%; transfo
 #side-menu:hover ul li a .icon i { opacity: 1; }
 
 /* Content Wrapper */
-#content-wrapper { margin-left: 105px; min-height: calc(100vh - 100px); background: #fafbff; padding: 14px 0px; }
+#content-wrapper { margin-left: 110px; min-height: calc(100vh - 100px); background: #fafbff; padding: 14px 0px; border-top-left-radius: 10px; }
 
 /* Home */
 #home .connection { background-color: #9be196; padding: 7px; border: 2px solid #91cf8d; position: relative; color: #357831; font-size: 18px; overflow: hidden; padding-right: 64px; }
@@ -106,9 +106,8 @@ main .run-list .run span.name { display: block; border-bottom: 2px solid #cfcfcf
 main .run-list .run .btn { float: left; margin-right: 10px; }
 main .run-list .run .btn.pull-right { margin-right: 0px; }
 main .run-list .run .progress { margin-bottom: 0px; height: 34px; background-color: #f9f9f9; }
-main .run-list .edited-runs-container { overflow: hidden; padding-left: 50px; }
-main .run-list .edited-runs-container .toggle { overflow: hidden; margin-bottom: 7px; }
-main .run-list .edited-runs-inner-container { display: none; clear: right; }
+main .run-list .edited-runs-container { padding-left: 50px; }
+main .run-list .edited-runs-container { display: none; }
 
 /* Main - Run creation */
 main form.run-creation h1 { margin-top: 0px; color: #444; }

@@ -327,25 +327,31 @@ $(document).ready(function() {
         editedRunsCount++;
 
         if (!nextRunEdited) {
-            var container = $('<div class="edited-runs-container">' + editedRunsCount + ' Edited runs<span class="toggle"><i class="fa fa-expand"></i></span></div>');
-            var innerContainer = $('<div class="edited-runs-inner-container"></div>');
-            innerContainer.appendTo(container);
+            var container = $('<div class="edited-runs-container"></div>');
             container.insertBefore(editedRuns[0]);
 
             for (i = 0; i < editedRuns.length; i++) {
-                editedRuns[i].appendTo(innerContainer);
+                editedRuns[i].appendTo(container);
             }
+            if (editedRunsCount == 1) {
+                //Append button to original run
+                container.prev('.run').append('<a class="btn btn-default toggle-edits"><i class="fa fa-angle-down"></i> ' + editedRunsCount + ' additional version available</a>');
+            } else {
+                //Append button to original run
+                container.prev('.run').append('<a class="btn btn-default toggle-edits"><i class="fa fa-angle-down"></i> ' + editedRunsCount + ' additional versions available</a>');
+            }
+
             editedRuns = [];
             editedRunsCount = 0;
         }
     });
 
     //Toggle edited runs display
-    $('.run-list').on('click', '.edited-runs-container .toggle', function() {
-        $(this).parent().find('.edited-runs-inner-container').slideToggle();
+    $('.run-list .run').on('click', '.toggle-edits', function() {
+        $(this).parent().next('.edited-runs-container').slideToggle();
 
-        $(this).find('.fa').toggleClass('fa-expand');
-        $(this).find('.fa').toggleClass('fa-compress');
+        $(this).find('.fa').toggleClass('fa-angle-down');
+        $(this).find('.fa').toggleClass('fa-angle-up');
     });
 
     //Delete run button click

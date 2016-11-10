@@ -1,10 +1,11 @@
 <div th:fragment="program-form">
+    <h2>Program settings</h2>
     <div class="form-group">
         <label>
             Name of program
             <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
         </label>
-        <input type="text" name="name" th:field="*{name}" class="form-control" th:errorclass="has-error"><br>
+        <input type="text" name="name" th:field="*{name}" class="form-control" th:errorclass="has-error">
     </div>
     <input type="hidden" name="originalName" th:field="*{originalName}">
     <div class="form-group">
@@ -12,14 +13,14 @@
             Alias of program
             <span class="error" th:if="${#fields.hasErrors('alias')}" th:errors="*{alias}">
         </label>
-        <input type="text" name="alias" th:field="*{alias}" class="form-control" th:errorclass="has-error"><br>
+        <input type="text" name="alias" th:field="*{alias}" class="form-control" th:errorclass="has-error">
     </div>
     <div class="form-group">
         <label>
             Invocation format
             <span class="error" th:if="${#fields.hasErrors('invocationFormat')}" th:errors="*{invocationFormat}">
         </label>
-        <input type="text" name="invocationFormat" th:field="*{invocationFormat}" class="form-control" th:errorclass="has-error"><br>
+        <input type="text" name="invocationFormat" th:field="*{invocationFormat}" class="form-control" th:errorclass="has-error">
     </div>
     <div class="form-group">
         <label>
@@ -44,6 +45,7 @@
             <option th:each="outputFormat : ${outputFormats}" th:value="${outputFormat}" th:text="${outputFormat}" th:selected="${outputFormat} eq ${programCreation.outputFormat}">
         </select>
     </div>
+    <h2>Program parameters</h2>
     <div id="program-parameters">
         <div class="box" th:each="parameter, parameterStat : *{parameters}">
             <div class="form-group">

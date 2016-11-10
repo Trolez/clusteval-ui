@@ -141,7 +141,6 @@ public class DataService {
                     BufferedReader br2 = new BufferedReader(new FileReader(getPath() + "/data/datasets/configs/" + currentLine.split("=")[1].trim() + ".dsconfig"));
                     String currentLine2;
                     while ((currentLine2 = br2.readLine()) != null) {
-                        System.err.println("Deleting dataset folder - " + currentLine2);
                         if (currentLine2.startsWith("datasetName")) {
                             //Delete dataset folder
                             String directoryName = currentLine2.split("=")[1].trim();
@@ -158,7 +157,6 @@ public class DataService {
                     BufferedReader br2 = new BufferedReader(new FileReader(getPath() + "/data/goldstandards/configs/" + currentLine.split("=")[1].trim() + ".gsconfig"));
                     String currentLine2;
                     while ((currentLine2 = br2.readLine()) != null) {
-                        System.err.println("Deleting goldstandard folder - " + currentLine2);
                         if (currentLine2.startsWith("goldstandardName")) {
                             //Delete goldstandard folder
                             String directoryName = currentLine2.split("=")[1].trim();
