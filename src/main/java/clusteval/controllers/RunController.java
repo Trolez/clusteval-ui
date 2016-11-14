@@ -227,6 +227,7 @@ public class RunController {
             ArrayList<String> runStatistics = new ArrayList<String>(backendClient.getRunStatistics());
             ArrayList<String> runDataStatistics = new ArrayList<String>(backendClient.getRunDataStatistics());
             ArrayList<String> uniqueRunIdentifiers = new ArrayList<String>(backendClient.getClusteringRunResultIdentifiers());
+            ArrayList<String> uniqueDataIdentifiers = new ArrayList<String>(backendClient.getDataAnalysisRunResultIdentifiers());
             ArrayList<String> randomizers = new ArrayList<String>(backendClient.getDataRandomizers());
 
             Collections.sort(dataSets, String.CASE_INSENSITIVE_ORDER);
@@ -237,6 +238,7 @@ public class RunController {
             Collections.sort(runStatistics, String.CASE_INSENSITIVE_ORDER);
             Collections.sort(runDataStatistics, String.CASE_INSENSITIVE_ORDER);
             Collections.sort(uniqueRunIdentifiers, String.CASE_INSENSITIVE_ORDER);
+            Collections.sort(uniqueDataIdentifiers, String.CASE_INSENSITIVE_ORDER);
             Collections.sort(randomizers, String.CASE_INSENSITIVE_ORDER);
 
             model.addAttribute("dataSets", dataSets);
@@ -247,6 +249,7 @@ public class RunController {
             model.addAttribute("runStatistics", runStatistics);
             model.addAttribute("runDataStatistics", runDataStatistics);
             model.addAttribute("uniqueRunIdentifiers", uniqueRunIdentifiers);
+            model.addAttribute("uniqueDataIdentifiers", uniqueDataIdentifiers);
             model.addAttribute("randomizers", randomizers);
         } catch (ConnectException e) {
             throw(e);
@@ -258,10 +261,6 @@ public class RunController {
     public String createRun(RunCreation runCreation, Model model) {
         try {
             populateModel(model);
-            /*ProgramController programController = new ProgramController();
-            ArrayList<Program> programs = new ArrayList<Program>();
-            programs.add(programController.getProgram("DBSCAN"));
-            runCreation.setProgramSettings(programs);*/
         } catch (ConnectException e) {
             return "runs/notRunning";
         } catch (Exception e) {

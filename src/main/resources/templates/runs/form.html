@@ -259,7 +259,7 @@
                             <span class="error" th:if="${#fields.hasErrors('uniqueDataIdentifiers')}" th:errors="*{uniqueDataIdentifiers}">
                         </label>
                         <select class="select2-multiple" multiple="multiple" name="uniqueDataIdentifiers">
-                            <option th:each="uniqueDataIdentifier : ${uniqueRunIdentifiers}" th:value="${uniqueDataIdentifier}" th:text="${uniqueDataIdentifier}" th:selected="${#lists.contains(runCreation.uniqueDataIdentifiers, uniqueDataIdentifier)}">
+                            <option th:each="uniqueDataIdentifier : ${uniqueDataIdentifiers}" th:value="${uniqueDataIdentifier}" th:text="${uniqueDataIdentifier}" th:selected="${#lists.contains(runCreation.uniqueDataIdentifiers, uniqueDataIdentifier)}">
                         </select>
                         <input class="placeholder" type="hidden" name="uniqueDataIdentifiers" value="DUMMY" disabled>
                     </div>
@@ -317,7 +317,7 @@
         </li>
         <li>
             <span class="section-header">
-                <span>Other settings</span>
+                <span>Finish</span>
             </span>
             <div class="section-content">
                 <div class="form-group">

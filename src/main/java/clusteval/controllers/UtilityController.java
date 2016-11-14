@@ -50,7 +50,7 @@ public class UtilityController {
     private int clientId;
 
     @RequestMapping(value="/utilities")
-    public String utilitiesIndex(Model model) {
+    public String utilitiesIndex() {
         return "utilities/index";
     }
 
