@@ -49,7 +49,7 @@ public class RunController {
     @RequestMapping("/runs")
     public String showRuns(Model model) {
         ArrayList<Run> runs = new ArrayList<Run>();
-        ArrayList<String> runNames = new ArrayList<String>();
+        //ArrayList<String> runNames = new ArrayList<String>();
         ArrayList<String> runResumes = new ArrayList<String>();
         ArrayList<String> runningRuns;
         ArrayList<String> finishedRuns;
@@ -58,11 +58,11 @@ public class RunController {
         try {
             BackendClient backendClient = getBackendClient();
 
-            runNames = new ArrayList<String>(backendClient.getRuns());
+            final ArrayList<String> runNames = new ArrayList<String>(backendClient.getRuns());
             for (String runName : runNames) {
                 runs.add(new Run(runName));
             }
-            //Collections.sort(runs, String.CASE_INSENSITIVE_ORDER);
+
             Collections.sort(runs, new Comparator<Run>() {
                 public int compare(Run left, Run right) {
                     //Use the 'edit of' line to determine the proper order of runs
@@ -77,7 +77,10 @@ public class RunController {
                         while ((currentLine = leftReader.readLine()) != null) {
                             if (currentLine.startsWith("#editOf")) {
                                 leftName = currentLine.split("=")[1].trim();
-                                left.setEdited(true);
+
+                                if (runNames.contains(leftName)) {
+                                    left.setEdited(true);
+                                }
                                 break;
                             }
                         }
@@ -85,7 +88,10 @@ public class RunController {
                         while ((currentLine = rightReader.readLine()) != null) {
                             if (currentLine.startsWith("#editOf")) {
                                 rightName = currentLine.split("=")[1].trim();
-                                right.setEdited(true);
+
+                                if (runNames.contains(rightName)) {
+                                    right.setEdited(true);
+                                }
                                 break;
                             }
                         }

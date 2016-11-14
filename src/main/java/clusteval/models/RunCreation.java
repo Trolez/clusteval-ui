@@ -304,8 +304,24 @@ public class RunCreation {
             Program program = new Program();
             ProgramParameter programParameter;
 
+            HashMap<String, ArrayList<String>> parametersToOptimize = new HashMap<String, ArrayList<String>>();
+            Pattern programPattern = Pattern.compile("\\[(.+)\\]"); //Should match [program]
+            Matcher programMatcher;
+
             while ((currentLine = br.readLine()) != null) {
                 matcher = pattern.matcher(currentLine);
+                programMatcher = programPattern.matcher(currentLine);
+
+                if (programMatcher.find()) {
+                    //Add parameters that should be optimized
+                    while ((currentLine = br.readLine()) != null && !(currentLine.equals(""))) {
+                        if (currentLine.startsWith("optimizationParameters")) {
+                            parametersToOptimize.put(programMatcher.group(1), new ArrayList<String>(Arrays.asList(currentLine.split(","))));
+                            break;
+                        }
+                    }
+                }
+
                 if (matcher.find()) {
                     String programName = matcher.group(1); //Group count is 1-based
                     String parameterName = matcher.group(2);
@@ -313,8 +329,8 @@ public class RunCreation {
                     Program programTest = new Program();
                     programTest.setName(programName);
                     if (!programs.contains(programTest)) {
-                        ProgramController programController = new ProgramController();
-                        program = programController.getProgram(programName);
+                        ProgramService programService = new ProgramService();
+                        program = programService.getProgram(programName);
 
                         programs.add(program);
                     }
@@ -340,10 +356,16 @@ public class RunCreation {
                         if (currentLine.startsWith("options")) {
                             programParameter.setOptions(line);
                         }
+                        if (parametersToOptimize.get(programName).contains(parameterName)) {
+                            programParameter.setOptimize(true);
+                        } else {
+                            programParameter.setOptimize(false);
+                        }
                     }
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
 
         setProgramSettings(programs);
