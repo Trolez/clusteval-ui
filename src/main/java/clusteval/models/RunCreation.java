@@ -313,11 +313,14 @@ public class RunCreation {
                 programMatcher = programPattern.matcher(currentLine);
 
                 if (programMatcher.find()) {
-                    //Add parameters that should be optimized
-                    while ((currentLine = br.readLine()) != null && !(currentLine.equals(""))) {
-                        if (currentLine.startsWith("optimizationParameters")) {
-                            parametersToOptimize.put(programMatcher.group(1), new ArrayList<String>(Arrays.asList(currentLine.split(","))));
-                            break;
+                    if (currentLine.indexOf(':') < 0) {
+                        //Add parameters that should be optimized
+                        while ((currentLine = br.readLine()) != null && !(currentLine.equals(""))) {
+                            if (currentLine.startsWith("optimizationParameters")) {
+                                String programParametersToOptimize = currentLine.split("=")[1].trim();
+                                parametersToOptimize.put(programMatcher.group(1), new ArrayList<String>(Arrays.asList(programParametersToOptimize.split(","))));
+                                break;
+                            }
                         }
                     }
                 }
@@ -348,6 +351,7 @@ public class RunCreation {
                             programParameter.setMinValue(line);
                         }
                         if (currentLine.startsWith("maxValue")) {
+                            System.err.println("Setting max value: Program: " + program.getName() + " - Parameter: " + programParameter.getName() + " - Value: " + line);
                             programParameter.setMaxValue(line);
                         }
                         if (currentLine.startsWith("def")) {
@@ -362,6 +366,18 @@ public class RunCreation {
                             programParameter.setOptimize(false);
                         }
                     }
+                }
+            }
+
+            //Add programs for older runs without parameter settings
+            for (String programName : getPrograms()) {
+                Program programTest = new Program();
+                programTest.setName(programName.trim());
+                if (!programs.contains(programTest)) {
+                    ProgramService programService = new ProgramService();
+                    program = programService.getProgram(programName);
+
+                    programs.add(program);
                 }
             }
         } catch (Exception e) {
