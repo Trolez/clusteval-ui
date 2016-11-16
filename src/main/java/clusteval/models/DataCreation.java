@@ -15,6 +15,8 @@ public class DataCreation {
     @Pattern(regexp="([0-9|a-z|A-Z|\\_])+", message = "Please only include letters a-z, numbers 0-9 and underscores (_) in the name")
     private String name;
 
+    private String originalName;
+
     @NotNull(message = "Please specify a dataset type")
     private String dataSetType;
 
@@ -32,6 +34,14 @@ public class DataCreation {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getOriginalName() {
+        return originalName;
+    }
+
+    public void setOriginalName(String originalName) {
+        this.originalName = originalName;
     }
 
     public String getDataSetType() {
@@ -68,6 +78,7 @@ public class DataCreation {
 
     public void parse(String path, String fileName) {
         setName(fileName);
+        setOriginalName(fileName);
 
         BufferedReader datasetConfigReader = null;
         BufferedReader datasetFileReader = null;

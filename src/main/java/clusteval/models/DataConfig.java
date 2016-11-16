@@ -7,6 +7,10 @@ public class DataConfig {
 
     private String goldStandardConfig;
 
+    private String goldStandardFile;
+
+    private String goldStandardName;
+
     private String dataSetName;
 
     private String dataSetFile;
@@ -39,6 +43,22 @@ public class DataConfig {
 
     public void setGoldStandardConfig(String goldStandardConfig) {
         this.goldStandardConfig = goldStandardConfig;
+    }
+
+    public String getGoldStandardFile() {
+        return goldStandardFile;
+    }
+
+    public void setGoldStandardFile(String goldStandardFile) {
+        this.goldStandardFile = goldStandardFile;
+    }
+
+    public String getGoldStandardName() {
+        return goldStandardName;
+    }
+
+    public void setGoldStandardName(String goldStandardName) {
+        this.goldStandardName = goldStandardName;
     }
 
     public String getDataSetName() {

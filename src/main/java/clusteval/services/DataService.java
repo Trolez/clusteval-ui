@@ -4,6 +4,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.mock.web.MockMultipartFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +28,69 @@ public class DataService {
     private int clientId;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    public void getData(DataConfig dataConfig, String name) {
+        dataConfig.setName(name);
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(getPath() + "/data/configs/" + name + ".dataconfig"));;
+            String currentLine;
+
+            while ((currentLine = br.readLine()) != null) {
+                String line = currentLine.substring(currentLine.indexOf("=") + 1).trim();
+                if (currentLine.startsWith("datasetConfig")) {
+                    dataConfig.setDataSetConfig(line);
+                } else if (currentLine.startsWith("goldstandardConfig")) {
+                    dataConfig.setGoldStandardConfig(line);
+                    dataConfig.setHasGoldstandard(true);
+                }
+            }
+
+            br = new BufferedReader(new FileReader(getPath() + "/data/datasets/configs/" + dataConfig.getDataSetConfig() + ".dsconfig"));;
+
+            while ((currentLine = br.readLine()) != null) {
+                String line = currentLine.substring(currentLine.indexOf("=") + 1).trim();
+                if (currentLine.startsWith("datasetName")) {
+                    dataConfig.setDataSetName(line);
+                } else if (currentLine.startsWith("datasetFile")) {
+                    dataConfig.setDataSetFile(line);
+                }
+            }
+
+            br = new BufferedReader(new FileReader(getPath() + "/data/goldstandards/configs/" + dataConfig.getGoldStandardConfig() + ".gsconfig"));;
+
+            while ((currentLine = br.readLine()) != null) {
+                String line = currentLine.substring(currentLine.indexOf("=") + 1).trim();
+                if (currentLine.startsWith("goldstandardFile")) {
+                    dataConfig.setGoldStandardFile(line);
+                } else if (currentLine.startsWith("goldstandardName")) {
+                    dataConfig.setGoldStandardName(line);
+                }
+            }
+        } catch (Exception e) {
+
+        }
+
+        //Read dataset file to determine number of samples and dimensionality
+        Integer dimensionality = null;
+        Integer numberOfSamples = 0;
+        String datasetFile = new String(getPath() + "/data/datasets/" + dataConfig.getDataSetName() + "/" + dataConfig.getDataSetFile());
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(datasetFile));
+
+            String currentLine;
+            while ((currentLine = br.readLine()) != null) {
+                if (!currentLine.startsWith("//")) {
+                    numberOfSamples++;
+                    if (dimensionality == null) {
+                        dimensionality = currentLine.split("\t").length - 1;
+                    }
+                }
+            }
+        } catch (Exception e) {}
+        dataConfig.setNumberOfSamples(numberOfSamples);
+        dataConfig.setDimensionality(dimensionality);
+    }
 
     public void createData(DataCreation dataCreation) throws IOException {
         try {
@@ -128,6 +193,48 @@ public class DataService {
             } catch (IOException e) {
                 throw(e);
             }
+        }
+    }
+
+    public void editData(DataCreation dataCreation) throws IOException {
+        DataConfig dataConfig = new DataConfig();
+        getData(dataConfig, dataCreation.getOriginalName());
+
+        if (dataCreation.getDataSetFile().getSize() == 0) {
+            Path path = Paths.get(getPath() + "/data/datasets/" + dataConfig.getDataSetName() + "/" + dataConfig.getDataSetFile());
+            String name = dataConfig.getDataSetFile();
+            String originalName = dataConfig.getDataSetFile();
+            String contentType = Files.probeContentType(path);
+            byte[] content = null;
+            try {
+                content = Files.readAllBytes(path);
+            } catch (IOException e) {
+                throw(e);
+            }
+            dataCreation.setDataSetFile(new MockMultipartFile(name, originalName, contentType, content));
+        }
+
+        if (dataCreation.getGoldstandardFile().getSize() == 0) {
+            Path path = Paths.get(getPath() + "/data/goldstandards/" + dataConfig.getGoldStandardName() + "/" + dataConfig.getGoldStandardFile());
+            String name = dataConfig.getGoldStandardFile();
+            String originalName = dataConfig.getGoldStandardFile();
+            String contentType = Files.probeContentType(path);
+            byte[] content = null;
+            try {
+                content = Files.readAllBytes(path);
+            } catch (IOException e) {
+                throw(e);
+            }
+            dataCreation.setGoldstandardFile(new MockMultipartFile(name, originalName, contentType, content));
+        }
+
+        //To edit data, just delete original and create new
+        deleteData(dataCreation.getOriginalName());
+
+        try {
+            createData(dataCreation);
+        } catch (IOException e) {
+            throw(e);
         }
     }
 

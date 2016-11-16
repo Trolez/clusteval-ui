@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -64,54 +65,7 @@ public class DataController {
 
     @RequestMapping(value="/data/show")
     public String showData(DataConfig dataConfig, @RequestParam(value="name", required=true) String name) {
-        dataConfig.setName(name);
-
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(getPath() + "/data/configs/" + name + ".dataconfig"));;
-            String currentLine;
-
-            while ((currentLine = br.readLine()) != null) {
-                String line = currentLine.substring(currentLine.indexOf("=") + 1).trim();
-                if (currentLine.startsWith("datasetConfig")) {
-                    dataConfig.setDataSetConfig(line);
-                } else if (currentLine.startsWith("goldstandardConfig")) {
-                    dataConfig.setGoldStandardConfig(line);
-                    dataConfig.setHasGoldstandard(true);
-                }
-            }
-
-            br = new BufferedReader(new FileReader(getPath() + "/data/datasets/configs/" + dataConfig.getDataSetConfig() + ".dsconfig"));;
-
-            while ((currentLine = br.readLine()) != null) {
-                String line = currentLine.substring(currentLine.indexOf("=") + 1).trim();
-                if (currentLine.startsWith("datasetName")) {
-                    dataConfig.setDataSetName(line);
-                } else if (currentLine.startsWith("datasetFile")) {
-                    dataConfig.setDataSetFile(line);
-                }
-            }
-        } catch (Exception e) {
-        }
-
-        //Read dataset file to determine number of samples and dimensionality
-        Integer dimensionality = null;
-        Integer numberOfSamples = 0;
-        String datasetFile = new String(getPath() + "/data/datasets/" + dataConfig.getDataSetName() + "/" + dataConfig.getDataSetFile());
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(datasetFile));
-
-            String currentLine;
-            while ((currentLine = br.readLine()) != null) {
-                if (!currentLine.startsWith("//")) {
-                    numberOfSamples++;
-                    if (dimensionality == null) {
-                        dimensionality = currentLine.split("\t").length - 1;
-                    }
-                }
-            }
-        } catch (Exception e) {}
-        dataConfig.setNumberOfSamples(numberOfSamples);
-        dataConfig.setDimensionality(dimensionality);
+        dataService.getData(dataConfig, name);
 
         return "data/show";
     }
@@ -163,8 +117,17 @@ public class DataController {
 
     @RequestMapping(value="/data/edit", method=RequestMethod.POST)
     public String editData(@Valid DataCreation dataCreation, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        boolean ignoreErrors = true;
+
+        //Ignore validation errors if only data set file is missing
+        for (FieldError error : bindingResult.getFieldErrors()) {
+            if (!error.getField().equals("dataSetFile")) {
+                ignoreErrors = false;
+            }
+        }
+
         //Return to form if there were validation errors
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors() && !ignoreErrors) {
             try {
                 populateModel(model);
             } catch (ConnectException e) {
@@ -173,7 +136,14 @@ public class DataController {
             return "data/edit";
         }
 
-        return "redirect:/data/edit";
+        try {
+            dataService.editData(dataCreation);
+            redirectAttributes.addFlashAttribute("success", "Succesfully edited data configuration");
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("success", "An error occurred when editing the data");
+        }
+
+        return "redirect:/data";
     }
 
     @RequestMapping(value="/data/delete")
