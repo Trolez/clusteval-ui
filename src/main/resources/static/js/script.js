@@ -150,17 +150,19 @@ $(document).ready(function() {
                             var options = '';
 
                             returnValue += '<div class="program-content-parameter">';
-                                returnValue += '<hr><label>' + value.name + '</label><br>';
+                                returnValue += '<hr><strong>Parameter:</strong> ' + value.name + '<br>';
                                 returnValue += '<input type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.name"' + 'name="programSettings[' + index + '].parameters[' + paramIndex + '].name" value="' + value.name + '" />';
+                                returnValue += '<strong>Defaults:</strong><br>';
                                 $.each(value.defaultOptions, function(key,value){
-                                    returnValue += value.name + ': ' + value.value + '<br>';
                                     if (value.name == "defaultValue") {
                                         defaultValue = value.value;
                                     }
                                     if (value.name == "minValue") {
+                                        returnValue += 'Minimum value: ' + value.value + '<br>';
                                         minValue = value.value;
                                     }
                                     if (value.name == "maxValue") {
+                                        returnValue += 'Maximum value: ' + value.value + '<br>';
                                         maxValue = value.value;
                                     }
                                     if (value.name == "options") {
@@ -184,21 +186,21 @@ $(document).ready(function() {
                                     if (options == '') {
                                         if (value.optimizable) {
                                             returnValue += '<div class="optimize-parameter optimize">';
-                                                returnValue += '<label>Min value';
+                                                returnValue += '<label>Overwrite minimum value';
                                                     returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.minValue" name="programSettings[' + index + '].parameters[' + paramIndex + '].minValue" type="text" value="' + minValue + '" />';
                                                 returnValue += '</label>';
-                                                returnValue += '<label>Max value';
+                                                returnValue += '<label>Overwrite maximum value';
                                                     returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.maxValue" name="programSettings[' + index + '].parameters[' + paramIndex + '].maxValue" type="text" value="' + maxValue + '" />';
                                                 returnValue += '</label>';
                                             returnValue += '</div>';
                                             returnValue += '<div class="optimize-parameter no-optimize hidden" style="display: none;">';
-                                                returnValue += '<label>Value';
+                                                returnValue += '<label>Overwrite default value';
                                                     returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].value" type="text" value="' + defaultValue + '" disabled />';
                                                 returnValue += '</label>';
                                             returnValue += '</div>';
                                         } else {
                                             returnValue += '<div>';
-                                                returnValue += '<label>Value';
+                                                returnValue += '<label>Overwrite default value';
                                                     returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].value" type="text" value="' + defaultValue + '" />';
                                                 returnValue += '</label>';
                                             returnValue += '</div>';
@@ -335,10 +337,10 @@ $(document).ready(function() {
             }
             if (editedRunsCount == 1) {
                 //Append button to original run
-                container.prev('.run').append('<a class="btn btn-default toggle-edits"><i class="fa fa-angle-down"></i> ' + editedRunsCount + ' additional version available</a>');
+                container.prev('.run').find('form').append('<a class="gray-button no-margin pull-right toggle-edits"><i class="fa fa-angle-down"></i> ' + editedRunsCount + ' additional version available</a>');
             } else {
                 //Append button to original run
-                container.prev('.run').append('<a class="btn btn-default toggle-edits"><i class="fa fa-angle-down"></i> ' + editedRunsCount + ' additional versions available</a>');
+                container.prev('.run').find('form').append('<a class="gray-button no-margin pull-right toggle-edits"><i class="fa fa-angle-down"></i> ' + editedRunsCount + ' additional versions available</a>');
             }
 
             editedRuns = [];
@@ -348,7 +350,7 @@ $(document).ready(function() {
 
     //Toggle edited runs display
     $('.run-list .run').on('click', '.toggle-edits', function() {
-        $(this).parent().next('.edited-runs-container').slideToggle();
+        $(this).closest('.run').next('.edited-runs-container').slideToggle();
 
         $(this).find('.fa').toggleClass('fa-angle-down');
         $(this).find('.fa').toggleClass('fa-angle-up');

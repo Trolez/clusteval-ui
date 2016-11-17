@@ -351,7 +351,6 @@ public class RunCreation {
                             programParameter.setMinValue(line);
                         }
                         if (currentLine.startsWith("maxValue")) {
-                            System.err.println("Setting max value: Program: " + program.getName() + " - Parameter: " + programParameter.getName() + " - Value: " + line);
                             programParameter.setMaxValue(line);
                         }
                         if (currentLine.startsWith("def")) {

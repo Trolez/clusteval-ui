@@ -16,11 +16,11 @@
 
             <div th:object="${result}" class="parameter-optimization">
                 <div class="program" th:each="program, programStat : *{programs}">
-                    <span class="name">Program configuration: <span th:text="${program.name}"></span></span>
+                    <span class="name">Program: <span th:text="${program.name}"></span></span>
                     <div class="data-wrapper">
                         <div class="data" th:each="data, dataStat : ${program.data}">
                             <div class="dash"></div>
-                            <span class="name">Data configuration: <span th:text="${data.name}"></span></span><br><br>
+                            <span class="name">Data: <span th:text="${data.name}"></span></span><br><br>
                             <strong>Best qualities</strong>
                             <ul>
                                 <li th:each="quality : ${data.qualities}">

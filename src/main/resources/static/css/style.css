@@ -25,8 +25,9 @@ a:focus, a:hover { color: rgb(67, 80, 109); }
 .gray-button { font-size: 16px; text-decoration: none; display: inline-block; height: 38px; background: #f9f9f9; padding: 0px 10px; line-height: 38px; vertical-align: middle; cursor: pointer; border-radius: 3px; border: 1px solid #ccc; color: #333; margin: 5px 0px; }
 .gray-button:focus { outline: none; border: 1px dashed #ccc; }
 .gray-button.full-width { display: block; }
-.delete-button { display: inline-block; float: right; width: 25px; height: 25px; background: #d85252; text-align: center; line-height: 25px; vertical-align: middle; cursor: pointer; border-radius: 3px; border: 1px solid #530000; margin-left: 3px; color: #451515; }
-.edit-button { display: inline-block; float: right; width: 25px; height: 25px; background: #f9f9f9; text-align: center; line-height: 25px; vertical-align: middle; cursor: pointer; border-radius: 3px; border: 1px solid #ccc; margin-left: 3px; color: #333; }
+.gray-button.no-margin { margin: 0px; }
+.delete-button { display: inline-block; float: right; width: 38px; height: 38px; background: #d85252; text-align: center; line-height: 38px; vertical-align: middle; cursor: pointer; border-radius: 3px; border: 1px solid #530000; margin-left: 3px; color: #451515; }
+.edit-button { display: inline-block; float: right; width: 38px; height: 38px; background: #f9f9f9; text-align: center; line-height: 38px; vertical-align: middle; cursor: pointer; border-radius: 3px; border: 1px solid #ccc; margin-left: 3px; color: #333; }
 
 /* Header */
 header { height: 100px; background: rgb(67, 80, 109); padding-left: 120px; }
@@ -69,6 +70,7 @@ header h1 { color: white; margin-top: 0px; margin-bottom: 0px; position: relativ
 #home .basic-stat .btn { width: 100%; }
 
 /* Data */
+#data .data-name { line-height: 38px; }
 #data .data-container .data-information { display: none; margin-top: 5px; padding: 5px; }
 #data .data-container .data-information .data-basic-stat { border: 2px solid #cfcfcf; background: #f5f5f5; text-align: center; color: #333; margin-bottom: 5px; }
 #data .data-container .data-information .data-basic-stat .stat-count { font-size: 50px; font-weight: bold; margin-top: 20px; }
@@ -76,6 +78,7 @@ header h1 { color: white; margin-top: 0px; margin-bottom: 0px; position: relativ
 
 /* Programs */
 #programs .program-container .program-information { display: none; margin-top: 5px; padding: 5px; }
+#programs .program-name { line-height: 38px; }
 
 /* Results */
 #results .parameter-optimization .name { font-size: 25px; font-weight: bold; display: inline-block; margin: 5px 0px; }
@@ -102,10 +105,10 @@ header h1 { color: white; margin-top: 0px; margin-bottom: 0px; position: relativ
 
 /* Main - Run list */
 main .run-list .run { padding: 10px; border: 2px solid #cfcfcf; background: #efefef; margin-bottom: 8px; overflow: hidden; }
-main .run-list .run span.name { display: block; border-bottom: 2px solid #cfcfcf; margin: -10px -10px 10px -10px; padding: 10px; }
-main .run-list .run .btn { float: left; margin-right: 10px; }
+main .run-list .run span.name { line-height: 38px; font-size: 16px; font-weight: bold; }
+main .run-list .run .gray-button { float: left; margin-right: 10px; }
 main .run-list .run .btn.pull-right { margin-right: 0px; }
-main .run-list .run .progress { margin-bottom: 0px; height: 34px; background-color: #f9f9f9; }
+main .run-list .run .progress { margin-bottom: 0px; height: 38px; background-color: #f9f9f9; }
 main .run-list .edited-runs-container { padding-left: 50px; }
 main .run-list .edited-runs-container { display: none; }
 

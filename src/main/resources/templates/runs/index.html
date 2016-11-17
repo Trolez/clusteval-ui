@@ -13,7 +13,7 @@
                         <div><span class="name" th:text="${runningRun}" /></div>
                         <form th:action="@{/terminate-run}" method="post">
                             <input type="hidden" name="name" th:value="${runningRun}">
-                            <input type="submit" name="send" value="Pause Run" class="btn btn-primary">
+                            <input type="submit" name="send" value="Pause Run" class="gray-button no-margin">
                         </form>
                         <div class="progress">
                             <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
@@ -29,8 +29,8 @@
                 <div class="run-container" th:each="finishedRun : ${finishedRuns}">
                     <div class="run">
                         <div><span class="name" th:text="${finishedRun}" /></div>
-                        <a class="btn btn-primary" th:href="@{/results/show(name=${finishedRun})}">View results</a>
-                        <a class="btn btn-danger delete-run" th:href="@{/delete-run(name=${finishedRun})}">Delete run</a>
+                        <a class="gray-button no-margin" th:href="@{/results/show(name=${finishedRun})}">View results</a>
+                        <a class="delete-button delete-run" th:href="@{/delete-run(name=${finishedRun})}"><i class="fa fa-trash"></i></a>
                         <div class="progress">
                             <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
                                 <span class="sr-only">100% Complete</span>
@@ -47,9 +47,9 @@
                         <div><span class="name" th:text="${terminatedRun}" /></div>
                         <form th:action="@{/resume-run}" method="post">
                             <input type="hidden" name="name" th:value="${terminatedRun}">
-                            <input type="submit" name="send" value="Resume Run" class="btn btn-primary">
+                            <input type="submit" name="send" value="Resume Run" class="gray-button no-margin">
                         </form>
-                        <a class="btn btn-danger delete-run" th:href="@{/delete-run(name=${terminatedRun})}">Delete run</a>
+                        <a class="delete-button delete-run" th:href="@{/delete-run(name=${terminatedRun})}"><i class="fa fa-trash"></i></a>
                         <div class="progress">
                             <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
                                 <span class="sr-only">0% Complete</span>
@@ -61,13 +61,15 @@
 
             <h1>Available runs</h1>
             <div class="run" th:each="run : ${runs}" th:classappend="${run.edited} ? edited : ''">
-                <div><span class="name" th:text="${run.name}" /></div>
-                <form th:action="@{/runs}" method="post">
-                    <a class="btn btn-danger pull-right delete-run" th:href="@{/runs/delete(name=${run.name})}">Delete run</a>
-                    <input type="hidden" name="name" th:value="${run.name}">
-                    <input type="submit" name="send" value="Perform Run" class="btn btn-primary">
-                    <a class="btn btn-primary" th:href="@{/runs/edit(name=${run.name})}">Edit run</a>
-                </form>
+                <div>
+                    <form th:action="@{/runs}" method="post">
+                        <span class="name" th:text="${run.name}"></span>
+                        <a class="delete-button pull-right delete-run" th:href="@{/runs/delete(name=${run.name})}"><i class="fa fa-trash"></i></a>
+                        <a class="edit-button" th:href="@{/runs/edit(name=${run.name})}"><i class="fa fa-edit"></i></a>
+                        <input type="submit" name="send" value="Perform Run" class="gray-button no-margin pull-right">
+                        <input type="hidden" name="name" th:value="${run.name}">
+                    </form>
+                </div>
             </div>
         </div>
     </div>

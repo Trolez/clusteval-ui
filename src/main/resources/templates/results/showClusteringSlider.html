@@ -10,7 +10,7 @@
         </div>
         <div>
             <strong th:text="${parameter.key}"></strong> -
-            <span th:text="${#lists.size(parameter.value)}"></span> possible values
+            <span th:text="${#lists.size(parameter.value)}"></span> evaluated values
             <div class="range-input-container">
                 <input type="range" class="options" th:attr="data-options=${#strings.listJoin(parameter.value, ',')}, max=${#lists.size(parameter.value) - 1}" min="0" value="0" step="1">
                 <div class="range-value" th:text="${parameter.value[0]}"></div>

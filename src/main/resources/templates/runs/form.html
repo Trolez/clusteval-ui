@@ -93,18 +93,25 @@
                                 <div class="program-content">
                                     <div class="program-content-parameter" th:each="programParameter, programParamStat: ${programSetting.parameters}">
                                         <hr>
-                                        <label th:text="${programParameter.name}"></label>
+                                        <strong>Parameter:</strong> <span th:text="${programParameter.name}"></span>
                                         <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].name}" />
+                                        <br>
+                                        <strong>Defaults:</strong>
                                         <th:block th:each="programParameterOption, optionStat: ${programParameter.defaultOptions}">
-                                            <br>
-                                            <span th:text="${programParameterOption.name}"></span>:
-                                            <span th:text="${programParameterOption.value}"></span>
+                                            <th:block th:if="${programParameterOption.name == 'minValue'}">
+                                                <br>
+                                                Minimum value: <span th:text="${programParameterOption.value}"></span>
+                                            </th:block>
+                                            <th:block th:if="${programParameterOption.name == 'maxValue'}">
+                                                <br>
+                                                Maximum value: <span th:text="${programParameterOption.value}"></span>
+                                            </th:block>
                                             <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].defaultOptions[__${optionStat.index}__].name}" />
                                             <input type="hidden" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].defaultOptions[__${optionStat.index}__].value}" />
                                         </th:block>
                                         <div class="filter" data-mode="[&quot;clustering&quot;,&quot;robustnessAnalysis&quot;]">
                                             <label>
-                                                Value
+                                                Overwrite default value
                                                 <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].value}" />
                                             </label>
                                         </div>
@@ -119,17 +126,17 @@
                                             <th:block th:if="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].options} == null">
                                                 <div th:if="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimizable} == true" class="optimize-parameter optimize">
                                                     <label>
-                                                        Min value
+                                                        Overwrite minimum value
                                                         <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].minValue}" />
                                                     </label>
                                                     <label>
-                                                        Max value
+                                                        Overwrite maximum value
                                                         <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].maxValue}" />
                                                     </label>
                                                 </div>
                                                 <div class="optimize-parameter no-optimize">
                                                     <label>
-                                                        Value
+                                                        Overwrite default value
                                                         <input disabled="disabled" class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].value}" />
                                                     </label>
                                                 </div>

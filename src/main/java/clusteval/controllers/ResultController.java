@@ -525,7 +525,7 @@ public class ResultController {
 
             i = 1;
             for (String cluster : clusters) {
-                writer.print("Cluster_" + i + "\n");
+                writer.print("Cluster " + i + "\n");
 
                 String[] clusterObjects = cluster.split(",");
                 for (String clusterObject : clusterObjects) {
