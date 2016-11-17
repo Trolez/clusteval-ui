@@ -63,7 +63,10 @@
             <div class="run" th:each="run : ${runs}" th:classappend="${run.edited} ? edited : ''">
                 <div>
                     <form th:action="@{/runs}" method="post">
-                        <span class="name" th:text="${run.name}"></span>
+                        <span class="name" th:text="${run.displayName}"></span>
+                        <th:block th:if="${run.edited}">
+                            - <span class="date" th:text="${'Created: ' + run.date}"></span>
+                        </th:block>
                         <a class="delete-button pull-right delete-run" th:href="@{/runs/delete(name=${run.name})}"><i class="fa fa-trash"></i></a>
                         <a class="edit-button" th:href="@{/runs/edit(name=${run.name})}"><i class="fa fa-edit"></i></a>
                         <input type="submit" name="send" value="Perform Run" class="gray-button no-margin pull-right">

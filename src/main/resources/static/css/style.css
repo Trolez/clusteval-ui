@@ -89,6 +89,8 @@ header h1 { color: white; margin-top: 0px; margin-bottom: 0px; position: relativ
 #results .parameter-optimization .program .data .dash { position: absolute; left: -32px; top: 50%; transform: translateY(-50%); width: 30px; height: 2px; background: #cfcfcf; }
 #results .parameter-optimization .program .data ul { padding-left: 20px; }
 #results .parameter-optimization .toggle-result-graphs { display: inline-block; width: 25px; height: 25px; background: #f9f9f9; text-align: center; line-height: 25px; vertical-align: middle; cursor: pointer; border-radius: 3px; border: 1px solid #ccc; }
+#results .parameter-optimization .parameter-graph { height: 500px; background: #fff; }
+#results .parameter-optimization .parameter-graph span { position: relative; top: 50%; transform: translateY(-50%); display: block; text-align: center; }
 #results .data-wrapper .data-basic-stat { border: 2px solid #cfcfcf; background: #efefef; text-align: center; color: #333; }
 #results .data-wrapper .data-basic-stat .stat-count { font-size: 50px; font-weight: bold; margin-top: 20px; }
 #results .data-wrapper .data-basic-stat .stat-name { font-size: 18px; margin-bottom: 20px; }
@@ -109,6 +111,7 @@ main .run-list .run span.name { line-height: 38px; font-size: 16px; font-weight:
 main .run-list .run .gray-button { float: left; margin-right: 10px; }
 main .run-list .run .btn.pull-right { margin-right: 0px; }
 main .run-list .run .progress { margin-bottom: 0px; height: 38px; background-color: #f9f9f9; }
+main .run-list .run .date { font-size: 16px; color: #999; }
 main .run-list .edited-runs-container { padding-left: 50px; }
 main .run-list .edited-runs-container { display: none; }
 

@@ -60,7 +60,29 @@ public class RunController {
 
             final ArrayList<String> runNames = new ArrayList<String>(backendClient.getRuns());
             for (String runName : runNames) {
-                runs.add(new Run(runName));
+                Run run = new Run(runName);
+
+                String displayName = runName;
+
+                //Remove appended date if it is there
+                int index = runName.lastIndexOf('_');
+                if (index > -1) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-kk-mm-ss");
+                    try {
+                        if (dateFormat.parse(runName, new ParsePosition(index+1)) != null) {
+                            Date date = dateFormat.parse(runName, new ParsePosition(index+1));
+                            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy kk:mm:ss");
+                            displayName = runName.substring(0, index);
+
+                            run.setDate(formatter.format(date));
+                        }
+                    } catch (Exception e){
+                    }
+                }
+
+                run.setDisplayName(displayName);
+
+                runs.add(run);
             }
 
             Collections.sort(runs, new Comparator<Run>() {
@@ -347,7 +369,6 @@ public class RunController {
                         runCreation.setName(runCreation.getName().substring(0, index));
                     }
                 } catch (Exception e){
-                    System.err.println(e.toString());
                 }
             }
 
