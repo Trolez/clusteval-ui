@@ -19,7 +19,7 @@
                         Name of run
                         <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
                     </label>
-                    <input type="text" name="name" th:field="*{name}" class="form-control" th:errorclass="has-error"><br>
+                    <input placeholder="Name of run" type="text" name="name" th:field="*{name}" class="form-control" th:errorclass="has-error"><br>
                     <input type="hidden" name="originalName" th:field="*{originalName}" class="form-control"><br>
                 </div>
                 <div class="form-group">
@@ -112,7 +112,7 @@
                                         <div class="filter" data-mode="[&quot;clustering&quot;,&quot;robustnessAnalysis&quot;]">
                                             <label>
                                                 Overwrite default value
-                                                <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].value}" />
+                                                <input placeholder="Default value" class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].value}" />
                                             </label>
                                         </div>
                                         <div class="filter" data-mode="[&quot;parameter_optimization&quot;]">
@@ -127,11 +127,11 @@
                                                 <div th:if="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].optimizable} == true" class="optimize-parameter optimize">
                                                     <label>
                                                         Overwrite minimum value
-                                                        <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].minValue}" />
+                                                        <input placeholder="Minimum value" class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].minValue}" />
                                                     </label>
                                                     <label>
                                                         Overwrite maximum value
-                                                        <input class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].maxValue}" />
+                                                        <input placeholder="Maximum value" class="form-control" type="text" th:field="*{programSettings[__${programSettingStat.index}__].parameters[__${programParamStat.index}__].maxValue}" />
                                                     </label>
                                                 </div>
                                                 <div class="optimize-parameter no-optimize">
@@ -328,7 +328,9 @@
             </span>
             <div class="section-content">
                 <div class="form-group">
-                    <input type="submit" value="Create run">
+                    <button type="submit" class="gray-button">
+                        Create run
+                    </button>
                 </div>
             </div>
         </li>

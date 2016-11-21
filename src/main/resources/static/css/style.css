@@ -108,7 +108,7 @@ header h1 { color: white; margin-top: 0px; margin-bottom: 0px; position: relativ
 /* Main - Run list */
 main .run-list .run { padding: 10px; border: 2px solid #cfcfcf; background: #efefef; margin-bottom: 8px; overflow: hidden; }
 main .run-list .run span.name { line-height: 38px; font-size: 16px; font-weight: bold; }
-main .run-list .run .gray-button { float: left; margin-right: 10px; }
+main .run-list .run .gray-button { float: left; margin-right: 0px; margin-left: 3px; }
 main .run-list .run .btn.pull-right { margin-right: 0px; }
 main .run-list .run .progress { margin-bottom: 0px; height: 38px; background-color: #f9f9f9; }
 main .run-list .run .date { font-size: 16px; color: #999; }

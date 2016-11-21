@@ -5,7 +5,7 @@
             Name of program
             <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
         </label>
-        <input type="text" name="name" th:field="*{name}" class="form-control" th:errorclass="has-error">
+        <input placeholder="Name of program" type="text" name="name" th:field="*{name}" class="form-control" th:errorclass="has-error">
     </div>
     <input type="hidden" name="originalName" th:field="*{originalName}">
     <div class="form-group">
@@ -13,14 +13,14 @@
             Alias of program
             <span class="error" th:if="${#fields.hasErrors('alias')}" th:errors="*{alias}">
         </label>
-        <input type="text" name="alias" th:field="*{alias}" class="form-control" th:errorclass="has-error">
+        <input placeholder="Alias of program" type="text" name="alias" th:field="*{alias}" class="form-control" th:errorclass="has-error">
     </div>
     <div class="form-group">
         <label>
             Invocation format
             <span class="error" th:if="${#fields.hasErrors('invocationFormat')}" th:errors="*{invocationFormat}">
         </label>
-        <input type="text" name="invocationFormat" th:field="*{invocationFormat}" class="form-control" th:errorclass="has-error">
+        <input placeholder="Invocation format" type="text" name="invocationFormat" th:field="*{invocationFormat}" class="form-control" th:errorclass="has-error">
     </div>
     <div class="form-group">
         <label>
@@ -53,14 +53,14 @@
                     Parameter name
                     <span class="error" th:if="${#fields.hasErrors('parameters[__${parameterStat.index}__].name')}" th:errors="*{parameters[__${parameterStat.index}__].name}"></span>
                 </label>
-                <input type="text" class="form-control" name="name" th:field="*{parameters[__${parameterStat.index}__].name}" th:errorclass="has-error">
+                <input placeholder="Parameter name" type="text" class="form-control" name="name" th:field="*{parameters[__${parameterStat.index}__].name}" th:errorclass="has-error">
             </div>
             <div class="form-group">
                 <label>
                     Parameter description
                     <span class="error" th:if="${#fields.hasErrors('parameters[__${parameterStat.index}__].description')}" th:errors="*{parameters[__${parameterStat.index}__].description}"></span>
                 </label>
-                <input type="text" class="form-control" name="description" th:field="*{parameters[__${parameterStat.index}__].description}" th:errorclass="has-error">
+                <input placeholder="Parameter description" type="text" class="form-control" name="description" th:field="*{parameters[__${parameterStat.index}__].description}" th:errorclass="has-error">
             </div>
             <div class="form-group">
                 <label>Parameter type</label>
@@ -75,7 +75,7 @@
                     Default value
                     <span class="error" th:if="${#fields.hasErrors('parameters[__${parameterStat.index}__].defaultValue')}" th:errors="*{parameters[__${parameterStat.index}__].defaultValue}"></span>
                 </label>
-                <input type="text" class="form-control" name="defaultValue" th:field="*{parameters[__${parameterStat.index}__].defaultValue}" th:errorclass="has-error">
+                <input placeholder="Default value" type="text" class="form-control" name="defaultValue" th:field="*{parameters[__${parameterStat.index}__].defaultValue}" th:errorclass="has-error">
             </div>
             <div class="parameter-non-string">
                 <div class="form-group">
@@ -83,14 +83,14 @@
                         Minimum value
                         <span class="error" th:if="${#fields.hasErrors('parameters[__${parameterStat.index}__].minValue')}" th:errors="*{parameters[__${parameterStat.index}__].minValue}"></span>
                     </label>
-                    <input type="text" class="form-control" name="minValue" th:field="*{parameters[__${parameterStat.index}__].minValue}" th:errorclass="has-error">
+                    <input placeholder="Minimum value" type="text" class="form-control" name="minValue" th:field="*{parameters[__${parameterStat.index}__].minValue}" th:errorclass="has-error">
                 </div>
                 <div class="form-group">
                     <label>
                         Maximum value
                         <span class="error" th:if="${#fields.hasErrors('parameters[__${parameterStat.index}__].maxValue')}" th:errors="*{parameters[__${parameterStat.index}__].maxValue}"></span>
                     </label>
-                    <input type="text" class="form-control" name="maxValue" th:field="*{parameters[__${parameterStat.index}__].maxValue}" th:errorclass="has-error">
+                    <input placeholder="Maximum value" type="text" class="form-control" name="maxValue" th:field="*{parameters[__${parameterStat.index}__].maxValue}" th:errorclass="has-error">
                 </div>
             </div>
             <div class="parameter-string">

@@ -4,7 +4,7 @@
             Name of data set
             <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
         </label>
-        <input type="text" name="name" th:field="*{name}" class="form-control" th:errorclass="has-error"><br>
+        <input placeholder="Name of data set" type="text" name="name" th:field="*{name}" class="form-control" th:errorclass="has-error"><br>
     </div>
     <input type="hidden" name="originalName" th:field="*{originalName}">
     <div class="form-group">

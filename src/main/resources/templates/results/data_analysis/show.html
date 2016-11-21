@@ -4,6 +4,7 @@
     <!-- Highcarts -->
     <script src="/js/highcharts/highcharts.js"></script>
     <script src="/js/highcharts/modules/data.js"></script>
+    <script src="/js/highcharts/modules/exporting.js"></script>
 </head>
 <body>
     <div layout:fragment="content">
@@ -50,6 +51,9 @@
                                                     chart: {
                                                         type: 'area',
                                                         zoomType: 'x'
+                                                    },
+                                                    exporting: {
+                                                        enabled: true
                                                     },
                                                     title: {
                                                         text: 'Intra-/Inter Similarity Distribution'
@@ -120,6 +124,9 @@
                                                     chart: {
                                                         type: 'area',
                                                         zoomType: 'x'
+                                                    },
+                                                    exporting: {
+                                                        enabled: true
                                                     },
                                                     title: {
                                                         text: 'Similarity Distribution'
@@ -194,6 +201,9 @@
                                                         type: 'column',
                                                         zoomType: 'x'
                                                     },
+                                                    exporting: {
+                                                        enabled: true
+                                                    },
                                                     title: {
                                                         text: 'Class Size Distribution'
                                                     },
@@ -262,6 +272,9 @@
                                                     chart: {
                                                         type: 'area',
                                                         zoomType: 'x'
+                                                    },
+                                                    exporting: {
+                                                        enabled: true
                                                     },
                                                     title: {
                                                         text: 'Node Degree Distribution'

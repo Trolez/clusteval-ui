@@ -187,34 +187,34 @@ $(document).ready(function() {
                                         if (value.optimizable) {
                                             returnValue += '<div class="optimize-parameter optimize">';
                                                 returnValue += '<label>Overwrite minimum value';
-                                                    returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.minValue" name="programSettings[' + index + '].parameters[' + paramIndex + '].minValue" type="text" value="' + minValue + '" />';
+                                                    returnValue += '<input placeholder="Minimum value" class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.minValue" name="programSettings[' + index + '].parameters[' + paramIndex + '].minValue" type="text" value="' + minValue + '" />';
                                                 returnValue += '</label>';
                                                 returnValue += '<label>Overwrite maximum value';
-                                                    returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.maxValue" name="programSettings[' + index + '].parameters[' + paramIndex + '].maxValue" type="text" value="' + maxValue + '" />';
+                                                    returnValue += '<input placeholder="Maximum value" class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.maxValue" name="programSettings[' + index + '].parameters[' + paramIndex + '].maxValue" type="text" value="' + maxValue + '" />';
                                                 returnValue += '</label>';
                                             returnValue += '</div>';
                                             returnValue += '<div class="optimize-parameter no-optimize hidden" style="display: none;">';
                                                 returnValue += '<label>Overwrite default value';
-                                                    returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].value" type="text" value="' + defaultValue + '" disabled />';
+                                                    returnValue += '<input placeholder="Default value" class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].value" type="text" value="' + defaultValue + '" disabled />';
                                                 returnValue += '</label>';
                                             returnValue += '</div>';
                                         } else {
                                             returnValue += '<div>';
                                                 returnValue += '<label>Overwrite default value';
-                                                    returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].value" type="text" value="' + defaultValue + '" />';
+                                                    returnValue += '<input placeholder="Default value" class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].value" type="text" value="' + defaultValue + '" />';
                                                 returnValue += '</label>';
                                             returnValue += '</div>';
                                         }
                                     } else {
                                         returnValue += '<label>Values';
-                                            returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.options" name="programSettings[' + index + '].parameters[' + paramIndex + '].options" type="text" value="' + options + '" />';
+                                            returnValue += '<input placeholder="Options" class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.options" name="programSettings[' + index + '].parameters[' + paramIndex + '].options" type="text" value="' + options + '" />';
                                         returnValue += '</label>';
                                     }
                                 returnValue += '</div>';
 
                                 returnValue += '<div class="filter" data-mode="[&quot;clustering&quot;,&quot;robustnessAnalysis&quot;]">';
                                     returnValue += '<label>Value';
-                                        returnValue += '<input class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].value" type="text" value="' + defaultValue + '" />';
+                                        returnValue += '<input placeholder="Default value" class="form-control" id="programSettings' + index + '.parameters' + paramIndex + '.value" name="programSettings[' + index + '].parameters[' + paramIndex + '].value" type="text" value="' + defaultValue + '" />';
                                     returnValue += '</label>';
                                 returnValue += '</div>';
                             returnValue += '</div>';
@@ -527,6 +527,9 @@ $(document).ready(function() {
                     type: graphType,
                     zoomType: 'x'
                 },
+                exporting: {
+                    enabled: true
+                },
                 plotOptions: {
                     series: {
                         step: 'left'
@@ -619,11 +622,11 @@ $(document).ready(function() {
         var returnValue = '<div class="box">';
             returnValue += '<div class="form-group">';
                 returnValue += '<label>Parameter name</label>';
-                returnValue += '<input class="form-control" type="text" id="parameters' + index + '.name" name="parameters[' + index + '].name">';
+                returnValue += '<input placeholder="Parameter name" class="form-control" type="text" id="parameters' + index + '.name" name="parameters[' + index + '].name">';
             returnValue += '</div>';
             returnValue += '<div class="form-group">';
                 returnValue += '<label>Parameter description</label>';
-                returnValue += '<input class="form-control" type="text" id="parameters' + index + '.description" name="parameters[' + index + '].description">';
+                returnValue += '<input placeholder="Parameter description" class="form-control" type="text" id="parameters' + index + '.description" name="parameters[' + index + '].description">';
             returnValue += '</div>';
             returnValue += '<div class="form-group">';
                 returnValue += '<label>Parameter type</label>';
@@ -635,16 +638,16 @@ $(document).ready(function() {
             returnValue += '</div>';
             returnValue += '<div class="form-group">';
                 returnValue += '<label>Default value</label>';
-                returnValue += '<input class="form-control" type="text" id="parameters' + index + '.defaultValue" name="parameters[' + index + '].defaultValue">';
+                returnValue += '<input placeholder="Default value" class="form-control" type="text" id="parameters' + index + '.defaultValue" name="parameters[' + index + '].defaultValue">';
             returnValue += '</div>';
             returnValue += '<div class="parameter-non-string">'
                 returnValue += '<div class="form-group">';
                     returnValue += '<label>Minimum value</label>';
-                    returnValue += '<input class="form-control" type="text" id="parameters' + index + '.minValue" name="parameters[' + index + '].minValue">';
+                    returnValue += '<input placeholder="Minimum value" class="form-control" type="text" id="parameters' + index + '.minValue" name="parameters[' + index + '].minValue">';
                 returnValue += '</div>';
                 returnValue += '<div class="form-group">';
                     returnValue += '<label>Maximum value</label>';
-                    returnValue += '<input class="form-control" type="text" id="parameters' + index + '.maxValue" name="parameters[' + index + '].maxValue">';
+                    returnValue += '<input placeholder="Maximum value" class="form-control" type="text" id="parameters' + index + '.maxValue" name="parameters[' + index + '].maxValue">';
                 returnValue += '</div>';
             returnValue += '</div>';
             returnValue += '<div class="parameter-string" style="display: none;">'

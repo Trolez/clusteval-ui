@@ -359,7 +359,7 @@ public class RunCreation {
                         if (currentLine.startsWith("options")) {
                             programParameter.setOptions(line);
                         }
-                        if (parametersToOptimize.get(programName).contains(parameterName)) {
+                        if (parametersToOptimize.get(programName) != null && parametersToOptimize.get(programName).contains(parameterName)) {
                             programParameter.setOptimize(true);
                         } else {
                             programParameter.setOptimize(false);
