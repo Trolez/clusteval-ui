@@ -16,6 +16,8 @@ a:focus, a:hover { color: rgb(67, 80, 109); }
 .box { margin-top: 14px; padding: 7px; background: #efefef; border: 2px solid #c9c9c9; font-size: 16px; overflow: hidden; }
 .box .toggle,
 .edited-runs-container .toggle { display: inline-block; float: right; width: 25px; height: 25px; background: #f9f9f9; text-align: center; line-height: 25px; vertical-align: middle; cursor: pointer; border-radius: 3px; border: 1px solid #ccc; }
+.box .toggle.large,
+.edited-runs-container .toggle.large { width: 38px; height: 38px; line-height: 38px; }
 .range-container { overflow: hidden; border: 1px solid #ececec; padding: 4px; background: #fafafa; margin-bottom: 5px; position: relative; padding-left: 35px; }
 .range-container input[type="range"] { width: calc(100% - 140px); float: left; margin-right: 10px; }
 .range-container .range-value { width: 130px; display: inline-block; text-align: center; }

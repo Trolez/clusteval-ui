@@ -79,7 +79,7 @@
                                 Select programs
                                 <span class="error" th:if="${#fields.hasErrors('programs')}" th:errors="*{programs}">
                             </label>
-                            <select class="select2-multiple programs" multiple="multiple" name="programs">
+                            <select class="select2-multiple programs" multiple="multiple" name="programs" data-index="0">
                                 <option th:each="program : ${programs}" th:value="${program}" th:text="${program}" th:selected="${#lists.contains(runCreation.programs, program)}">
                             </select>
                             <input type="hidden" class="placeholder" name="programs" value="DUMMY" disabled>

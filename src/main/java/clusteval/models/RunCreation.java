@@ -414,16 +414,18 @@ public class RunCreation {
 
             ArrayList<String> parametersToOptimize;
             for (Program program : programSettings) {
-                parametersToOptimize = new ArrayList<String>();
+                if (program.getParameters() != null) {
+                    parametersToOptimize = new ArrayList<String>();
 
-                run += "[" + program.getName() + "]\n";
+                    run += "[" + program.getName() + "]\n";
 
-                for (ProgramParameter parameter : program.getParameters()) {
-                    if (parameter.getOptimize() && parameter.getOptimizable()) {
-                        parametersToOptimize.add(parameter.getName());
+                    for (ProgramParameter parameter : program.getParameters()) {
+                        if (parameter.getOptimize() && parameter.getOptimizable()) {
+                            parametersToOptimize.add(parameter.getName());
+                        }
                     }
+                    run += "optimizationParameters = " + StringUtils.join(parametersToOptimize, ',') + "\n\n";
                 }
-                run += "optimizationParameters = " + StringUtils.join(parametersToOptimize, ',') + "\n\n";
             }
         }
 
@@ -463,19 +465,21 @@ public class RunCreation {
 
         if (mode.equals("clustering") || mode.equals("parameter_optimization") || mode.equals("robustnessAnalysis")) {
             for (Program programSetting : programSettings) {
-                for (ProgramParameter programParameter : programSetting.getParameters()) {
-                    run += "\n[" + programSetting.getName() + ":" + programParameter.getName() + "]\n";
-                    if (programParameter.getMinValue() != null) {
-                        run += "minValue=" + programParameter.getMinValue() + "\n";
-                    }
-                    if (programParameter.getMaxValue() != null) {
-                        run += "maxValue=" + programParameter.getMaxValue() + "\n";
-                    }
-                    if (programParameter.getValue() != null) {
-                        run += "def=" + programParameter.getValue() + "\n";
-                    }
-                    if (programParameter.getOptions() != null) {
-                        run += "options=" + programParameter.getOptions() + "\n";
+                if (programSetting.getParameters() != null) {
+                    for (ProgramParameter programParameter : programSetting.getParameters()) {
+                        run += "\n[" + programSetting.getName() + ":" + programParameter.getName() + "]\n";
+                        if (programParameter.getMinValue() != null) {
+                            run += "minValue=" + programParameter.getMinValue() + "\n";
+                        }
+                        if (programParameter.getMaxValue() != null) {
+                            run += "maxValue=" + programParameter.getMaxValue() + "\n";
+                        }
+                        if (programParameter.getValue() != null) {
+                            run += "def=" + programParameter.getValue() + "\n";
+                        }
+                        if (programParameter.getOptions() != null) {
+                            run += "options=" + programParameter.getOptions() + "\n";
+                        }
                     }
                 }
             }

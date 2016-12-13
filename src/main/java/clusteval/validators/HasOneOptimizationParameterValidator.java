@@ -8,6 +8,10 @@ import java.util.ArrayList;
 public class HasOneOptimizationParameterValidator implements ConstraintValidator<HasOneOptimizationParameter, ArrayList<ProgramParameter>> {
     @Override
     public boolean isValid(ArrayList<ProgramParameter> parameters, ConstraintValidatorContext context) {
+        if (parameters == null) {
+            return true;
+        }
+        
         for (ProgramParameter programParameter : parameters) {
             if (programParameter.getOptimize()) {
                 return true;

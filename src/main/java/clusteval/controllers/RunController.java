@@ -383,6 +383,17 @@ public class RunController {
 
     @RequestMapping(value="/runs/edit", method=RequestMethod.POST)
     public String editRun(@Valid RunCreation runCreation, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        /*Create a new array of program settings
+        * This fixes an error that occurs if a program
+        * was selected and then deselected in the form */
+        ArrayList<Program> programSettings = new ArrayList<Program>();
+        for (Program program : runCreation.getProgramSettings()) {
+            if (program != null && program.getParameters() != null && program.getParameters().size() > 0) {
+                programSettings.add(program);
+            }
+        }
+        runCreation.setProgramSettings(programSettings);
+
         //Return to form if there were validation errors
         if (bindingResult.hasErrors()) {
             try {

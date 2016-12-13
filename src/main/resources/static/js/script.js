@@ -101,7 +101,7 @@ $(document).ready(function() {
     $('form.run-creation').on('change', 'select.programs', function() {
         var newVal = $(this).val();
         var selectedProgram;
-        var index = $('form.run-creation #program-parameters .program').length;
+        var index = parseInt($('form.run-creation select.programs').data('index'));
 
         if (newVal == null) {
             //All have been removed - reset everything
@@ -113,6 +113,7 @@ $(document).ready(function() {
                 if ($.inArray(newVal[i], val) == -1) {
                     selectedProgram = $(this).find('option[value="' + newVal[i] + '"]').text();
                     addProgramParameters(selectedProgram, index);
+                    $('form.run-creation select.programs').data('index', index + 1);
                 }
             }
 
@@ -127,6 +128,8 @@ $(document).ready(function() {
             val = newVal;
         }
     });
+
+    $('form.run-creation select.programs').data('index', $('form.run-creation #program-parameters .program').length);
 
     function addProgramParameters(program, index) {
         $.ajax({
@@ -177,7 +180,7 @@ $(document).ready(function() {
                                     if (value.optimizable) {
                                         returnValue += '<div class="checkbox">';
                                             returnValue += '<label>';
-                                                returnValue += '<input class="checkbox-optimize" type="checkbox" checked value="true" id="programSettings' + index + '.parameters' + paramIndex + '.optimize1" name="programSettings[' + index + '].parameters[' + paramIndex + '].optimize">Optimize';
+                                                returnValue += '<input class="checkbox-optimize" type="checkbox" checked="checked" value="true" id="programSettings' + index + '.parameters' + paramIndex + '.optimize1" name="programSettings[' + index + '].parameters[' + paramIndex + '].optimize">Optimize';
                                             returnValue += '</label>';
                                             returnValue += '<input type="hidden" id="programSettings' + index + '.parameters' + paramIndex + '.optimizable" name="programSettings[' + index + '].parameters[' + paramIndex + '].optimizable" value="true">';
                                             returnValue += '<input name="_programSettings[' + index + '].parameters[' + paramIndex + '].optimize" value="on" type="hidden">';
